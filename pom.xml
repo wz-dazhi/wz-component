@@ -9,6 +9,7 @@
         <module>wz-datasource</module>
         <module>wz-encrypt</module>
         <module>wz-redis</module>
+        <module>wz-validator</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -26,6 +27,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <wz-component.version>0.0.1-SNAPSHOT</wz-component.version>
         <mybatis-plus.version>3.1.0</mybatis-plus.version>
         <druid.version>1.1.10</druid.version>
         <velocity.version>1.7</velocity.version>
@@ -43,12 +45,22 @@
             <dependency>
                 <groupId>com.wz</groupId>
                 <artifactId>wz-common</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${wz-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wz</groupId>
+                <artifactId>wz-datasource</artifactId>
+                <version>${wz-component.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wz</groupId>
                 <artifactId>wz-web</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${wz-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wz</groupId>
+                <artifactId>wz-validator</artifactId>
+                <version>${wz-component.version}</version>
             </dependency>
             <!-- wz-component end -->
 

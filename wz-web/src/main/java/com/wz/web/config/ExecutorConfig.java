@@ -29,7 +29,7 @@ public class ExecutorConfig {
      *
      * @return
      */
-    @Bean
+    @Bean("web-executor")
     @ConditionalOnMissingBean
     public Executor executor(ThreadPoolProperties prop) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

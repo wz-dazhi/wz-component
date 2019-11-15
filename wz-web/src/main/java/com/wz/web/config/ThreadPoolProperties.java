@@ -18,20 +18,20 @@ public class ThreadPoolProperties {
     /**
      * 核心线程数
      */
-    private int corePoolSize;
+    private int corePoolSize = 10;
 
     /**
      * 最大线程数
      */
-    private int maxPoolSize;
+    private int maxPoolSize = 20;
 
     /**
      * 队列最大长度
      */
-    private int queueCapacity;
+    private int queueCapacity = 100;
 
     /**
      * 线程池维护线程所允许的空闲时间，默认为60s
      */
-    private int keepAliveSeconds;
+    private int keepAliveSeconds = 60;
 }

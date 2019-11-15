@@ -39,7 +39,7 @@ public final class Resources {
     }
 
     public static String getMessage(String key, Object... params) {
-        return getMessage("i18n/messages", key, params);
+        return getMessage("i18n/messages/messages", key, params);
     }
 
     public static void flushMessage() {

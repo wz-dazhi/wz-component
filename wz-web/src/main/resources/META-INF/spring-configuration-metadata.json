@@ -10,22 +10,30 @@
     {
       "name": "thread.pool.core-pool-size",
       "type": "java.lang.Integer",
-      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+      "description": "核心线程数",
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
+      "defaultValue": 10
     },
     {
       "name": "thread.pool.max-pool-size",
       "type": "java.lang.Integer",
-      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+      "description": "最大线程数",
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
+      "defaultValue": 20
     },
     {
       "name": "thread.pool.queue-capacity",
+      "description": "队列最大长度",
       "type": "java.lang.Integer",
-      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
+      "defaultValue": 100
     },
     {
       "name": "thread.pool.keep-alive-seconds",
+      "description": "线程池维护线程所允许的空闲时间，默认为60s",
       "type": "java.lang.Integer",
-      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
+      "defaultValue": 60
     }
   ],
   "hints": []

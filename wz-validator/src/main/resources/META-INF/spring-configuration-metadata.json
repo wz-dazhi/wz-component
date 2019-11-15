@@ -1,0 +1,19 @@
+{
+  "groups": [
+    {
+      "name": "validator.config",
+      "type": "com.wz.validator.config.ValidatorConfig",
+      "sourceType": "com.wz.validator.config.ValidatorConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "validator.config.base-names",
+      "description": "国际化文件path, 多个文件以 \",\" 逗号隔开",
+      "type": "java.lang.String",
+      "sourceType": "com.wz.validator.config.ValidatorConfig",
+      "defaultValue": "i18n/validations/validations"
+    }
+  ],
+  "hints": []
+}
