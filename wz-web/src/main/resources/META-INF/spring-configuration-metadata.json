@@ -1,0 +1,32 @@
+{
+  "groups": [
+    {
+      "name": "thread.pool",
+      "type": "com.wz.web.config.ThreadPoolProperties",
+      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "thread.pool.core-pool-size",
+      "type": "java.lang.Integer",
+      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+    },
+    {
+      "name": "thread.pool.max-pool-size",
+      "type": "java.lang.Integer",
+      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+    },
+    {
+      "name": "thread.pool.queue-capacity",
+      "type": "java.lang.Integer",
+      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+    },
+    {
+      "name": "thread.pool.keep-alive-seconds",
+      "type": "java.lang.Integer",
+      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+    }
+  ],
+  "hints": []
+}
