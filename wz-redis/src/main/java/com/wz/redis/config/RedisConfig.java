@@ -35,8 +35,6 @@ public class RedisConfig {
     @Resource
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory, RedisSerializer stringRedisSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        // string 序列化方式,用于key
-//        RedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // json 序列化方式,用于value
         Jackson2JsonRedisSerializer<Object> jsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
         jsonRedisSerializer.setObjectMapper(objectMapper);
