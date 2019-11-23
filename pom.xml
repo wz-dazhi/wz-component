@@ -62,6 +62,11 @@
                 <artifactId>wz-validator</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.wz</groupId>
+                <artifactId>wz-redis</artifactId>
+                <version>${wz-component.version}</version>
+            </dependency>
             <!-- wz-component end -->
 
             <!-- guava -->
