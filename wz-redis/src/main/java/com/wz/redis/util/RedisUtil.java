@@ -1,5 +1,6 @@
 package com.wz.redis.util;
 
+import com.google.common.collect.Lists;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.MapUtil;
 import com.wz.common.util.StringUtil;
@@ -125,33 +126,14 @@ public class RedisUtil {
     }
 
     /**
-     * @param key    key
-     * @param t      bean对象
-     * @param expire 超时时间, 大于0设置超时时间. 单位: 秒
-     * @Description 普通缓存放入
-     */
-    public <T> void setJson(String key, T t, long expire) {
-        this.setJson(key, t, expire, TimeUnit.SECONDS);
-    }
-
-    /**
-     * @param key    key
-     * @param t      bean对象
-     * @param expire 超时时间, 大于0设置超时时间
-     * @Description 普通缓存放入
-     */
-    public <T> void setJson(String key, T t, long expire, TimeUnit unit) {
-        String json = JsonUtil.toJsonString(t);
-        if (StringUtil.isBlank(json)) {
-            throw new RuntimeException("t 对象转换json 为null. " + t);
-        }
-        this.set(key, t, expire, unit);
-    }
-
-    /**
      * @param key key
      * @return Object
-     * @Description 获取普通缓存的value
+     * @Description <p>
+     * 获取缓存的value.
+     * 如果value是个对象的话, 默认返回 java.util.LinkedHashMap.
+     * 如果需要返回Bean对象, 请使用 {@link #get(String, Class)}
+     * 如果需要返回List<Bean>, 请使用 {@link #getList(String, Class)}
+     * </p>
      */
     public Object get(String key) {
         if (StringUtil.isBlank(key)) {
@@ -163,13 +145,30 @@ public class RedisUtil {
     /**
      * @param key key
      * @return T
-     * @Description 获取普通缓存的value
+     * @Description 缓存的bean 对象
      */
     public <T> T get(String key, Class<T> clazz) {
         if (StringUtil.isBlank(key)) {
             throw new RuntimeException("key 不能为空");
         }
         return JsonUtil.toBean(JsonUtil.toJsonString(this.get(key)), clazz);
+    }
+
+    /**
+     * @param key   key
+     * @param clazz Class 对象
+     * @return T List<T>
+     * @Description 获取缓存的list对象
+     */
+    public <T> List<T> getList(String key, Class<T> clazz) {
+        if (StringUtil.isBlank(key)) {
+            throw new RuntimeException("key 不能为空");
+        }
+        List list = JsonUtil.toBean(JsonUtil.toJsonString(this.get(key)), List.class);
+        if (null == list || list.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        return MapUtil.mapsToObjects(list, clazz);
     }
 
     /**
