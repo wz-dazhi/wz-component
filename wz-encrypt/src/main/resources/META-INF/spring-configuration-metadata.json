@@ -1,0 +1,53 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "name": "api.encrypt",
+      "type": "com.wz.encrypt.auto.EncryptProperties",
+      "description": "加解密配置"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "name": "api.encrypt.key",
+      "type": "java.lang.String",
+      "description": "加解密key"
+    },
+    {
+      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "name": "api.encrypt.debug",
+      "type": "java.lang.Boolean",
+      "description": "是否开启调试模式",
+      "defaultValue": "true"
+    },
+    {
+      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "name": "api.encrypt.sign-expire-time",
+      "type": "java.lang.Long",
+      "description": "签名过期时间（分钟)",
+      "defaultValue": "10L"
+    },
+    {
+      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "name": "api.encrypt.charset",
+      "type": "java.lang.String",
+      "description": "字符集",
+      "defaultValue": "UTF-8"
+    },
+    {
+      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "name": "api.encrypt.sign-enable",
+      "type": "java.lang.Boolean",
+      "description": "签名开关",
+      "defaultValue": "false"
+    },
+    {
+      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "name": "api.encrypt.sign-path",
+      "type": "java.lang.String[]",
+      "description": "校验签名的controller"
+    }
+  ]
+}
