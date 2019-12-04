@@ -1,40 +1,55 @@
 {
+  "hints": [],
   "groups": [
     {
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
       "name": "thread.pool",
       "type": "com.wz.web.config.ThreadPoolProperties",
-      "sourceType": "com.wz.web.config.ThreadPoolProperties"
+      "description": "线程池配置"
+    },
+    {
+      "sourceType": "com.wz.web.config.ValidatorConfig",
+      "name": "validator.config",
+      "type": "com.wz.web.config.ValidatorConfig",
+      "description": "校验配置"
     }
   ],
   "properties": [
     {
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
       "name": "thread.pool.core-pool-size",
       "type": "java.lang.Integer",
       "description": "核心线程数",
-      "sourceType": "com.wz.web.config.ThreadPoolProperties",
-      "defaultValue": 10
+      "defaultValue": "10"
     },
     {
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
       "name": "thread.pool.max-pool-size",
       "type": "java.lang.Integer",
       "description": "最大线程数",
-      "sourceType": "com.wz.web.config.ThreadPoolProperties",
-      "defaultValue": 20
+      "defaultValue": "20"
     },
     {
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
       "name": "thread.pool.queue-capacity",
-      "description": "队列最大长度",
       "type": "java.lang.Integer",
+      "description": "队列最大长度",
+      "defaultValue": "100"
+    },
+    ,
+    {
       "sourceType": "com.wz.web.config.ThreadPoolProperties",
-      "defaultValue": 100
+      "name": "thread.pool.keep-alive-second",
+      "type": "java.lang.Integer",
+      "description": "线程池维护线程所允许的空闲时间",
+      "defaultValue": "60"
     },
     {
-      "name": "thread.pool.keep-alive-seconds",
-      "description": "线程池维护线程所允许的空闲时间，默认为60s",
-      "type": "java.lang.Integer",
-      "sourceType": "com.wz.web.config.ThreadPoolProperties",
-      "defaultValue": 60
+      "sourceType": "com.wz.web.config.ValidatorConfig",
+      "name": "validator.config.base-names",
+      "type": "java.lang.String",
+      "description": "国际化文件path, 多个文件以 \",\" 逗号隔开",
+      "defaultValue": "i18n/validations/validations"
     }
-  ],
-  "hints": []
+  ]
 }

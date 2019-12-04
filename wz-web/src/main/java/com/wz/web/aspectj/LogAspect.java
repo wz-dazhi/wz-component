@@ -56,9 +56,6 @@ public class LogAspect {
             Object r = point.proceed();
             log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJsonString(r));
             return r;
-        } catch (Throwable e) {
-            log.error("Exception info: {}", e.getMessage());
-            throw e;
         } finally {
             log.info("Uri: [{}], Time consuming: [{}]ms", uri, sw.stop().elapsed(TimeUnit.MILLISECONDS));
             MDC.clear();

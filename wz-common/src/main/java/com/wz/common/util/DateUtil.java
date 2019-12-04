@@ -436,10 +436,33 @@ public final class DateUtil {
      * LocalDateTime转时间戳
      *
      * @param localDateTime LocalDateTime对象
-     * @return 时间戳(带毫秒)
+     * @return 时间戳
      */
     public static long localDateTimeToTimestamp(LocalDateTime localDateTime) {
+        Objects.requireNonNull(localDateTime, "LocalDateTime cannot is null");
         return localDateTime.atZone(getDefaultZoneId()).toInstant().toEpochMilli();
+    }
+
+    /**
+     * LocalDate 转时间戳
+     *
+     * @param localDate LocalDate
+     * @return
+     */
+    public static long localDateToTimestamp(LocalDate localDate) {
+        Objects.requireNonNull(localDate, "LocalDate cannot is null");
+        return localDate.atStartOfDay(getDefaultZoneId()).toInstant().toEpochMilli();
+    }
+
+    /**
+     * Date 转时间戳
+     *
+     * @param date Date
+     * @return
+     */
+    public static long dateToTimestamp(Date date) {
+        Objects.requireNonNull(date, "Date cannot is null");
+        return date.getTime();
     }
 
     /**

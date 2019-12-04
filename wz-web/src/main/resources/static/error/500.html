@@ -71,7 +71,22 @@
 <div class="container">
     <h1>Server Error</h1>
     <p>Sorry, but there was an error with the server that prevented this page from being displayed.</p>
-    <p>Code: <span th:text="${code}">9999</span>, Msg: <span th:text="${msg}">System Error</span> </p>
+    <p id="msg"></p>
 </div>
+<script>
+    let code;
+    let msg;
+    const query = window.location.search.substring(1);
+    const vars = query.split("&");
+    for (let i = 0; i < vars.length; i++) {
+        const pair = vars[i].split("=");
+        if ("code" === pair[0]) {
+            code = decodeURI(pair[1]);
+        } else if ("msg" === pair[0]) {
+            msg = decodeURI(pair[1]).replace("%2C", ",").replace("+", " ");
+        }
+    }
+    document.getElementById("msg").innerHTML = "code: " + code + ", msg: " + msg;
+</script>
 </body>
 </html>

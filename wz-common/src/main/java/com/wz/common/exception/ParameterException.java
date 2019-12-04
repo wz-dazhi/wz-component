@@ -19,7 +19,7 @@ public class ParameterException extends RuntimeException {
     private String msg;
 
     public ParameterException(IErrorCode iErrorCode) {
-        this(iErrorCode, iErrorCode.getErrorMsg(), iErrorCode.getErrorMsg());
+        this(iErrorCode, iErrorCode.getErrorCode(), iErrorCode.getErrorMsg());
     }
 
     public ParameterException(String msg) {

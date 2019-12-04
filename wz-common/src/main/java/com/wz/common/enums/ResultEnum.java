@@ -19,19 +19,19 @@ public enum ResultEnum implements IErrorCode {
     OK("0"),
 
     /**
-     * 未知错误
-     */
-    UNKNOWN_ERROR("-1"),
-
-    /**
      * 参数错误
      */
-    PARAM_ERROR("-2"),
+    PARAM_ERROR("-1"),
 
     /**
-     * 系统异常
+     * 服务器不高兴了, 请稍后再试
      */
-    SYSTEM_ERROR("-3"),
+    SYSTEM_ERROR("-2"),
+
+    /**
+     * 请求失败, 请稍后再试
+     */
+    REQUEST_ERROR("-3"),
 
     ;
 

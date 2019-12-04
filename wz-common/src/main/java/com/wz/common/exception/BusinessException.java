@@ -19,11 +19,11 @@ public class BusinessException extends Exception {
     private String msg;
 
     public BusinessException(IErrorCode iErrorCode) {
-        this(iErrorCode, iErrorCode.getErrorMsg(), iErrorCode.getErrorMsg());
+        this(iErrorCode, iErrorCode.getErrorCode(), iErrorCode.getErrorMsg());
     }
 
     public BusinessException(String code, String msg) {
-        this(ResultEnum.UNKNOWN_ERROR, code, msg);
+        this(ResultEnum.REQUEST_ERROR, code, msg);
     }
 
     private BusinessException(IErrorCode iErrorCode, String code, String msg) {

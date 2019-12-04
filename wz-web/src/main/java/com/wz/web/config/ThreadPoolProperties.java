@@ -33,5 +33,5 @@ public class ThreadPoolProperties {
     /**
      * 线程池维护线程所允许的空闲时间，默认为60s
      */
-    private int keepAliveSeconds = 60;
+    private int keepAliveSecond = 60;
 }

@@ -29,14 +29,14 @@ public class ExecutorConfig {
      *
      * @return
      */
-    @Bean("web-executor")
+    @Bean("async-executor")
     @ConditionalOnMissingBean
     public Executor executor(ThreadPoolProperties prop) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(prop.getCorePoolSize());
         executor.setMaxPoolSize(prop.getMaxPoolSize());
         executor.setQueueCapacity(prop.getQueueCapacity());
-        executor.setKeepAliveSeconds(prop.getKeepAliveSeconds());
+        executor.setKeepAliveSeconds(prop.getKeepAliveSecond());
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;

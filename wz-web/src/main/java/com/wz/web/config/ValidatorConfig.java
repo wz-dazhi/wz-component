@@ -1,4 +1,4 @@
-package com.wz.validator.config;
+package com.wz.web.config;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -14,8 +14,8 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import java.util.List;
 
 /**
- * @projectName: rnjf-product-api
- * @package: com.rnjf.bj.overseas.configuration.i18n
+ * @projectName: wz-web
+ * @package: com.wz.web.config
  * @className: ValidatorConfig
  * @description:
  * @author: Zhi

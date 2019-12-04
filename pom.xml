@@ -9,7 +9,6 @@
         <module>wz-datasource</module>
         <module>wz-encrypt</module>
         <module>wz-redis</module>
-        <module>wz-validator</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -37,6 +36,7 @@
         <fastjson.version>1.2.60</fastjson.version>
         <json-smart.version>2.3</json-smart.version>
         <commons-io.version>1.3.2</commons-io.version>
+        <weixin-java.version>3.6.0</weixin-java.version>
     </properties>
 
     <dependencyManagement>
@@ -59,12 +59,12 @@
             </dependency>
             <dependency>
                 <groupId>com.wz</groupId>
-                <artifactId>wz-validator</artifactId>
+                <artifactId>wz-redis</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.wz</groupId>
-                <artifactId>wz-redis</artifactId>
+                <artifactId>wz-encrypt</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
             <!-- wz-component end -->
@@ -133,6 +133,33 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
+            </dependency>
+
+            <!-- 微信相关 -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-pay</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-open</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-mp</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-cp</artifactId>
+                <version>${weixin-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

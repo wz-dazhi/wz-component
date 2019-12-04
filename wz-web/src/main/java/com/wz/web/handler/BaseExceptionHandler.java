@@ -86,7 +86,7 @@ abstract class BaseExceptionHandler {
     }
 
     private void error(HttpServletRequest req, HttpServletResponse resp, Throwable t) {
-        log.error("<<< A run exception has occurred, uri: [{}] msg: [{}], e: {}", req.getRequestURI(), t.getMessage(), t);
+        log.error("<<< A run exception has occurred, uri: [{}] msg: [{}], e: ", req.getRequestURI(), t.getMessage(), t);
         resp.setContentType("application/json; charset=utf-8");
         resp.setHeader("Access-Control-Allow-Origin", "*");
     }

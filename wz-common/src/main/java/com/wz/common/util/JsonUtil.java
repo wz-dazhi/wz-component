@@ -67,7 +67,7 @@ public final class JsonUtil {
         try {
             return MAPPER.writeValueAsString(o);
         } catch (JsonProcessingException e) {
-            log.error("Bean 转json字符串发生异常. msg: {}, e: {}", e.getMessage(), e);
+            log.error("Bean 转json字符串发生异常. msg: {}, e: ", e.getMessage(), e);
         }
         return null;
     }
@@ -87,7 +87,7 @@ public final class JsonUtil {
                 return toJsonString(o);
             }
         } catch (JsonProcessingException e) {
-            log.error("Bean 转json字符串发生异常. msg: {}, e: {}", e.getMessage(), e);
+            log.error("Bean 转json字符串发生异常. msg: {}, e: ", e.getMessage(), e);
         }
         return null;
     }
@@ -96,7 +96,7 @@ public final class JsonUtil {
         try {
             return MAPPER.readValue(json, clazz);
         } catch (IOException e) {
-            log.error("json 字符串转Bean发生异常. msg: {}, e: {}", e.getMessage(), e);
+            log.error("json 字符串转Bean发生异常. msg: {}, e: ", e.getMessage(), e);
         }
         return null;
     }
@@ -105,7 +105,7 @@ public final class JsonUtil {
         try {
             return MAPPER.readValue(file, clazz);
         } catch (IOException e) {
-            log.error("读取json 字符串文件[{}]转Bean发生异常. msg: {}, e: {}", file, e.getMessage(), e);
+            log.error("读取json 字符串文件[{}]转Bean发生异常. msg: {}, e: ", file, e.getMessage(), e);
         }
         return null;
     }
@@ -114,7 +114,7 @@ public final class JsonUtil {
         try {
             return MAPPER.readValue(is, clazz);
         } catch (IOException e) {
-            log.error("读取json 字符串输入流[{}]转Bean发生异常. msg: {}, e: {}", is, e.getMessage(), e);
+            log.error("读取json 字符串输入流[{}]转Bean发生异常. msg: {}, e: ", is, e.getMessage(), e);
         }
         return null;
     }
@@ -123,7 +123,7 @@ public final class JsonUtil {
         try {
             return MAPPER.readValue(url, clazz);
         } catch (IOException e) {
-            log.error("读取json 字符串输入流[{}]转Bean发生异常. msg: {}, e: {}", url, e.getMessage(), e);
+            log.error("读取json 字符串输入流[{}]转Bean发生异常. msg: {}, e: ", url, e.getMessage(), e);
         }
         return null;
     }

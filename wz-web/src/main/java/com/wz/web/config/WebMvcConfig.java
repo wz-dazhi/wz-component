@@ -1,11 +1,12 @@
 package com.wz.web.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,6 +27,8 @@ import java.util.List;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Resource
+    private MessageSource messageSource;
+    @Resource
     private Converter dateConverter;
     @Resource
     private Converter localTimeConverter;
@@ -34,11 +37,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Resource
     private Converter localDateTimeConverter;
     @Resource
-    private ObjectMapper objectMapper;
+    private HttpMessageConverter stringHttpMessageConverter;
+    @Resource
+    private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
+        converters.add(stringHttpMessageConverter);
+        converters.add(mappingJackson2HttpMessageConverter);
+    }
+
+    @Override
+    public Validator getValidator() {
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.setValidationMessageSource(messageSource);
+        return validator;
     }
 
     @Override
@@ -54,4 +67,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/public/**").addResourceLocations("classpath:/public/");
     }
+
 }
