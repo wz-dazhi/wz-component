@@ -4,7 +4,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
@@ -19,7 +18,6 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date: 2019/3/1 3:41 PM
  * @version: 1.0
  **/
-@Async
 @Configuration
 @EnableConfigurationProperties(ThreadPoolProperties.class)
 public class ExecutorConfig {

@@ -59,6 +59,11 @@
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.spring4all</groupId>
+            <artifactId>swagger-spring-boot-starter</artifactId>
+        </dependency>
+
         <!-- commons -->
         <dependency>
             <groupId>commons-codec</groupId>

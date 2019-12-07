@@ -32,6 +32,13 @@ public final class StringUtil {
         return StringUtils.isNotEmpty(str);
     }
 
+    public static CharSequence requireNonNull(CharSequence str, String msg) {
+        if (isBlank(str)) {
+            throw new NullPointerException(msg);
+        }
+        return str;
+    }
+
     public static boolean isAnyBlank(CharSequence... css) {
         return StringUtils.isAnyBlank(css);
     }

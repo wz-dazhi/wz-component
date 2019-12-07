@@ -1,6 +1,8 @@
 package com.wz.common.model;
 
 import com.wz.common.util.JsonUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +18,7 @@ import java.io.Serializable;
  * @author: Zhi Wang
  * @createDate: 2018/9/9 上午12:27
  **/
+@ApiModel("统一响应结果")
 @Data
 @Builder
 @NoArgsConstructor
@@ -25,16 +28,19 @@ public class Result<T> implements Serializable {
     /**
      * code码
      */
+    @ApiModelProperty("响应码")
     private String code;
 
     /**
      * msg
      */
+    @ApiModelProperty("响应信息")
     private String msg;
 
     /**
      * data
      */
+    @ApiModelProperty("响应数据")
     private T data;
 
     @Override
