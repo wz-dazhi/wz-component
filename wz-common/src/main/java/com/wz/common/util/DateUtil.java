@@ -133,6 +133,39 @@ public final class DateUtil {
     }
 
     /**
+     * 日期添加小时
+     *
+     * @param date      Date对象
+     * @param daysToAdd the days to add, may be negative
+     * @return LocalDateTime
+     */
+    public static LocalDateTime plusHours(Date date, long daysToAdd) {
+        return dateToLocalDateTime(date).plusHours(daysToAdd);
+    }
+
+    /**
+     * 日期添加分钟
+     *
+     * @param date      Date对象
+     * @param daysToAdd the days to add, may be negative
+     * @return LocalDateTime
+     */
+    public static LocalDateTime plusMinutes(Date date, long daysToAdd) {
+        return dateToLocalDateTime(date).plusMinutes(daysToAdd);
+    }
+
+    /**
+     * 日期添加秒
+     *
+     * @param date      Date对象
+     * @param daysToAdd the days to add, may be negative
+     * @return LocalDateTime
+     */
+    public static LocalDateTime plusSeconds(Date date, long daysToAdd) {
+        return dateToLocalDateTime(date).plusSeconds(daysToAdd);
+    }
+
+    /**
      * 日期减去年
      *
      * @param date            Date对象

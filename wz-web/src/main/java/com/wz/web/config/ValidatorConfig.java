@@ -10,7 +10,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.validation.Validator;
 import java.util.List;
 
 /**
@@ -43,6 +45,13 @@ public class ValidatorConfig {
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setBasenames(paths.toArray(new String[0]));
         return messageSource;
+    }
+
+    @Bean
+    public Validator validator() {
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.setValidationMessageSource(messageSource());
+        return validator;
     }
 
 }

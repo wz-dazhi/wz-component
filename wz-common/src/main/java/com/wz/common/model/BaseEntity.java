@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.wz.common.util.JsonUtil;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -18,7 +19,10 @@ import java.time.LocalDateTime;
  * @version: 1.0
  **/
 @Data
-public class BaseEntity {
+public class BaseEntity implements Serializable {
+    public static final String COL_ID = "id";
+    public static final String COL_CREATE_TIME = "create_time";
+    public static final String COL_UPDATE_TIME = "update_time";
 
     /**
      * 主键
