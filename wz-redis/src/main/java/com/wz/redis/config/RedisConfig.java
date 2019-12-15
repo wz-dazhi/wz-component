@@ -43,6 +43,7 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(jsonRedisSerializer);
         redisTemplate.setHashKeySerializer(stringRedisSerializer);
         redisTemplate.setHashValueSerializer(jsonRedisSerializer);
+        redisConnectionFactory.setValidateConnection(true);
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;
     }

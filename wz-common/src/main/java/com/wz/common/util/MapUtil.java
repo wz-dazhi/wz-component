@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.beans.BeanMap;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -82,6 +83,8 @@ public class MapUtil {
                     if ("java.lang.Integer".equals(valueTypeName) || "int".equals(valueTypeName)) {
                         map.put(fieldName, Double.valueOf(value.toString()));
                     }
+                } else if (fieldType == BigDecimal.class && !"java.math.BigDecimal".equals(valueTypeName)) {
+                    map.put(fieldName, new BigDecimal(String.valueOf(value)));
                 }
             }
         }

@@ -38,4 +38,6 @@ public class Consts {
      * redis分割符号
      */
     public static final String SUBFIX = ":";
+
+    public static final int TWO_INT = 2;
 }

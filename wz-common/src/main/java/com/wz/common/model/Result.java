@@ -1,5 +1,6 @@
 package com.wz.common.model;
 
+import com.wz.common.enums.ResultEnum;
 import com.wz.common.util.JsonUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -42,6 +43,10 @@ public class Result<T> implements Serializable {
      */
     @ApiModelProperty("响应数据")
     private T data;
+
+    public boolean isSuccess() {
+        return ResultEnum.OK.getErrorCode().equals(code);
+    }
 
     @Override
     public String toString() {
