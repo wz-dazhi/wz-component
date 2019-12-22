@@ -42,23 +42,38 @@ public class LogAspect {
 
     @Around("log()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        Stopwatch sw = Stopwatch.createStarted();
-        MDC.put("linkId", UUIDUtil.getUUIDLowerCase());
         HttpServletRequest req = WebContextUtil.getRequest();
-        Object[] args = point.getArgs();
         String uri = req.getRequestURI();
-        log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJsonString(args), point.getSignature().toShortString());
-        try {
-            MDC.put("clientIp", IpUtil.getIpAddress(req));
-            MDC.put("serverIp", InetAddress.getLocalHost().getHostAddress());
-            MDC.put("api", req.getRequestURL().toString());
-
-            Object r = point.proceed();
-            log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJsonString(r));
-            return r;
-        } finally {
-            log.info("Uri: [{}], Time consuming: [{}]ms", uri, sw.stop().elapsed(TimeUnit.MILLISECONDS));
-            MDC.clear();
+        Object r;
+        if (this.isInfoEnabled(uri)) {
+            Stopwatch sw = Stopwatch.createStarted();
+            MDC.put("linkId", UUIDUtil.getUUIDLowerCase());
+            Object[] args = point.getArgs();
+            log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJsonString(args), point.getSignature().toShortString());
+            try {
+                MDC.put("clientIp", IpUtil.getIpAddress(req));
+                MDC.put("serverIp", InetAddress.getLocalHost().getHostAddress());
+                MDC.put("api", req.getRequestURL().toString());
+                r = point.proceed();
+                log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJsonString(r));
+                return r;
+            } finally {
+                log.info("Uri: [{}], Time consuming: [{}]ms", uri, sw.stop().elapsed(TimeUnit.MILLISECONDS));
+                MDC.clear();
+            }
+        } else {
+            r = point.proceed();
         }
+        return r;
+    }
+
+    private boolean isInfoEnabled(String uri) {
+        String[] uris = new String[]{"/swagger", "/v2/api-docs-ext"};
+        for (String u : uris) {
+            if (uri.startsWith(u)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
