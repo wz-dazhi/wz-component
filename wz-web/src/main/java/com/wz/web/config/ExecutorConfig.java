@@ -31,6 +31,7 @@ public class ExecutorConfig {
     @ConditionalOnMissingBean
     public Executor executor(ThreadPoolProperties prop) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setThreadNamePrefix("my-app-");
         executor.setCorePoolSize(prop.getCorePoolSize());
         executor.setMaxPoolSize(prop.getMaxPoolSize());
         executor.setQueueCapacity(prop.getQueueCapacity());
