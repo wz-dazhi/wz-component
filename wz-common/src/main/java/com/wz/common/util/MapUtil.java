@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -61,32 +60,74 @@ public class MapUtil {
     private static <T> void mapToBeanProcess(Map<String, Object> map, T bean) {
         Field[] fields = bean.getClass().getDeclaredFields();
         for (Field f : fields) {
+            setMap(f, map);
+        }
+    }
+
+    private static void setMap(Field f, Map<String, Object> map) {
+        if (!f.isAccessible()) {
             f.setAccessible(true);
-            String fieldName = f.getName();
-            Class<?> fieldType = f.getType();
-            Object value = map.get(fieldName);
-            if (null != value && fieldType != String.class) {
-                String valueTypeName = value.getClass().getTypeName();
-                if (fieldType == Date.class && !"java.util.Date".equals(valueTypeName)) {
-                    map.put(fieldName, DateUtil.dateTimeParse(String.valueOf(value), DateConsts.DATE_TIME_HH_MM_SS_FORMATTER));
-                } else if (fieldType == LocalDate.class && !"java.time.LocalDate".equals(valueTypeName)) {
-                    map.put(fieldName, LocalDate.parse(String.valueOf(value)));
-                } else if (fieldType == LocalDateTime.class && !"java.time.LocalDateTime".equals(valueTypeName)) {
-                    map.put(fieldName, LocalDateTime.parse(String.valueOf(value), DateConsts.DATE_TIME_HH_MM_SS_FORMATTER));
-                } else if (fieldType == LocalTime.class && !"java.time.LocalTime".equals(valueTypeName)) {
-                    map.put(fieldName, LocalTime.parse(String.valueOf(value)));
-                } else if (fieldType == Long.class || fieldType == long.class) {
-                    if ("java.lang.Integer".equals(valueTypeName) || "int".equals(valueTypeName)) {
-                        map.put(fieldName, Long.valueOf(value.toString()));
-                    }
-                } else if (fieldType == Double.class || fieldType == double.class) {
-                    if ("java.lang.Integer".equals(valueTypeName) || "int".equals(valueTypeName)) {
-                        map.put(fieldName, Double.valueOf(value.toString()));
-                    }
-                } else if (fieldType == BigDecimal.class && !"java.math.BigDecimal".equals(valueTypeName)) {
-                    map.put(fieldName, new BigDecimal(String.valueOf(value)));
-                }
-            }
+        }
+        // Bean field
+        String fieldName = f.getName();
+        Class<?> fieldType = f.getType();
+        String typeName = fieldType.getTypeName();
+        // Map value
+        Object value = map.get(fieldName);
+        if (null == value) {
+            return;
+        }
+        // Map valueType == fieldType return;
+        if (typeName.equals(value.getClass().getTypeName())) {
+            return;
+        }
+
+        // 重新设置map value的类型
+        map.put(fieldName, getValue(typeName, String.valueOf(value)));
+    }
+
+    private static Object getValue(String typeName, String value) {
+        switch (typeName) {
+            case "java.util.Date":
+                return DateUtil.dateTimeParse(value, DateConsts.DATE_TIME_HH_MM_SS_FORMATTER);
+            case "java.time.LocalDate":
+                return LocalDate.parse(value);
+            case "java.time.LocalDateTime":
+                return LocalDateTime.parse(value, DateConsts.DATE_TIME_HH_MM_SS_FORMATTER);
+            case "java.time.LocalTime":
+                return LocalTime.parse(value);
+            case "java.math.BigDecimal":
+                return new BigDecimal(value);
+            case "java.lang.Integer":
+                return Integer.valueOf(value);
+            case "int":
+                return Integer.parseInt(value);
+            case "java.lang.Double":
+                return Double.valueOf(value);
+            case "double":
+                return Double.parseDouble(value);
+            case "java.lang.Long":
+                return Long.valueOf(value);
+            case "long":
+                return Long.parseLong(value);
+            case "java.lang.Float":
+                return Float.valueOf(value);
+            case "float":
+                return Float.parseFloat(value);
+            case "java.lang.Boolean":
+                return Boolean.valueOf(value);
+            case "boolean":
+                return Boolean.parseBoolean(value);
+            case "java.lang.Byte":
+                return Byte.valueOf(value);
+            case "byte":
+                return Byte.parseByte(value);
+            case "java.lang.Short":
+                return Short.valueOf(value);
+            case "short":
+                return Short.parseShort(value);
+            default:
+                return null;
         }
     }
 

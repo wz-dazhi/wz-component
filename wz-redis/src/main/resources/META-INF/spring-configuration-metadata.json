@@ -1,0 +1,27 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.wz.redis.config",
+      "name": "spring.redis.redisson",
+      "type": "com.wz.redis.config.RedissonProperties",
+      "description": "redisson 配置"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.wz.redis.config.RedissonProperties",
+      "name": "spring.redis.redisson.config",
+      "type": "java.lang.String",
+      "description": "redisson 的配置文件, JSON/YAML",
+      "defaultValue": "classpath:redisson.yml"
+    },
+    {
+      "sourceType": "com.wz.redis.config.RedissonProperties",
+      "name": "spring.redis.redisson.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否启用Redisson, 默认不启用",
+      "defaultValue": "false"
+    }
+  ]
+}

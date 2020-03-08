@@ -17,9 +17,10 @@ public class MapUtilTest {
 
     @Test
     public void beanToMap() {
-        Bean b = new Bean("zhangsan", 18, BigDecimal.TEN, new Date(), LocalDateTime.now(), true);
+        Bean b = new Bean("zhangsan", 18, BigDecimal.TEN, new Date(), LocalDateTime.now(), true, 1.1D, 1.2D, 2L, 2L, 3, 3, Bean.T.T2);
         Map<String, Object> map = MapUtil.beanToMap(b);
         log.info("Bean to Map: {}", map);
+        log.info("Map to Bean: {}", MapUtil.mapToBean(map, new Bean()));
     }
 
     @Test
@@ -32,14 +33,21 @@ public class MapUtilTest {
         map.put("date", new Date());
         map.put("birth", LocalDateTime.now());
         map.put("b", true);
+        map.put("d1", 1.1);
+        map.put("d2", 1.1);
+        map.put("l1", 2);
+        map.put("l2", 2);
+        map.put("i1", 3);
+        map.put("i2", 3);
+        map.put("t", Bean.T.T1);
 
         log.info("Map to Bean: {}", MapUtil.mapToBean(map, new Bean()));
     }
 
     @Test
     public void objectsToMaps() {
-        Bean b1 = new Bean("zhangsan", 18, BigDecimal.ONE, new Date(), LocalDateTime.now(), false);
-        Bean b2 = new Bean("lisi", 20, BigDecimal.TEN, new Date(), LocalDateTime.now(), true);
+        Bean b1 = new Bean("zhangsan", 18, BigDecimal.ONE, new Date(), LocalDateTime.now(), false, 1.1D, 1.2D, 2L, 2L, 3, 3, Bean.T.T1);
+        Bean b2 = new Bean("lisi", 20, BigDecimal.TEN, new Date(), LocalDateTime.now(), true, 1.1D, 1.2D, 2L, 2L, 3, 3, Bean.T.T2);
         List<Bean> beans = new ArrayList<>();
         beans.add(b1);
         beans.add(b2);
@@ -56,6 +64,13 @@ public class MapUtilTest {
         map1.put("date", new Date());
         map1.put("birth", LocalDateTime.now());
         map1.put("b", false);
+        map1.put("d1", 1.1);
+        map1.put("d2", 1.1);
+        map1.put("l1", 2);
+        map1.put("l2", 2);
+        map1.put("i1", 3);
+        map1.put("i2", 3);
+        map1.put("t", Bean.T.T1);
 
         Map<String, Object> map2 = new HashMap<>();
         map2.put("name", "lisi");
@@ -64,6 +79,13 @@ public class MapUtilTest {
         map2.put("date", new Date());
         map2.put("birth", LocalDateTime.now());
         map2.put("b", true);
+        map2.put("d1", 1.1);
+        map2.put("d2", 1.1);
+        map2.put("l1", 2);
+        map2.put("l2", 2);
+        map2.put("i1", 3);
+        map2.put("i2", 3);
+        map2.put("t", Bean.T.T2);
 
         List<Map<String, Object>> list = new ArrayList<>();
         list.add(map1);
@@ -97,4 +119,15 @@ class Bean {
     private Date date;
     private LocalDateTime birth;
     private boolean b;
+    private Double d1;
+    private double d2;
+    private Long l1;
+    private long l2;
+    private Integer i1;
+    private int i2;
+    private T t;
+
+    enum T {
+        T1, T2
+    }
 }

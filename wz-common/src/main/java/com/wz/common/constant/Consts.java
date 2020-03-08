@@ -40,4 +40,6 @@ public class Consts {
     public static final String SUBFIX = ":";
 
     public static final int TWO_INT = 2;
+
+    public static final String UNKNOWN_LOWER = "unknown";
 }

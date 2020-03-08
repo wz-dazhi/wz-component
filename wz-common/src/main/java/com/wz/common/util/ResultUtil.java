@@ -23,19 +23,19 @@ public class ResultUtil {
      *
      * @return
      */
-    public static Result ok() {
+    public static <T> Result<T> ok() {
         return ok(null);
     }
 
     /**
      * 成功返回对象
      *
-     * @param data
+     * @param t
      * @return
      */
-    public static Result ok(Object data) {
+    public static <T> Result<T> ok(T t) {
         ResultEnum ok = ResultEnum.OK;
-        return Result.builder().code(ok.getErrorCode()).msg(ok.getErrorMsg()).data(data).build();
+        return new Result<>(ok.getErrorCode(), ok.getErrorMsg(), t);
     }
 
     /**
@@ -43,7 +43,7 @@ public class ResultUtil {
      *
      * @return
      */
-    public static Result fail() {
+    public static <T> Result<T> fail() {
         ResultEnum se = ResultEnum.SYSTEM_ERROR;
         return fail(se.getErrorCode(), se.getErrorMsg());
     }
@@ -55,8 +55,8 @@ public class ResultUtil {
      * @param msg  自定义msg
      * @return
      */
-    public static Result fail(String code, String msg) {
-        return Result.builder().code(code).msg(msg).build();
+    public static <T> Result<T> fail(String code, String msg) {
+        return new Result<>(code, msg, null);
     }
 
     /**
@@ -65,7 +65,7 @@ public class ResultUtil {
      * @param ec {@link IErrorCode 实现类}
      * @return
      */
-    public static Result fail(IErrorCode ec) {
+    public static <T> Result<T> fail(IErrorCode ec) {
         return fail(ec.getErrorCode(), ec.getErrorMsg());
     }
 

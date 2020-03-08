@@ -24,10 +24,8 @@ public class ExecutorConfig {
 
     /**
      * 自定义spring线程池
-     *
-     * @return
      */
-    @Bean("async-executor")
+    @Bean
     @ConditionalOnMissingBean
     public Executor executor(ThreadPoolProperties prop) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

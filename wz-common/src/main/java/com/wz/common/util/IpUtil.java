@@ -1,5 +1,7 @@
 package com.wz.common.util;
 
+import com.wz.common.constant.Consts;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -11,41 +13,41 @@ import javax.servlet.http.HttpServletRequest;
  * @date: 2019-09-20 17:27
  * @version: 1.0
  */
-public final class IpUtil {
+public class IpUtil {
     private IpUtil() {
     }
 
     public static String getIpAddress(HttpServletRequest req) {
         String ip = req.getHeader("X-Forwarded-For");
         String[] ips;
-        if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
+        if (ip != null && ip.length() != 0 && !Consts.UNKNOWN_LOWER.equalsIgnoreCase(ip)) {
             if (ip.length() > 15) {
                 ips = ip.split(",");
                 for (String strIp : ips) {
-                    if (!"unknown".equalsIgnoreCase(strIp)) {
+                    if (!Consts.UNKNOWN_LOWER.equalsIgnoreCase(strIp)) {
                         ip = strIp;
                         break;
                     }
                 }
             }
         } else {
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.length() == 0 || Consts.UNKNOWN_LOWER.equalsIgnoreCase(ip)) {
                 ip = req.getHeader("Proxy-Client-IP");
             }
 
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.length() == 0 || Consts.UNKNOWN_LOWER.equalsIgnoreCase(ip)) {
                 ip = req.getHeader("WL-Proxy-Client-IP");
             }
 
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.length() == 0 || Consts.UNKNOWN_LOWER.equalsIgnoreCase(ip)) {
                 ip = req.getHeader("HTTP_CLIENT_IP");
             }
 
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.length() == 0 || Consts.UNKNOWN_LOWER.equalsIgnoreCase(ip)) {
                 ip = req.getHeader("HTTP_X_FORWARDED_FOR");
             }
 
-            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            if (ip == null || ip.length() == 0 || Consts.UNKNOWN_LOWER.equalsIgnoreCase(ip)) {
                 ip = req.getRemoteAddr();
             }
         }

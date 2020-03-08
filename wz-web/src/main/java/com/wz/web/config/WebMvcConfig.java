@@ -7,7 +7,6 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,7 +22,7 @@ import java.util.List;
  * @date: 2019/3/9 11:16 PM
  * @version: 1.0
  **/
-@EnableWebMvc
+//@EnableWebMvc
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Resource

@@ -15,7 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
  * @date: 2019/3/5 5:26 PM
  * @version: 1.0
  **/
-public class AesEncryptUtil {
+public class AesUtil {
 
     private static final String KEY = "1234567890abcdef";
 

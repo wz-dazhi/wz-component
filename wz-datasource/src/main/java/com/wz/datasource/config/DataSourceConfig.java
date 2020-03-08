@@ -135,7 +135,7 @@ public class DataSourceConfig {
     @Bean
     @Primary
     @Resource
-    public PlatformTransactionManager masterTranscationManager(DynamicDataSource dataSource) {
+    public PlatformTransactionManager masterTransactionManager(DynamicDataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 

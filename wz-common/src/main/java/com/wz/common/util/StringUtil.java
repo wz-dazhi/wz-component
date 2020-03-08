@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
  * @date: 2018/12/28 下午3:19
  * @version: 1.0
  **/
-public final class StringUtil {
+public class StringUtil {
 
     private StringUtil() {
     }

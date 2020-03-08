@@ -2,7 +2,7 @@
 <configuration debug="false" scan="true" scanPeriod="60 seconds">
 
     <!-- 默认app, 需设置为项目名称 -->
-    <property name="springAppName" value="app"/>
+    <springProperty scope="context" name="logName" source="spring.application.name" defaultValue="app"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -12,7 +12,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/${springAppName}.log</file>
+        <file>./logs/${logName}.log</file>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{linkId}] [%X{X-B3-TraceId:-}] [%X{X-B3-SpanId:-}] %p %r %t %C:%M:%L %m%xEx{full}%n
             </pattern>
@@ -20,7 +20,7 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./logs/${springAppName}-%d{yyyyMMdd}.%i.log</fileNamePattern>
+            <fileNamePattern>./logs/${logName}-%d{yyyyMMdd}.%i.log</fileNamePattern>
             <maxHistory>7</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>200MB</maxFileSize>
@@ -28,8 +28,10 @@
         </rollingPolicy>
     </appender>
 
-    <root level="info">
+<!--    <springProfile name="dev,test,pro">-->
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
+<!--    </springProfile>-->
 </configuration>

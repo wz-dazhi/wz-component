@@ -1,0 +1,48 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.wz.qiniu.config",
+      "name": "qiniu.config",
+      "type": "com.wz.qiniu.config.QiniuProperties",
+      "description": "redisson 配置"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.wz.qiniu.config.QiniuProperties",
+      "name": "qiniu.config.access-key",
+      "type": "java.lang.String",
+      "description": "Access",
+      "defaultValue": ""
+    },
+    {
+      "sourceType": "com.wz.qiniu.config.QiniuProperties",
+      "name": "qiniu.config.secret-key",
+      "type": "java.lang.String",
+      "description": "Secret Key",
+      "defaultValue": ""
+    },
+    {
+      "sourceType": "com.wz.qiniu.config.QiniuProperties",
+      "name": "qiniu.config.bucket",
+      "type": "java.lang.String",
+      "description": "空间名称",
+      "defaultValue": ""
+    },
+    {
+      "sourceType": "com.wz.qiniu.config.QiniuProperties",
+      "name": "qiniu.config.url",
+      "type": "java.lang.String",
+      "description": "url 地址",
+      "defaultValue": ""
+    },
+    {
+      "sourceType": "com.wz.qiniu.config.QiniuProperties",
+      "name": "qiniu.config.region",
+      "type": "com.wz.qiniu.enums.RegionEnum",
+      "description": "地区,默认华北",
+      "defaultValue": "HUABEI"
+    }
+  ]
+}

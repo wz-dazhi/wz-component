@@ -44,6 +44,7 @@ public class Result<T> implements Serializable {
     @ApiModelProperty("响应数据")
     private T data;
 
+    @ApiModelProperty("是否成功")
     public boolean isSuccess() {
         return ResultEnum.OK.getErrorCode().equals(code);
     }

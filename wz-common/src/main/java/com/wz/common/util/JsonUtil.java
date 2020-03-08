@@ -6,6 +6,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.wz.common.constant.DateConsts;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -13,6 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -32,6 +46,7 @@ public final class JsonUtil {
         MAPPER.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+        MAPPER.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
 
         // 允许字段不带双引号
         MAPPER.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
@@ -44,10 +59,25 @@ public final class JsonUtil {
         // 允许 json 生成器自动补全未匹配的括号
         MAPPER.configure(JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, true);
         // 设置全局的时间转化
-        SimpleDateFormat smt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat smt = new SimpleDateFormat(DateConsts.NORMAL_YYYY_MM_DD_HH_MM_SS_PATTERN);
         MAPPER.setDateFormat(smt);
         // 解决时区差8小时问题
         MAPPER.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+
+        //LocalDateTime系列序列化和反序列化模块，继承自jsr310，我们在这里修改了日期格式
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateConsts.DATE_TIME_HH_MM_SS_FORMATTER));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateConsts.DATE_DEFAULT_FORMATTER));
+        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateConsts.DATE_HH_MM_SS_FORMATTER));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateConsts.DATE_TIME_HH_MM_SS_FORMATTER));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateConsts.DATE_DEFAULT_FORMATTER));
+        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateConsts.DATE_HH_MM_SS_FORMATTER));
+
+        //Date序列化和反序列化
+        javaTimeModule.addSerializer(Date.class, new DateSerializer());
+        javaTimeModule.addDeserializer(Date.class, new DateDeserializers.DateDeserializer());
+
+        MAPPER.registerModule(javaTimeModule);
     }
 
     private JsonUtil() {

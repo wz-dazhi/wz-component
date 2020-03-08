@@ -10,7 +10,7 @@ import java.util.Collection;
  * @author: Zhi Wang
  * @createDate: 2018/9/9 上午12:08
  **/
-public final class CollectionUtil {
+public class CollectionUtil {
 
     private CollectionUtil() {
     }

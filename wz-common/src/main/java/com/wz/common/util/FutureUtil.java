@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
  * @date: 2019-11-21 18:35
  * @version: 1.0
  */
-public final class FutureUtil<T> {
+public class FutureUtil<T> {
 
     public void cancelList(List<Future<T>> futures) {
         futures.parallelStream().forEach(this::cancel);
@@ -23,4 +23,5 @@ public final class FutureUtil<T> {
             f.cancel(true);
         }
     }
+
 }

@@ -1,6 +1,6 @@
 package com.wz.encrypt.algorithm;
 
-import com.wz.common.util.AesEncryptUtil;
+import com.wz.common.util.AesUtil;
 
 /**
  * @projectName: wz
@@ -15,11 +15,11 @@ public class DefaultEncryptAlgorithm implements EncryptAlgorithm {
 
     @Override
     public String encrypt(String content, String encryptKey) throws Exception {
-        return AesEncryptUtil.aesEncrypt(content, encryptKey);
+        return AesUtil.aesEncrypt(content, encryptKey);
     }
 
     @Override
     public String decrypt(String encryptStr, String decryptKey) throws Exception {
-        return AesEncryptUtil.aesDecrypt(encryptStr, decryptKey);
+        return AesUtil.aesDecrypt(encryptStr, decryptKey);
     }
 }
