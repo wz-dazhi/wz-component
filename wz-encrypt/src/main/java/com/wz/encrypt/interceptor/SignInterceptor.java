@@ -63,7 +63,7 @@ public class SignInterceptor implements HandlerInterceptor {
         // 签名算法暂时与加解密算法一致
         String decryptSign = algorithm.decrypt(sign, properties.getKey());
         log.debug(">>> Decrypt header sign: {}", decryptSign);
-        Map<String, Object> map = JsonUtil.toBean(decryptSign, Map.class);
+        Map<String, Object> map = JsonUtil.toHashMap(decryptSign, String.class, Object.class);
         if (MapUtil.isEmpty(map)) {
             throw new SystemException(NOT_EXIST_SIGNATURE);
         }
@@ -81,7 +81,7 @@ public class SignInterceptor implements HandlerInterceptor {
 
         // POST请求只处理时间
         // GET请求处理参数和时间
-        if (req.getMethod().equals(HttpMethod.GET.name())) {
+        if (HttpMethod.GET.name().equals(req.getMethod())) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();
                 Object value = entry.getValue();
