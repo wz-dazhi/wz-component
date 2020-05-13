@@ -1,6 +1,12 @@
 package com.wz.common.util;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @projectName: wz
@@ -42,4 +48,18 @@ public class StringUtil {
     public static boolean isAnyBlank(CharSequence... css) {
         return StringUtils.isAnyBlank(css);
     }
+
+    public static List<String> split(CharSequence str, String separator) {
+        requireNonNull(str, "string is not null");
+        requireNonNull(separator, "separator is not null");
+        Iterable<String> iterable = Splitter.on(separator).omitEmptyStrings().trimResults().split(str);
+        return Lists.newArrayList(iterable);
+    }
+
+    public static String join(Iterable<String> strings, String separator) {
+        Objects.requireNonNull(strings, "strings is not null");
+        requireNonNull(separator, "separator is not null");
+        return Joiner.on(separator).join(strings);
+    }
+
 }

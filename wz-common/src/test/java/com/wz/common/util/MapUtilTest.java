@@ -112,7 +112,7 @@ public class MapUtilTest {
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-class Bean {
+class Bean implements Comparable<Bean> {
     private String name;
     private int age;
     private BigDecimal price;
@@ -126,6 +126,11 @@ class Bean {
     private Integer i1;
     private int i2;
     private T t;
+
+    @Override
+    public int compareTo(Bean b) {
+        return this.price.compareTo(b.price);
+    }
 
     enum T {
         T1, T2

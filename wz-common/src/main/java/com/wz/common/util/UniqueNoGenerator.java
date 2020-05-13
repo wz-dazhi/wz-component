@@ -65,6 +65,15 @@ public final class UniqueNoGenerator {
     // 数据标识id部分
     private final long datacenterId;
 
+    /**
+     * 默认实体
+     */
+    private static final UniqueNoGenerator UNIQUE_NO_GENERATOR = new UniqueNoGenerator();
+
+    public static UniqueNoGenerator getDefaultInstance() {
+        return UNIQUE_NO_GENERATOR;
+    }
+
     public UniqueNoGenerator() {
         this.datacenterId = getDatacenterId(maxDatacenterId);
         this.workerId = getMaxWorkerId(datacenterId, maxWorkerId);
@@ -169,7 +178,7 @@ public final class UniqueNoGenerator {
                 id = id % (maxDatacenterId + 1);
             }
         } catch (Exception e) {
-            log.error("自动生成ID发送异常: {}", e.getMessage());
+            log.error("自动生成ID发生异常: {}", e.getMessage());
         }
         return id;
     }

@@ -11,6 +11,8 @@
         <module>wz-redis</module>
         <module>wz-mail</module>
         <module>wz-qiniu</module>
+        <module>wz-rabbitmq</module>
+        <module>wz-gateway</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -28,6 +30,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
+        <spring-cloud-starter-alibaba-nacos-discovery.version>2.2.1.RELEASE
+        </spring-cloud-starter-alibaba-nacos-discovery.version>
         <wz-component.version>0.0.1-SNAPSHOT</wz-component.version>
         <mybatis-plus.version>3.1.0</mybatis-plus.version>
         <druid.version>1.1.10</druid.version>
@@ -85,7 +90,34 @@
                 <artifactId>wz-qiniu</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.wz</groupId>
+                <artifactId>wz-rabbitmq</artifactId>
+                <version>${wz-component.version}</version>
+            </dependency>
+
+            <!-- wz cloud -->
+            <dependency>
+                <groupId>com.wz</groupId>
+                <artifactId>wz-gateway</artifactId>
+                <version>${wz-component.version}</version>
+            </dependency>
             <!-- wz-component end -->
+
+            <!-- spring cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${spring-cloud-starter-alibaba-nacos-discovery.version}</version>
+            </dependency>
+
             <!-- thymeleaf java8日期格式化 -->
             <dependency>
                 <groupId>org.thymeleaf.extras</groupId>
@@ -224,33 +256,50 @@
         </dependencies>
     </dependencyManagement>
 
-    <!--内网-->
-    <!--    <distributionManagement>-->
-    <!--        <repository>-->
-    <!--            <id>releases</id>-->
-    <!--            <name>Nexus Release Repository</name>-->
-    <!--            <url>http://192.168.199.100:9000/repository/maven-releases/</url>-->
-    <!--        </repository>-->
-    <!--        <snapshotRepository>-->
-    <!--            <id>snapshots</id>-->
-    <!--            <name>Nexus Snapshot Repository</name>-->
-    <!--            <url>http://192.168.199.100:9000/repository/maven-snapshots/</url>-->
-    <!--        </snapshotRepository>-->
-    <!--    </distributionManagement>-->
+    <dependencies>
+        <!-- kotlin support -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-kotlin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-    <!--外网-->
+    <!--内网-->
     <distributionManagement>
         <repository>
             <id>releases</id>
             <name>Nexus Release Repository</name>
-            <url>http://nexus.cggqsh.xyz/repository/maven-releases/</url>
+            <url>http://192.168.199.100:9000/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>Nexus Snapshot Repository</name>
-            <url>http://nexus.cggqsh.xyz/repository/maven-snapshots/</url>
+            <url>http://192.168.199.100:9000/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <!--外网-->
+    <!--    <distributionManagement>-->
+    <!--        <repository>-->
+    <!--            <id>releases</id>-->
+    <!--            <name>Nexus Release Repository</name>-->
+    <!--            <url>http://nexus.cggqsh.xyz/repository/maven-releases/</url>-->
+    <!--        </repository>-->
+    <!--        <snapshotRepository>-->
+    <!--            <id>snapshots</id>-->
+    <!--            <name>Nexus Snapshot Repository</name>-->
+    <!--            <url>http://nexus.cggqsh.xyz/repository/maven-snapshots/</url>-->
+    <!--        </snapshotRepository>-->
+    <!--    </distributionManagement>-->
 
     <build>
         <plugins>
@@ -268,6 +317,29 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
             </plugin>
         </plugins>
     </build>
