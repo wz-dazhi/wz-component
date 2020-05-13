@@ -1,0 +1,119 @@
+{
+  "groups": [
+    {
+      "name": "rabbit.queue",
+      "type": "com.wz.rabbitmq.bean.QueueProperties",
+      "sourceType": "com.wz.rabbitmq.bean.QueueProperties"
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.exchange-argument",
+      "type": "com.wz.rabbitmq.bean.ExchangeInfo$ExchangeArgument",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo"
+    },
+    {
+      "name": "rabbit.queue.queues.queue-info.queue-argument",
+      "type": "com.wz.rabbitmq.bean.QueueInfo$QueueArgument",
+      "sourceType": "com.wz.rabbitmq.bean.QueueInfo"
+    }
+  ],
+  "properties": [
+    {
+      "name": "rabbit.queue.queues",
+      "type": "java.util.List<com.wz.rabbitmq.bean.QueueProperties$RabbitQueueInfo>",
+      "description": "队列列表",
+      "sourceType": "com.wz.rabbitmq.bean.QueueProperties"
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.auto-delete",
+      "type": "Boolean",
+      "description": "自动删除",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo",
+      "defaultValue": false
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.declare",
+      "type": "java.lang.Boolean",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo",
+      "defaultValue": true
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.declaring-admins",
+      "type": "java.lang.Object[]",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo"
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.delayed",
+      "type": "java.lang.Boolean",
+      "description": "延时",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo",
+      "defaultValue": false
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.durable",
+      "type": "java.lang.Boolean",
+      "description": "持久化",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo",
+      "defaultValue": true
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.ignore-declaration-exceptions",
+      "type": "java.lang.Boolean",
+      "description": "忽略声明异常",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo",
+      "defaultValue": false
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.internal",
+      "type": "java.lang.Boolean",
+      "description": "是否内置的，如果为true，只能通过Exchange到Exchange",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo",
+      "defaultValue": false
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.name",
+      "type": "java.lang.String",
+      "description": "交换机名称",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo"
+    },
+    {
+      "name": "rabbit.queue.queues.exchange-info.type",
+      "type": "java.lang.String",
+      "description": "交换机类型 @see org.springframework.amqp.core.ExchangeTypes",
+      "sourceType": "com.wz.rabbitmq.bean.ExchangeInfo"
+    },
+    {
+      "name": "rabbit.queue.queues.queue-info.auto-delete",
+      "type": "java.lang.Boolean",
+      "description": "是否自动删除，当没有生产者或者消费者使用此队列，该队列会自动删除",
+      "sourceType": "com.wz.rabbitmq.bean.QueueInfo",
+      "defaultValue": false
+    },
+    {
+      "name": "rabbit.queue.queues.queue-info.durable",
+      "type": "java.lang.Boolean",
+      "description": "是否持久化, 默认true",
+      "sourceType": "com.wz.rabbitmq.bean.QueueInfo",
+      "defaultValue": true
+    },
+    {
+      "name": "rabbit.queue.queues.queue-info.exclusive",
+      "type": "java.lang.Boolean",
+      "description": "独有的,只能被当前创建的连接使用,而且当连接关闭后队列即被删除",
+      "sourceType": "com.wz.rabbitmq.bean.QueueInfo",
+      "defaultValue": false
+    },
+    {
+      "name": "rabbit.queue.queues.queue-info.name",
+      "type": "java.lang.String",
+      "description": "队列名字",
+      "sourceType": "com.wz.rabbitmq.bean.QueueInfo"
+    },
+    {
+      "name": "rabbit.queue.queues.queue-info.routing-key",
+      "type": "java.lang.String",
+      "description": "routingKey",
+      "sourceType": "com.wz.rabbitmq.bean.QueueInfo"
+    }
+  ],
+  "hints": []
+}
