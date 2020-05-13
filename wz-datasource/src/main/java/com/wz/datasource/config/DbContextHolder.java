@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @projectName: wz-datasource
@@ -23,7 +23,7 @@ public final class DbContextHolder {
     /**
      * 用于轮循的计数器
      */
-    private static final AtomicInteger COUNT = new AtomicInteger();
+    private static final AtomicLong COUNT = new AtomicLong();
 
     /**
      * Maintain variable for every thread, to avoid effect other thread
@@ -69,7 +69,7 @@ public final class DbContextHolder {
     /**
      * Use master data source.
      */
-    static void useMasterDataSource() {
+    public static void useMasterDataSource() {
         CONTEXT_HOLDER.set(DBEnum.MASTER.name());
     }
 
@@ -78,8 +78,8 @@ public final class DbContextHolder {
      */
     public static void useSlaveDataSource() {
         try {
-            int datasourceKeyIndex = COUNT.get() % SLAVE_DATA_SOURCE_KEYS.size();
-            CONTEXT_HOLDER.set(SLAVE_DATA_SOURCE_KEYS.get(datasourceKeyIndex).name());
+            long datasourceKeyIndex = COUNT.get() % SLAVE_DATA_SOURCE_KEYS.size();
+            CONTEXT_HOLDER.set(SLAVE_DATA_SOURCE_KEYS.get((int) datasourceKeyIndex).name());
             COUNT.incrementAndGet();
         } catch (Exception e) {
             log.error("Switch slave datasource failed, err msg is {}, e: {}", e.getMessage(), e);

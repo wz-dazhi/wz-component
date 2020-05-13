@@ -1,5 +1,6 @@
 package com.wz.datasource.aspectj;
 
+import com.wz.datasource.annotation.Master;
 import com.wz.datasource.config.DbContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -7,7 +8,10 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Method;
 
 /**
  * @projectName: wz
@@ -39,10 +43,17 @@ public class DynamicDataSourceAspect {
      */
     @Before("mapperAspect()")
     public void switchDataSource(JoinPoint point) {
-        if (isQueryMethod(point.getSignature().getName())) {
-            DbContextHolder.useSlaveDataSource();
-            log.debug("Switch DataSource to [{}] in Method [{}]", DbContextHolder.getDataSourceKey(), point.getSignature());
+        MethodSignature sign = (MethodSignature) point.getSignature();
+        Method m = sign.getMethod();
+        Master master = m.getAnnotation(Master.class);
+        if (master == null) {
+            if (isQueryMethod(point.getSignature().getName())) {
+                DbContextHolder.useSlaveDataSource();
+            }
+        } else {
+            DbContextHolder.useMasterDataSource();
         }
+        log.debug("Switch DataSource to [{}] in Method [{}]", DbContextHolder.getDataSourceKey(), point.getSignature());
     }
 
     /**
