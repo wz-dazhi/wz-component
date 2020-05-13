@@ -64,15 +64,15 @@ public class RedisSingleLock {
     /**
      * redisTemplate 封装的string对象
      */
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
 
-    public RedisSingleLock(RedisTemplate<String, Object> redisTemplate, String key, String requestId) {
+    public RedisSingleLock(RedisTemplate<String, String> redisTemplate, String key, String requestId) {
         this.redisTemplate = Objects.requireNonNull(redisTemplate, "RedisTemplate 不能为null.");
         this.key = this.key + Objects.requireNonNull(key, "Key 不能为null.");
         this.requestId = Objects.requireNonNull(requestId, "RequestId 不能为null.");
     }
 
-    public RedisSingleLock(RedisTemplate<String, Object> redisTemplate, String key, String requestId, long expire) {
+    public RedisSingleLock(RedisTemplate<String, String> redisTemplate, String key, String requestId, long expire) {
         this(redisTemplate, key, requestId);
         if (expire <= 0) {
             throw new IllegalArgumentException("Expire 过期时间不能低于0.");
@@ -80,7 +80,7 @@ public class RedisSingleLock {
         this.expire = expire;
     }
 
-    public RedisSingleLock(RedisTemplate<String, Object> redisTemplate, String key, String requestId, long expire, TimeUnit unit) {
+    public RedisSingleLock(RedisTemplate<String, String> redisTemplate, String key, String requestId, long expire, TimeUnit unit) {
         this(redisTemplate, key, requestId, expire);
         this.unit = Objects.requireNonNull(unit, "TimeUnit 不能为null.");
     }
@@ -98,8 +98,8 @@ public class RedisSingleLock {
      */
     public boolean unLock() {
         if (isLock) {
-            RedisScript redisScript = RedisScript.of(UNLOCK_LUA_SCRIPT, Long.class);
-            Long result = (Long) redisTemplate.execute(redisScript, Collections.singletonList(key), requestId);
+            RedisScript<Long> redisScript = RedisScript.of(UNLOCK_LUA_SCRIPT);
+            Long result = redisTemplate.execute(redisScript, Collections.singletonList(key), requestId);
             log.debug("---> key: [{}] 解锁: [{}]. 返回结果: {}", key, requestId, result);
             isLock = false;
             // 解锁失败, 可能设置的锁超时时间短. 锁已经过期了

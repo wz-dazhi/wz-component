@@ -1,6 +1,5 @@
 package com.wz.redis.util;
 
-import com.google.common.collect.Lists;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.MapUtil;
 import com.wz.common.util.StringUtil;
@@ -9,10 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -82,11 +78,7 @@ public class RedisUtil {
      */
     public void del(String... keys) {
         if (null != keys && keys.length > 0) {
-            if (keys.length == 1) {
-                redisTemplate.delete(keys[0]);
-            } else {
-                redisTemplate.delete(Arrays.asList(keys));
-            }
+            redisTemplate.delete(Arrays.asList(keys));
         }
     }
 
@@ -136,9 +128,7 @@ public class RedisUtil {
      * </p>
      */
     public Object get(String key) {
-        if (StringUtil.isBlank(key)) {
-            throw new RuntimeException("key 不能为空");
-        }
+        StringUtil.requireNonNull(key, "key 不能为空");
         return valueOperations.get(key);
     }
 
@@ -148,9 +138,7 @@ public class RedisUtil {
      * @Description 缓存的bean 对象
      */
     public <T> T get(String key, Class<T> clazz) {
-        if (StringUtil.isBlank(key)) {
-            throw new RuntimeException("key 不能为空");
-        }
+        StringUtil.requireNonNull(key, "key 不能为空");
         return JsonUtil.toBean(JsonUtil.toJsonString(this.get(key)), clazz);
     }
 
@@ -161,14 +149,8 @@ public class RedisUtil {
      * @Description 获取缓存的list对象
      */
     public <T> List<T> getList(String key, Class<T> clazz) {
-        if (StringUtil.isBlank(key)) {
-            throw new RuntimeException("key 不能为空");
-        }
-        List list = JsonUtil.toBean(JsonUtil.toJsonString(this.get(key)), List.class);
-        if (null == list || list.isEmpty()) {
-            return Lists.newArrayList();
-        }
-        return MapUtil.mapsToObjects(list, clazz);
+        StringUtil.requireNonNull(key, "key 不能为空");
+        return JsonUtil.toArrayList(JsonUtil.toJsonString(this.get(key)), clazz);
     }
 
     /**
@@ -189,7 +171,7 @@ public class RedisUtil {
      */
     public Long incr(String key, long delta) {
         if (delta <= 0) {
-            throw new RuntimeException("递增因子必须大于0");
+            throw new IllegalArgumentException("递增因子必须大于0");
         }
         return valueOperations.increment(key, delta);
     }
@@ -203,7 +185,7 @@ public class RedisUtil {
      */
     public Double incr(String key, double delta) {
         if (delta <= 0) {
-            throw new RuntimeException("递增因子必须大于0");
+            throw new IllegalArgumentException("递增因子必须大于0");
         }
         return valueOperations.increment(key, delta);
     }
@@ -226,7 +208,7 @@ public class RedisUtil {
      */
     public Long decr(String key, long delta) {
         if (delta <= 0) {
-            throw new RuntimeException("递减因子必须大于0");
+            throw new IllegalArgumentException("递减因子必须大于0");
         }
         return valueOperations.increment(key, -delta);
     }
@@ -240,7 +222,7 @@ public class RedisUtil {
      */
     public Double decr(String key, double delta) {
         if (delta <= 0) {
-            throw new RuntimeException("递减因子必须大于0");
+            throw new IllegalArgumentException("递减因子必须大于0");
         }
         return valueOperations.increment(key, -delta);
     }
@@ -253,25 +235,25 @@ public class RedisUtil {
      * @param value
      * @Description hash 放入缓存
      */
-    public void hset(String key, String field, Object value) {
-        hashOperations.put(key, field, value);
+    public <HK, HV> void hset(String key, HK field, HV value) {
+        redisTemplate.<HK, HV>opsForHash().put(key, field, value);
     }
 
     /**
      * @Description hash放入缓存, 并设置过期时间. 单位: 秒
      */
-    public void hset(String key, String field, Object value, long time) {
+    public <HK, HV> void hset(String key, HK field, HV value, long time) {
         this.hset(key, field, value, time, TimeUnit.SECONDS);
     }
 
     /**
      * @Description hash放入缓存, 并设置过期时间
      */
-    public void hset(String key, String field, Object value, long time, TimeUnit unit) {
+    public <HK, HV> void hset(String key, HK field, HV value, long time, TimeUnit unit) {
         if (time <= 0) {
-            throw new RuntimeException("time [" + time + "]不能小于0");
+            throw new IllegalArgumentException("time [" + time + "]不能小于0");
         }
-        hashOperations.put(key, field, value);
+        redisTemplate.<HK, HV>opsForHash().put(key, field, value);
         expire(key, time, unit);
     }
 
@@ -282,43 +264,49 @@ public class RedisUtil {
      * @param field field不能为空
      * @return
      */
-    public Object hget(String key, String field) {
-        return hashOperations.get(key, field);
+    public <HK, HV> HV hget(String key, HK field) {
+        StringUtil.requireNonNull(key, "key 不能为空");
+        Objects.requireNonNull(field, "field 不能为空");
+        return redisTemplate.<HK, HV>opsForHash().get(key, field);
     }
 
     /**
-     * HashSet
+     * hmset
      *
      * @param key 键
      * @param map 对应多个键值
      */
-    public void hmset(String key, Map<String, Object> map) {
-        hashOperations.putAll(key, map);
+    public <HK, HV> void hmset(String key, Map<HK, HV> map) {
+        StringUtil.requireNonNull(key, "key 不能为空");
+        Objects.requireNonNull(map, "map 不能为空");
+        redisTemplate.<HK, HV>opsForHash().putAll(key, map);
     }
 
     /**
-     * HashSet 并设置时间
+     * hmset 并设置时间
      *
      * @param key  键
      * @param map  对应多个键值
      * @param time 时间(秒)
      */
-    public void hmset(String key, Map<String, Object> map, long time) {
+    public <HK, HV> void hmset(String key, Map<HK, HV> map, long time) {
         this.hmset(key, map, time, TimeUnit.SECONDS);
     }
 
     /**
-     * HashSet 并设置时间
+     * hmset 并设置时间
      *
      * @param key  键
      * @param map  对应多个键值
      * @param time 时间
      */
-    public void hmset(String key, Map<String, Object> map, long time, TimeUnit unit) {
+    public <HK, HV> void hmset(String key, Map<HK, HV> map, long time, TimeUnit unit) {
+        StringUtil.requireNonNull(key, "key 不能为空");
+        Objects.requireNonNull(map, "map 不能为空");
         if (time <= 0) {
             throw new RuntimeException("time [" + time + "]不能小于0");
         }
-        hashOperations.putAll(key, map);
+        redisTemplate.<HK, HV>opsForHash().putAll(key, map);
         expire(key, time, unit);
     }
 
@@ -330,9 +318,8 @@ public class RedisUtil {
      * @param time 时间(秒)
      */
     public <T> void hmset(String key, T t, long time) {
-        if (null == t) {
-            throw new RuntimeException("Bean t 不能为null");
-        }
+        StringUtil.requireNonNull(key, "key 不能为空");
+        Objects.requireNonNull(t, "t 不能为空");
         this.hmset(key, MapUtil.beanToMap(t), time);
     }
 
@@ -342,8 +329,9 @@ public class RedisUtil {
      * @param key key不能为空
      * @return
      */
-    public Map<String, Object> hmget(String key) {
-        return hashOperations.entries(key);
+    public <HK, HV> Map<HK, HV> hmget(String key) {
+        StringUtil.requireNonNull(key, "key 不能为空");
+        return redisTemplate.<HK, HV>opsForHash().entries(key);
     }
 
     /**
@@ -353,6 +341,8 @@ public class RedisUtil {
      * @return
      */
     public <T> T hmget(String key, Class<T> clazz) {
+        StringUtil.requireNonNull(key, "key 不能为空");
+        Objects.requireNonNull(clazz, "clazz 不能为空");
         Map<String, Object> map = hashOperations.entries(key);
         if (map.isEmpty()) {
             return null;
@@ -360,7 +350,7 @@ public class RedisUtil {
         try {
             return MapUtil.mapToBean(map, clazz.newInstance());
         } catch (InstantiationException | IllegalAccessException e) {
-            log.error("根据key[{}]获取对象[{}], 转换异常: {}", key, clazz.getName(), e.getMessage());
+            log.error("根据key[{}]获取对象[{}], 转换异常: {}, e: ", key, clazz.getName(), e.getMessage(), e);
         }
         return null;
     }
@@ -371,6 +361,8 @@ public class RedisUtil {
      * @Description 删除hash中的值
      */
     public Long hdel(String key, Object... hashKeys) {
+        StringUtil.requireNonNull(key, "key 不能为空");
+        Objects.requireNonNull(hashKeys, "hashKeys 不能为空");
         return hashOperations.delete(key, hashKeys);
     }
 
@@ -381,7 +373,7 @@ public class RedisUtil {
      * @param field 项 不能为null
      * @return true 存在 false不存在
      */
-    public Boolean hHasKey(String key, String field) {
+    public <HK> Boolean hHasKey(String key, HK field) {
         return hashOperations.hasKey(key, field);
     }
 
@@ -389,8 +381,10 @@ public class RedisUtil {
      * hash递增 如果不存在,就会创建一个 并把新增后的值返回
      */
     public Double hincr(String key, String field, double by) {
+        StringUtil.requireNonNull(key, "key 不能为空");
+        StringUtil.requireNonNull(field, "field 不能为空");
         if (by <= 0) {
-            throw new RuntimeException("hash递增因子必须大于0");
+            throw new IllegalArgumentException("hash递增因子必须大于0");
         }
         return hashOperations.increment(key, field, by);
     }
@@ -400,7 +394,7 @@ public class RedisUtil {
      */
     public Double hdecr(String key, String field, double by) {
         if (by <= 0) {
-            throw new RuntimeException("hash递减因子必须大于0");
+            throw new IllegalArgumentException("hash递减因子必须大于0");
         }
         return hashOperations.increment(key, field, -by);
     }
@@ -413,7 +407,7 @@ public class RedisUtil {
      * @return
      * @Description set 放入缓存
      */
-    public Long sSet(String key, Object... values) {
+    public <V> Long sSet(String key, V... values) {
         return setOperations.add(key, values);
     }
 
@@ -424,9 +418,9 @@ public class RedisUtil {
      * @return
      * @Description set放入缓存, 并设置过期时间
      */
-    public boolean sSet(long time, String key, Object... values) {
+    public <V> boolean sSet(long time, String key, V... values) {
         if (time <= 0) {
-            throw new RuntimeException("time [" + time + "]不能小于0");
+            throw new IllegalArgumentException("time [" + time + "]不能小于0");
         }
         setOperations.add(key, values);
         return expire(key, time);
@@ -448,7 +442,7 @@ public class RedisUtil {
      * @return 存在 成功 false 不存在
      * @Description set 是否存在
      */
-    public Boolean sHasKey(String key, Object value) {
+    public <V> Boolean sHasKey(String key, V value) {
         return setOperations.isMember(key, value);
     }
 
@@ -472,7 +466,7 @@ public class RedisUtil {
      * @param end   结束  0 到 -1代表所有值
      * @return
      */
-    public List<Object> lGet(String key, long start, long end) {
+    public List<Object> lRange(String key, long start, long end) {
         return listOperations.range(key, start, end);
     }
 
@@ -482,7 +476,7 @@ public class RedisUtil {
      * @param key 键
      * @return
      */
-    public Long lGetListSize(String key) {
+    public Long lSize(String key) {
         return listOperations.size(key);
     }
 
@@ -493,7 +487,7 @@ public class RedisUtil {
      * @param index 索引  index>=0时， 0 表头，1 第二个元素，依次类推；index<0时，-1，表尾，-2倒数第二个元素，依次类推
      * @return
      */
-    public Object lGetIndex(String key, long index) {
+    public Object lIndex(String key, long index) {
         return listOperations.index(key, index);
     }
 
@@ -504,8 +498,19 @@ public class RedisUtil {
      * @param value 值
      * @return
      */
-    public Long lSet(String key, Object value) {
+    public <V> Long lRightPush(String key, V value) {
         return listOperations.rightPush(key, value);
+    }
+
+    /**
+     * 将list放入缓存
+     *
+     * @param key   键
+     * @param value 值
+     * @return
+     */
+    public <V> Long lLeftPush(String key, V value) {
+        return listOperations.leftPush(key, value);
     }
 
     /**
@@ -516,9 +521,9 @@ public class RedisUtil {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, Object value, long time) {
+    public <V> boolean lRightPush(String key, V value, long time) {
         if (time <= 0) {
-            throw new RuntimeException("time [" + time + "]不能小于0");
+            throw new IllegalArgumentException("time [" + time + "]不能小于0");
         }
         listOperations.rightPush(key, value);
         return expire(key, time);
@@ -531,7 +536,7 @@ public class RedisUtil {
      * @param value 值
      * @return
      */
-    public Long lSet(String key, List<Object> value) {
+    public <V> Long lRightPushAll(String key, List<V> value) {
         return listOperations.rightPushAll(key, value);
     }
 
@@ -543,11 +548,54 @@ public class RedisUtil {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, List<Object> value, long time) {
+    public boolean lRightPushAll(String key, List<Object> value, long time) {
         if (time <= 0) {
-            throw new RuntimeException("time [" + time + "]不能小于0");
+            throw new IllegalArgumentException("time [" + time + "]不能小于0");
         }
         listOperations.rightPushAll(key, value);
+        return expire(key, time);
+    }
+
+    /**
+     * 将list放入缓存
+     *
+     * @param key   键
+     * @param value 值
+     * @param time  时间(秒)
+     * @return
+     */
+    public <V> boolean lLeftPush(String key, V value, long time) {
+        if (time <= 0) {
+            throw new IllegalArgumentException("time [" + time + "]不能小于0");
+        }
+        listOperations.leftPush(key, value);
+        return expire(key, time);
+    }
+
+    /**
+     * 将list放入缓存
+     *
+     * @param key   键
+     * @param value 值
+     * @return
+     */
+    public <V> Long lLeftPushAll(String key, List<V> value) {
+        return listOperations.leftPushAll(key, value);
+    }
+
+    /**
+     * 将list放入缓存
+     *
+     * @param key   键
+     * @param value 值
+     * @param time  时间(秒)
+     * @return
+     */
+    public boolean lLeftPushAll(String key, List<Object> value, long time) {
+        if (time <= 0) {
+            throw new IllegalArgumentException("time [" + time + "]不能小于0");
+        }
+        listOperations.leftPushAll(key, value);
         return expire(key, time);
     }
 
@@ -559,7 +607,7 @@ public class RedisUtil {
      * @param value 值
      * @return
      */
-    public void lUpdateIndex(String key, long index, Object value) {
+    public <V> void lSet(String key, long index, V value) {
         listOperations.set(key, index, value);
     }
 
@@ -571,7 +619,7 @@ public class RedisUtil {
      * @param value 值
      * @return 移除的个数
      */
-    public Long lRemove(String key, long count, Object value) {
+    public <V> Long lRemove(String key, long count, V value) {
         return listOperations.remove(key, count, value);
     }
 
@@ -584,7 +632,7 @@ public class RedisUtil {
      * @return
      * @Description 将zset 放入缓存,添加元素并制定序号
      */
-    public Boolean zSet(String key, Object value, double v1) {
+    public <V> Boolean zAdd(String key, V value, double v1) {
         return zSetOperations.add(key, value, v1);
     }
 
@@ -595,9 +643,9 @@ public class RedisUtil {
      * @return
      * @Description 将zset 放入缓存,添加元素并制定序号,并设置过期时间
      */
-    public boolean zSet(String key, Object value, double v1, long time) {
+    public <V> boolean zAdd(String key, V value, double v1, long time) {
         if (time <= 0) {
-            throw new RuntimeException("time [" + time + "]不能小于0");
+            throw new IllegalArgumentException("time [" + time + "]不能小于0");
         }
         zSetOperations.add(key, value, v1);
         return expire(key, time);
@@ -609,7 +657,7 @@ public class RedisUtil {
      * @return 1表示添加成功, 0表示添加失败
      * @Description 添加多个元素, 并指定序号
      */
-    public Long zSet(String key, Set<ZSetOperations.TypedTuple<Object>> set) {
+    public Long zAdd(String key, Set<ZSetOperations.TypedTuple<Object>> set) {
         return zSetOperations.add(key, set);
     }
 
@@ -619,9 +667,9 @@ public class RedisUtil {
      * @return 1表示添加成功, 0表示添加失败
      * @Description 添加多个元素, 并指定序号,设置过期时间
      */
-    public boolean zSet(String key, Set<ZSetOperations.TypedTuple<Object>> set, long time) {
+    public boolean zAdd(String key, Set<ZSetOperations.TypedTuple<Object>> set, long time) {
         if (time <= 0) {
-            throw new RuntimeException("time [" + time + "]不能小于0");
+            throw new IllegalArgumentException("time [" + time + "]不能小于0");
         }
         zSetOperations.add(key, set);
         return expire(key, time);
@@ -633,7 +681,7 @@ public class RedisUtil {
      * @return
      * @Description 移除zSet中的元素
      */
-    public Long zDel(String key, Object... values) {
+    public Long zRemove(String key, Object... values) {
         return zSetOperations.remove(key, values);
     }
 }
