@@ -10,7 +10,7 @@ import com.wz.common.enums.ResultEnum;
  * @author: Zhi Wang
  * @createDate: 2018/9/8 下午6:24
  **/
-public class BusinessException extends Exception {
+public class BusinessException extends RuntimeException {
 
     private IErrorCode iErrorCode;
 

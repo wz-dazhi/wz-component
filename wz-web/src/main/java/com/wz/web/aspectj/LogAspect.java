@@ -31,11 +31,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class LogAspect {
 
-    @Pointcut("execution( * com.*.controller.*.*(..) ) || " +
-            "execution( * com.*.*.controller.*.*(..) ) || " +
-            "execution( * com.*.*.*.controller.*.*(..) ) || " +
-            "execution( * com.*.*.*.controller.*.*.*(..) ) || " +
-            "execution( * com.*.*.*.controller.*.*.*.*(..) ) ")
+    @Pointcut("execution( * com..controller..*.*(..) ) ")
     private void log() {
     }
 

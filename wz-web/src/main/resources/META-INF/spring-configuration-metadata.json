@@ -36,7 +36,6 @@
       "description": "队列最大长度",
       "defaultValue": "100"
     },
-    ,
     {
       "sourceType": "com.wz.web.config.ThreadPoolProperties",
       "name": "thread.pool.keep-alive-second",

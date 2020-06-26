@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.5.RELEASE</version>
+        <version>2.2.5.RELEASE</version> <!-- spring-boot.version -->
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.wz</groupId>
@@ -31,8 +31,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring-cloud.version>Hoxton.RELEASE</spring-cloud.version>
-        <spring-cloud-starter-alibaba-nacos-discovery.version>2.2.1.RELEASE
-        </spring-cloud-starter-alibaba-nacos-discovery.version>
+        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+        <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
+        <kotlin.version>1.3.61</kotlin.version>
+        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <wz-component.version>0.0.1-SNAPSHOT</wz-component.version>
         <mybatis-plus.version>3.1.0</mybatis-plus.version>
         <druid.version>1.1.10</druid.version>
@@ -114,10 +116,11 @@
             </dependency>
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-                <version>${spring-cloud-starter-alibaba-nacos-discovery.version}</version>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
-
             <!-- thymeleaf java8日期格式化 -->
             <dependency>
                 <groupId>org.thymeleaf.extras</groupId>
@@ -257,52 +260,71 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- kotlin support -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-kotlin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
-            <scope>test</scope>
+            <artifactId>kotlin-stdlib</artifactId>
         </dependency>
     </dependencies>
 
     <!--内网-->
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <name>Nexus Release Repository</name>
-            <url>http://192.168.199.100:9000/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>Nexus Snapshot Repository</name>
-            <url>http://192.168.199.100:9000/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <!--外网-->
     <!--    <distributionManagement>-->
     <!--        <repository>-->
     <!--            <id>releases</id>-->
     <!--            <name>Nexus Release Repository</name>-->
-    <!--            <url>http://nexus.cggqsh.xyz/repository/maven-releases/</url>-->
+    <!--            <url>http://192.168.199.100:9000/repository/maven-releases/</url>-->
     <!--        </repository>-->
     <!--        <snapshotRepository>-->
     <!--            <id>snapshots</id>-->
     <!--            <name>Nexus Snapshot Repository</name>-->
-    <!--            <url>http://nexus.cggqsh.xyz/repository/maven-snapshots/</url>-->
+    <!--            <url>http://192.168.199.100:9000/repository/maven-snapshots/</url>-->
     <!--        </snapshotRepository>-->
     <!--    </distributionManagement>-->
 
+    <!--外网-->
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://nexus.cggqsh.xyz/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://nexus.cggqsh.xyz/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>java-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>java-test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -318,28 +340,78 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+                <configuration>
+                    <args>
+                        <arg>-Xjsr305=strict</arg>
+                    </args>
+                    <compilerPlugins>
+                        <plugin>spring</plugin>
+                    </compilerPlugins>
+                </configuration>
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>src/main/kotlin</sourceDir>
+                                <sourceDir>src/main/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
-                        <phase>test-compile</phase>
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>src/test/kotlin</sourceDir>
+                                <sourceDir>src/test/java</sourceDir>
+                            </sourceDirs>
+                        </configuration>
                     </execution>
+
+                    <!-- 注解处理器install 控制台会报错 -->
+                    <!--                    <execution>-->
+                    <!--                        <id>kapt</id>-->
+                    <!--                        <goals>-->
+                    <!--                            <goal>kapt</goal>-->
+                    <!--                        </goals>-->
+                    <!--                        <configuration>-->
+                    <!--                            <sourceDirs>-->
+                    <!--                                <sourceDir>src/main/kotlin</sourceDir>-->
+                    <!--                                <sourceDir>src/main/java</sourceDir>-->
+                    <!--                            </sourceDirs>-->
+                    <!--                            <annotationProcessorPaths>-->
+                    <!--                                &lt;!&ndash; 注解处理器 &ndash;&gt;-->
+                    <!--                                <annotationProcessorPath>-->
+                    <!--                                    <groupId>org.springframework.boot</groupId>-->
+                    <!--                                    <artifactId>spring-boot-configuration-processor</artifactId>-->
+                    <!--                                    <version>${spring-boot.version}</version>-->
+                    <!--                                </annotationProcessorPath>-->
+                    <!--                            </annotationProcessorPaths>-->
+                    <!--                        </configuration>-->
+                    <!--                    </execution>-->
                 </executions>
-                <configuration>
-                    <jvmTarget>1.8</jvmTarget>
-                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-allopen</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-maven-noarg</artifactId>
+                        <version>${kotlin.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

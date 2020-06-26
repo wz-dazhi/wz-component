@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.redisson.config.ConfigSupport;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -36,6 +37,7 @@ public class RedissonAutoConfiguration {
     private final ApplicationContext ctx;
 
     @Bean(destroyMethod = "shutdown")
+    @SuppressWarnings("unchecked")
     @ConditionalOnMissingBean(RedissonClient.class)
     public RedissonClient redissonClient() {
         if (!redissonProperties.isEnable()) {
@@ -58,7 +60,8 @@ public class RedissonAutoConfiguration {
         if (redissonProperties.getConfig() != null) {
             try {
                 InputStream is = getConfigStream();
-                config = Config.fromJSON(is);
+                ConfigSupport support = new ConfigSupport();
+                config = support.fromJSON(is, Config.class);
             } catch (IOException e) {
                 // trying next format
                 try {
@@ -117,7 +120,7 @@ public class RedissonAutoConfiguration {
     }
 
     private String[] convert(List<String> nodesObject) {
-        List<String> nodes = new ArrayList<String>(nodesObject.size());
+        List<String> nodes = new ArrayList<>(nodesObject.size());
         for (String node : nodesObject) {
             if (!node.startsWith("redis://") && !node.startsWith("rediss://")) {
                 nodes.add("redis://" + node);

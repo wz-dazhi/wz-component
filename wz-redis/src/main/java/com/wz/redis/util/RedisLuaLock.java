@@ -3,7 +3,7 @@ package com.wz.redis.util;
 import com.wz.common.constant.Consts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @projectName: wz-redis
  * @package: com.wz.redis.util
- * @className: RedisSingleLock
+ * @className: RedisLuaLock
  * @description: 描述
  * <p>
  * 基于redis setnx 命令实现一个单机的分布式锁
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @version: 1.0
  **/
 @Slf4j
-public class RedisSingleLock {
+public class RedisLuaLock {
 
     /**
      * Lua 解锁脚本
@@ -66,13 +66,13 @@ public class RedisSingleLock {
      */
     private RedisTemplate<String, String> redisTemplate;
 
-    public RedisSingleLock(RedisTemplate<String, String> redisTemplate, String key, String requestId) {
+    public RedisLuaLock(RedisTemplate<String, String> redisTemplate, String key, String requestId) {
         this.redisTemplate = Objects.requireNonNull(redisTemplate, "RedisTemplate 不能为null.");
         this.key = this.key + Objects.requireNonNull(key, "Key 不能为null.");
         this.requestId = Objects.requireNonNull(requestId, "RequestId 不能为null.");
     }
 
-    public RedisSingleLock(RedisTemplate<String, String> redisTemplate, String key, String requestId, long expire) {
+    public RedisLuaLock(RedisTemplate<String, String> redisTemplate, String key, String requestId, long expire) {
         this(redisTemplate, key, requestId);
         if (expire <= 0) {
             throw new IllegalArgumentException("Expire 过期时间不能低于0.");
@@ -80,7 +80,7 @@ public class RedisSingleLock {
         this.expire = expire;
     }
 
-    public RedisSingleLock(RedisTemplate<String, String> redisTemplate, String key, String requestId, long expire, TimeUnit unit) {
+    public RedisLuaLock(RedisTemplate<String, String> redisTemplate, String key, String requestId, long expire, TimeUnit unit) {
         this(redisTemplate, key, requestId, expire);
         this.unit = Objects.requireNonNull(unit, "TimeUnit 不能为null.");
     }
@@ -98,14 +98,19 @@ public class RedisSingleLock {
      */
     public boolean unLock() {
         if (isLock) {
-            RedisScript<Long> redisScript = RedisScript.of(UNLOCK_LUA_SCRIPT);
+            DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>(UNLOCK_LUA_SCRIPT, Long.class);
             Long result = redisTemplate.execute(redisScript, Collections.singletonList(key), requestId);
             log.debug("---> key: [{}] 解锁: [{}]. 返回结果: {}", key, requestId, result);
             isLock = false;
             // 解锁失败, 可能设置的锁超时时间短. 锁已经过期了
-            return 1L == result;
+            return 1L == (result != null ? result : 0);
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "{\"key\":\"" + key + "\",\"requestId\":\"" + requestId + "\",\"unit\":\"" + unit + "\",\"expire\":" + expire + "}";
     }
 
 }

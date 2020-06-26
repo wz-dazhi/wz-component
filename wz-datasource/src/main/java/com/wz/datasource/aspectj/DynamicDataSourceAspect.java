@@ -32,9 +32,7 @@ public class DynamicDataSourceAspect {
      */
     private final String[] QUERY_PREFIX = {"select", "find", "get", "load", "query"};
 
-    @Pointcut("execution( * com.*.mapper.*.*(..) ) || " +
-            "execution( * com.*.*.mapper.*.*(..) ) || " +
-            "execution( * com.*.*.*.mapper.*.*(..) )")
+    @Pointcut("execution( * com..mapper..*.*(..) )")
     private void mapperAspect() {
     }
 
