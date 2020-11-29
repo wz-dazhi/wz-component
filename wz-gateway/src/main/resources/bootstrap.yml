@@ -1,0 +1,13 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: wz-gateway
+  cloud:
+    nacos:
+      server-addr: 192.168.199.100:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
