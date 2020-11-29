@@ -3,12 +3,11 @@ package com.wz.common.util;
 import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -105,7 +104,15 @@ public class RestUtil {
     }
 
     private static class RestSingleton {
-        private static final RestTemplate TEMPLATE = new RestTemplate();
+        private static final RestTemplate TEMPLATE;
+
+        static {
+            TEMPLATE = new RestTemplate();
+            MappingJackson2HttpMessageConverter jackson = new MappingJackson2HttpMessageConverter();
+            jackson.setObjectMapper(JsonUtil.getMapper());
+            jackson.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_HTML));
+            TEMPLATE.getMessageConverters().add(jackson);
+        }
 
         static RestTemplate getTemplate() {
             return TEMPLATE;
@@ -114,19 +121,17 @@ public class RestUtil {
 
     public static void main(String[] args) {
         RestUtil r = new RestUtil();
-//        JSONObject json = r.get("http://gank.io/api/data/Android/10/1", JSONObject.class);
-//        System.out.println(json);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:72.0) Gecko/20100101 Firefox/72.0");
-//        ResponseEntity<JSONObject> entity = r.getEntity("http://gank.io/api/today", headers, JSONObject.class);
-//        System.out.println(entity.getStatusCode());
-//        System.out.println(entity.getHeaders());
-//        System.out.println(entity.getBody());
+        ResponseEntity<JSONObject> entity = r.getEntity("http://www.tianqiapi.com/api?version=v9&appid=23035354&appsecret=8YvlPNrz", headers, JSONObject.class);
+        System.out.println(entity.getStatusCode());
+        System.out.println(entity.getHeaders());
+        System.out.println(entity.getBody());
 
-        JSONObject jsonObject = r.get("http://gank.io/api/today", null, headers, JSONObject.class);
+        System.out.println("----------");
+        JSONObject jsonObject = r.get("http://www.tianqiapi.com/api?version=v9&appid=23035354&appsecret=8YvlPNrz", null, headers, JSONObject.class);
         System.out.println(jsonObject);
-
-
     }
+
 }

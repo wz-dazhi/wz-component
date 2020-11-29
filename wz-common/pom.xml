@@ -12,6 +12,10 @@
     <artifactId>wz-common</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.wz</groupId>
+            <artifactId>wz-swagger</artifactId>
+        </dependency>
         <!-- spring start -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -58,15 +62,6 @@
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.spring4all</groupId>
-            <artifactId>swagger-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-spring-boot-starter</artifactId>
-        </dependency>
-
         <!-- commons -->
         <dependency>
             <groupId>commons-codec</groupId>
@@ -76,9 +71,25 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+
+        <!-- hutool -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-io</artifactId>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <!-- mapstruct -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
         </dependency>
 
         <!-- guava -->
