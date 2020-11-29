@@ -33,7 +33,6 @@ import java.util.Set;
 abstract class BaseExceptionHandler {
 
     String paramHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
-        //this.error(req, resp, e);
         String msg;
         if (e instanceof BindException) {
             // 对象绑定(form 表单 or URL params)
@@ -62,6 +61,7 @@ abstract class BaseExceptionHandler {
             }
             msg = "[" + paramName + "] " + v.getMessage();
         } else {
+            this.error(req, resp, e);
             msg = ResultEnum.PARAM_ERROR.getErrorMsg();
         }
         return msg;
