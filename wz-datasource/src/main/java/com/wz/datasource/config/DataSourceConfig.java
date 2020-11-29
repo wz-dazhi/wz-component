@@ -6,25 +6,23 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.autoconfigure.SpringBootVFS;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
-import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PerformanceInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.IllegalSQLInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import com.wz.common.util.SpringContextUtil;
 import com.wz.datasource.enums.DBEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -44,11 +42,11 @@ import java.util.Map;
  **/
 @Slf4j
 @Configuration
-@DependsOn("springContextUtil")
+@EnableTransactionManagement
 public class DataSourceConfig {
 
     @Resource
-    private ResourceLoader resourceLoader = new DefaultResourceLoader();
+    private ResourceLoader resourceLoader;
 
     @Resource
     private MybatisPlusProperties plusProperties;
@@ -99,22 +97,15 @@ public class DataSourceConfig {
         if (StringUtils.hasText(this.plusProperties.getConfigLocation())) {
             sqlSessionFactoryBean.setConfigLocation(this.resourceLoader.getResource(this.plusProperties.getConfigLocation()));
         }
-        // 插件
-        Interceptor[] interceptors;
-        String profile = SpringContextUtil.getActiveProfile();
-        if ("dev".equals(profile) || "".equals(profile)) {
-            interceptors = new Interceptor[]{paginationInterceptor(), optimisticLockerInterceptor(), performanceInterceptor()};
-        } else {
-            interceptors = new Interceptor[]{paginationInterceptor(), optimisticLockerInterceptor()};
-        }
-        sqlSessionFactoryBean.setPlugins(interceptors);
+        // MP 拦截器
+        sqlSessionFactoryBean.setPlugins(mybatisPlusInterceptor());
         // MP 全局配置，更多内容进入类看注释
-        GlobalConfig globalConfig = new GlobalConfig().setDbConfig(
-                new GlobalConfig.DbConfig()
-                        .setDbType(DbType.MYSQL)
-                        .setIdType(IdType.AUTO)
-                        .setTableUnderline(true)
-        );
+        final GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig()
+                .setIdType(IdType.AUTO)
+                .setTableUnderline(true);
+        GlobalConfig globalConfig = new GlobalConfig()
+                .setDbConfig(dbConfig)
+                .setBanner(false);
         sqlSessionFactoryBean.setGlobalConfig(globalConfig);
 
         if (StringUtils.hasLength(this.plusProperties.getTypeAliasesPackage())) {
@@ -139,27 +130,35 @@ public class DataSourceConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        final MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(paginationInnerInterceptor());
+        interceptor.addInnerInterceptor(optimisticLockerInnerInterceptor());
+        // 性能插件
+        //interceptor.addInnerInterceptor(illegalSQLInnerInterceptor());
+        return interceptor;
+    }
+
     /**
      * mybatis-plus分页插件
      */
-    private PaginationInterceptor paginationInterceptor() {
-        PaginationInterceptor page = new PaginationInterceptor();
-        page.setDialectType(DbType.MYSQL.getDb());
-        return page;
+    private PaginationInnerInterceptor paginationInnerInterceptor() {
+        return new PaginationInnerInterceptor(DbType.MYSQL);
     }
 
     /**
      * 乐观锁插件
      */
-    private OptimisticLockerInterceptor optimisticLockerInterceptor() {
-        return new OptimisticLockerInterceptor();
+    private OptimisticLockerInnerInterceptor optimisticLockerInnerInterceptor() {
+        return new OptimisticLockerInnerInterceptor();
     }
 
     /**
-     * SQL执行效率插件
+     * sql性能规范
      */
-    private PerformanceInterceptor performanceInterceptor() {
-        return new PerformanceInterceptor();
+    private IllegalSQLInnerInterceptor illegalSQLInnerInterceptor() {
+        return new IllegalSQLInnerInterceptor();
     }
 
 }
