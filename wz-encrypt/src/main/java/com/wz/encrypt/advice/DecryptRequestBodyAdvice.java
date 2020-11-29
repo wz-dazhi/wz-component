@@ -5,8 +5,8 @@ import com.wz.encrypt.algorithm.EncryptAlgorithm;
 import com.wz.encrypt.annotation.Decrypt;
 import com.wz.encrypt.auto.EncryptProperties;
 import lombok.AllArgsConstructor;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,15 +48,16 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
 
     @Override
     public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        try {
-            if (Objects.requireNonNull(parameter.getMethod()).isAnnotationPresent(Decrypt.class) && !properties.isDebug()) {
-                return new ApiHttpInputMessage(inputMessage, algorithm, properties.getKey(), properties.getCharset());
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+        if (parameter.getMethodAnnotation(Decrypt.class) == null || properties.isDebug()) {
+            log.debug("Decrypt is null or properties is debug.");
             return inputMessage;
         }
-        return inputMessage;
+        try {
+            return new ApiHttpInputMessage(inputMessage, algorithm, properties.getKey(), properties.getCharset());
+        } catch (Exception e) {
+            log.error("Request Body decrypt fail. msg: {}, e: ", e.getMessage(), e);
+            return inputMessage;
+        }
     }
 
     @Override
@@ -79,10 +82,25 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         private void decrypt(HttpInputMessage message, EncryptAlgorithm algorithm, String key, String charset) throws Exception {
             log.debug("<<< Starting decrypt data.");
             Stopwatch sw = Stopwatch.createStarted();
-            String content = IOUtils.toString(message.getBody(), charset);
+            String content = this.getContent(message.getBody(), charset);
             String decryptBody = algorithm.decrypt(content, key);
-            this.body = IOUtils.toInputStream(decryptBody, charset);
+            this.body = this.toBody(decryptBody, charset);
             log.debug("<<< Decrypt Time: {} ms.", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
+
+        private String getContent(InputStream inputStream, String charset) throws Exception {
+            @Cleanup ByteArrayOutputStream os = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                os.write(buffer, 0, length);
+            }
+            return os.toString(charset);
+        }
+
+        private InputStream toBody(String input, String encoding) throws IOException {
+            byte[] bytes = encoding != null ? input.getBytes(encoding) : input.getBytes();
+            return new ByteArrayInputStream(bytes);
         }
 
         @Override
