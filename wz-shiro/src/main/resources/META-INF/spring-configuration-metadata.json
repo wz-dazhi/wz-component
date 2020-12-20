@@ -1,0 +1,73 @@
+{
+  "groups": [
+    {
+      "name": "shiro.config",
+      "type": "com.wz.shiro.bean.ShiroProperties",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "shiro.config.algorithm",
+      "type": "com.wz.shiro.enums.AlgorithmEnum",
+      "description": "加密方式, 默认MD5",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties"
+    },
+    {
+      "name": "shiro.config.cache-expire",
+      "type": "java.lang.Integer",
+      "description": "shiro 缓存过期时间, session 过期时间",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties",
+      "defaultValue": 1800
+    },
+    {
+      "name": "shiro.config.cache-key-prefix",
+      "type": "java.lang.String",
+      "description": "缓存key前缀, 默认 shiro:cache:",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties",
+      "defaultValue": "shiro:cache:"
+    },
+    {
+      "name": "shiro.config.cache-principal-id-field-name",
+      "type": "java.lang.String",
+      "description": "缓存字段名称, 默认 id",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties",
+      "defaultValue": "id"
+    },
+    {
+      "name": "shiro.config.delete-invalid-sessions",
+      "type": "java.lang.Boolean",
+      "description": "从会话存储中删除无效的会话, 默认为true",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties",
+      "defaultValue": true
+    },
+    {
+      "name": "shiro.config.hash-iterations",
+      "type": "java.lang.Integer",
+      "description": "加密次数",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "shiro.config.path-definition",
+      "type": "java.util.List<com.wz.shiro.bean.ShiroPathDefinitionProperties>",
+      "description": "path 定义",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties"
+    },
+    {
+      "name": "shiro.config.session-dao-key-prefix",
+      "type": "java.lang.String",
+      "description": "sessionDAO 缓存前缀, 默认 shiro:session:",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties",
+      "defaultValue": "shiro:session:"
+    },
+    {
+      "name": "shiro.config.token",
+      "type": "java.lang.String",
+      "description": "token名称",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties",
+      "defaultValue": "token"
+    }
+  ],
+  "hints": []
+}

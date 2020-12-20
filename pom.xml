@@ -12,8 +12,9 @@
         <module>wz-mail</module>
         <module>wz-qiniu</module>
         <module>wz-rabbitmq</module>
-        <module>wz-gateway</module>
         <module>wz-swagger</module>
+        <module>wz-webmvc</module>
+        <module>wz-shiro</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -54,6 +55,8 @@
         <qiniu-java-sdk.version>7.3.0</qiniu-java-sdk.version>
         <hutool-all.version>5.4.6</hutool-all.version>
         <mapstruct.version>1.4.1.Final</mapstruct.version>
+        <shiro-spring-boot-web-starter.version>1.7.0</shiro-spring-boot-web-starter.version>
+        <shiro-redis.version>3.3.1</shiro-redis.version>
     </properties>
 
     <dependencyManagement>
@@ -81,6 +84,11 @@
             </dependency>
             <dependency>
                 <groupId>com.wz</groupId>
+                <artifactId>wz-webmvc</artifactId>
+                <version>${wz-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wz</groupId>
                 <artifactId>wz-redis</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
@@ -102,6 +110,11 @@
             <dependency>
                 <groupId>com.wz</groupId>
                 <artifactId>wz-rabbitmq</artifactId>
+                <version>${wz-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wz</groupId>
+                <artifactId>wz-shiro</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
 
@@ -186,7 +199,6 @@
                 <artifactId>p6spy</artifactId>
                 <version>${p6spy.version}</version>
             </dependency>
-
 
             <!--swagger-->
             <dependency>
@@ -282,15 +294,20 @@
                 <version>${mapstruct.version}</version>
             </dependency>
 
+            <!-- shiro -->
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-spring-boot-web-starter</artifactId>
+                <version>${shiro-spring-boot-web-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.crazycake</groupId>
+                <artifactId>shiro-redis</artifactId>
+                <version>${shiro-redis.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
-    </dependencies>
 
     <!--github-->
     <distributionManagement>
@@ -302,36 +319,9 @@
     </distributionManagement>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <phase>none</phase>
-                    </execution>
-                    <execution>
-                        <id>java-compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>java-test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
+        <!-- 默认引用插件 -->
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -347,79 +337,112 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <configuration>
-                    <args>
-                        <arg>-Xjsr305=strict</arg>
-                    </args>
-                    <compilerPlugins>
-                        <plugin>spring</plugin>
-                    </compilerPlugins>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>src/main/kotlin</sourceDir>
-                                <sourceDir>src/main/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>src/test/kotlin</sourceDir>
-                                <sourceDir>src/test/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
-                    </execution>
-
-                    <!-- 注解处理器install 控制台会报错 -->
-                    <!--                    <execution>-->
-                    <!--                        <id>kapt</id>-->
-                    <!--                        <goals>-->
-                    <!--                            <goal>kapt</goal>-->
-                    <!--                        </goals>-->
-                    <!--                        <configuration>-->
-                    <!--                            <sourceDirs>-->
-                    <!--                                <sourceDir>src/main/kotlin</sourceDir>-->
-                    <!--                                <sourceDir>src/main/java</sourceDir>-->
-                    <!--                            </sourceDirs>-->
-                    <!--                            <annotationProcessorPaths>-->
-                    <!--                                &lt;!&ndash; 注解处理器 &ndash;&gt;-->
-                    <!--                                <annotationProcessorPath>-->
-                    <!--                                    <groupId>org.springframework.boot</groupId>-->
-                    <!--                                    <artifactId>spring-boot-configuration-processor</artifactId>-->
-                    <!--                                    <version>${spring-boot.version}</version>-->
-                    <!--                                </annotationProcessorPath>-->
-                    <!--                            </annotationProcessorPaths>-->
-                    <!--                        </configuration>-->
-                    <!--                    </execution>-->
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-allopen</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-noarg</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-compile</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>default-testCompile</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>java-compile</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>java-test-compile</id>
+                            <phase>test-compile</phase>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <configuration>
+                        <args>
+                            <arg>-Xjsr305=strict</arg>
+                        </args>
+                        <compilerPlugins>
+                            <plugin>spring</plugin>
+                        </compilerPlugins>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <sourceDirs>
+                                    <sourceDir>src/main/kotlin</sourceDir>
+                                    <sourceDir>src/main/java</sourceDir>
+                                </sourceDirs>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>test-compile</id>
+                            <goals>
+                                <goal>test-compile</goal>
+                            </goals>
+                            <configuration>
+                                <sourceDirs>
+                                    <sourceDir>src/test/kotlin</sourceDir>
+                                    <sourceDir>src/test/java</sourceDir>
+                                </sourceDirs>
+                            </configuration>
+                        </execution>
+
+                        <!-- 注解处理器install 控制台会报错 -->
+                        <!--                    <execution>-->
+                        <!--                        <id>kapt</id>-->
+                        <!--                        <goals>-->
+                        <!--                            <goal>kapt</goal>-->
+                        <!--                        </goals>-->
+                        <!--                        <configuration>-->
+                        <!--                            <sourceDirs>-->
+                        <!--                                <sourceDir>src/main/kotlin</sourceDir>-->
+                        <!--                                <sourceDir>src/main/java</sourceDir>-->
+                        <!--                            </sourceDirs>-->
+                        <!--                            <annotationProcessorPaths>-->
+                        <!--                                &lt;!&ndash; 注解处理器 &ndash;&gt;-->
+                        <!--                                <annotationProcessorPath>-->
+                        <!--                                    <groupId>org.springframework.boot</groupId>-->
+                        <!--                                    <artifactId>spring-boot-configuration-processor</artifactId>-->
+                        <!--                                    <version>${spring-boot.version}</version>-->
+                        <!--                                </annotationProcessorPath>-->
+                        <!--                            </annotationProcessorPaths>-->
+                        <!--                        </configuration>-->
+                        <!--                    </execution>-->
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.jetbrains.kotlin</groupId>
+                            <artifactId>kotlin-maven-allopen</artifactId>
+                            <version>${kotlin.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.jetbrains.kotlin</groupId>
+                            <artifactId>kotlin-maven-noarg</artifactId>
+                            <version>${kotlin.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
