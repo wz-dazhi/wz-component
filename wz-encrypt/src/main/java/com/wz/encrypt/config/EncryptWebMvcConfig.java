@@ -2,7 +2,7 @@ package com.wz.encrypt.config;
 
 import com.wz.encrypt.auto.EncryptProperties;
 import com.wz.encrypt.interceptor.SignInterceptor;
-import com.wz.web.config.WebMvcConfig;
+import com.wz.webmvc.config.WebMvcConfig;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;

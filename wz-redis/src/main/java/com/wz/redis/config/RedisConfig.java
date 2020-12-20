@@ -33,7 +33,7 @@ public class RedisConfig {
      */
     @Bean
     @Resource
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory, RedisSerializer stringRedisSerializer) {
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory, RedisSerializer<String> stringRedisSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         // json 序列化方式,用于value
         Jackson2JsonRedisSerializer<Object> jsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
@@ -89,7 +89,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisSerializer stringRedisSerializer() {
+    public RedisSerializer<String> stringRedisSerializer() {
         return new StringRedisSerializer();
     }
 
