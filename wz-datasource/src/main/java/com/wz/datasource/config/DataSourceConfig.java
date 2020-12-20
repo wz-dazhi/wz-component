@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInt
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.wz.datasource.enums.DBEnum;
+import com.wz.datasource.mybatisplus.intercepter.QueryStringEscapeInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -98,7 +99,7 @@ public class DataSourceConfig {
             sqlSessionFactoryBean.setConfigLocation(this.resourceLoader.getResource(this.plusProperties.getConfigLocation()));
         }
         // MP 拦截器
-        sqlSessionFactoryBean.setPlugins(mybatisPlusInterceptor());
+        sqlSessionFactoryBean.setPlugins(mybatisPlusInterceptor(), queryStringEscapeInterceptor());
         // MP 全局配置，更多内容进入类看注释
         final GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig()
                 .setIdType(IdType.AUTO)
@@ -159,6 +160,14 @@ public class DataSourceConfig {
      */
     private IllegalSQLInnerInterceptor illegalSQLInnerInterceptor() {
         return new IllegalSQLInnerInterceptor();
+    }
+
+    /**
+     * sql 模糊查询处理特殊字符
+     */
+    @Bean
+    public QueryStringEscapeInterceptor queryStringEscapeInterceptor() {
+        return new QueryStringEscapeInterceptor();
     }
 
 }
