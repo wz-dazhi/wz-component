@@ -18,6 +18,10 @@ public class SystemException extends Exception {
 
     private String msg;
 
+    public SystemException() {
+        this(ResultEnum.SYSTEM_ERROR);
+    }
+
     public SystemException(IErrorCode iErrorCode) {
         this(iErrorCode, iErrorCode.getErrorCode(), iErrorCode.getErrorMsg());
     }

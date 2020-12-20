@@ -1,8 +1,21 @@
-# Getting Started
+[TOC]
 
-### Reference Documentation
-For further reference, please consider the following sections:
+# 帮助
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.1.8.RELEASE/maven-plugin/)
+## 统一升级版本
+
+1. 进入`wz-component`目录
+
+   ```shell
+   # 设置新版本号
+   mvn versions:set -DnewVersion=0.0.2-SNAPSHOT
+   # 提交版本
+   mvn versions:commit
+   ```
+
+2. 修改`wz-component`的`pom.xml`
+
+   ```xml
+   <wz-component.version>0.0.2-SNAPSHOT</wz-component.version>
+   ```
 

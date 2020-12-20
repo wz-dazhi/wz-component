@@ -18,6 +18,10 @@ public class BusinessException extends RuntimeException {
 
     private String msg;
 
+    public BusinessException() {
+        this(ResultEnum.REQUEST_ERROR);
+    }
+
     public BusinessException(IErrorCode iErrorCode) {
         this(iErrorCode, iErrorCode.getErrorCode(), iErrorCode.getErrorMsg());
     }

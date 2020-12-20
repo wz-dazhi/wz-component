@@ -24,7 +24,7 @@ public enum ResultEnum implements IErrorCode {
     PARAM_ERROR("-1"),
 
     /**
-     * 服务器不高兴了, 请稍后再试
+     * 服务器开小差, 请稍后再试
      */
     SYSTEM_ERROR("-2"),
 

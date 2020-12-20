@@ -18,6 +18,10 @@ public class ParameterException extends RuntimeException {
 
     private String msg;
 
+    public ParameterException() {
+        this(ResultEnum.PARAM_ERROR);
+    }
+
     public ParameterException(IErrorCode iErrorCode) {
         this(iErrorCode, iErrorCode.getErrorCode(), iErrorCode.getErrorMsg());
     }
