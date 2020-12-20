@@ -25,12 +25,12 @@ import javax.validation.ConstraintViolationException;
 public class GlobalApiExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class, IllegalStateException.class})
-    public Result paramException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+    public Result<Void> paramException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         return ResultUtil.fail(ResultEnum.PARAM_ERROR.getErrorCode(), super.paramHandlerException(req, resp, e));
     }
 
     @ExceptionHandler(Exception.class)
-    public Result otherException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+    public Result<Void> otherException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         return super.otherHandlerException(req, resp, e);
     }
 

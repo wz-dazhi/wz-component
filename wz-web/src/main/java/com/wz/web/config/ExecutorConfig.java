@@ -28,7 +28,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableConfigurationProperties(ThreadPoolProperties.class)
 public class ExecutorConfig {
 
-    @Value("${spring.application.name}")
+    @Value("#{ @environment['spring.application.name'] ?: 'app' }")
     private String applicationName;
 
     /**

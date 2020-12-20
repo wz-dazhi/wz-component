@@ -7,6 +7,8 @@ import com.wz.common.exception.SystemException;
 import com.wz.common.model.Result;
 import com.wz.common.util.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -67,8 +69,8 @@ abstract class BaseExceptionHandler {
         return msg;
     }
 
-    Result otherHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
-        Result result;
+    Result<Void> otherHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+        Result<Void> result;
         if (e instanceof SystemException) {
             SystemException se = (SystemException) e;
             result = ResultUtil.fail(se.getCode(), se.getMsg());
@@ -87,8 +89,8 @@ abstract class BaseExceptionHandler {
 
     private void error(HttpServletRequest req, HttpServletResponse resp, Throwable t) {
         log.error("<<< A run exception has occurred, uri: [{}] msg: [{}], e: ", req.getRequestURI(), t.getMessage(), t);
-        resp.setContentType("application/json; charset=utf-8");
-        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        resp.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
     }
 
 }
