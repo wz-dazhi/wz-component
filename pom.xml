@@ -15,6 +15,7 @@
         <module>wz-swagger</module>
         <module>wz-webmvc</module>
         <module>wz-shiro</module>
+        <module>wz-logging</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -47,6 +48,8 @@
         <json-smart.version>2.3</json-smart.version>
         <weixin-java.version>3.9.0</weixin-java.version>
         <knife4j-spring-boot-starter.version>3.0.1</knife4j-spring-boot-starter.version>
+        <springfox-core.version>3.0.0</springfox-core.version>
+        <io.swagger.version>1.6.2</io.swagger.version>
         <java-jwt.version>3.11.0</java-jwt.version>
         <nimbus-jose-jwt.version>9.1.1</nimbus-jose-jwt.version>
         <thymeleaf-extras-java8time.version>3.0.4.RELEASE</thymeleaf-extras-java8time.version>
@@ -54,9 +57,11 @@
         <redisson.version>3.13.6</redisson.version>
         <qiniu-java-sdk.version>7.3.0</qiniu-java-sdk.version>
         <hutool-all.version>5.4.6</hutool-all.version>
+        <oshi-core.version>5.3.7</oshi-core.version>
         <mapstruct.version>1.4.1.Final</mapstruct.version>
         <shiro-spring-boot-web-starter.version>1.7.0</shiro-spring-boot-web-starter.version>
         <shiro-redis.version>3.3.1</shiro-redis.version>
+        <disruptor.version>3.4.2</disruptor.version>
     </properties>
 
     <dependencyManagement>
@@ -117,13 +122,12 @@
                 <artifactId>wz-shiro</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
-
-            <!-- wz cloud -->
             <dependency>
                 <groupId>com.wz</groupId>
-                <artifactId>wz-gateway</artifactId>
+                <artifactId>wz-logging</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
+
             <!-- wz-component end -->
 
             <!-- spring cloud -->
@@ -206,6 +210,26 @@
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j-spring-boot-starter.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-core</artifactId>
+                <version>${springfox-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${io.swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${io.swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${io.swagger.version}</version>
+            </dependency>
 
             <!-- 微信相关 -->
             <dependency>
@@ -276,6 +300,12 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool-all.version}</version>
             </dependency>
+            <!-- 跨平台的系统及硬件信息库 -->
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>${oshi-core.version}</version>
+            </dependency>
 
             <!-- mapstruct -->
             <dependency>
@@ -306,6 +336,13 @@
                 <artifactId>shiro-redis</artifactId>
                 <version>${shiro-redis.version}</version>
             </dependency>
+
+            <!-- log4j2 使用环队列 -->
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -322,6 +359,7 @@
 
         <!-- 默认引用插件 -->
         <plugins>
+            <!-- 打包源码 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -334,6 +372,54 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 排除依赖插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <!-- maven3.0和3.0以上版本 -->
+                                <requireMavenVersion>
+                                    <version>3.0</version>
+                                    <message>maven必须是3.0或3.0以上的版本</message>
+                                </requireMavenVersion>
+                                <!-- java1.8和1.8以上的版本 -->
+                                <requireJavaVersion>
+                                    <version>1.8</version>
+                                    <message>java必须是1.8或1.8以上的版本</message>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>enforce-banned-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <!-- 此处排除springboot默认日志框架 -->
+                                    <excludes>
+                                        <exclude>org.springframework.boot:spring-boot-starter-logging</exclude>
+                                    </excludes>
+                                    <message>必须排除spring-boot-starter-logging依赖</message>
+                                    <!--是否检查传递性依赖(间接依赖)-->
+                                    <searchTransitive>true</searchTransitive>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

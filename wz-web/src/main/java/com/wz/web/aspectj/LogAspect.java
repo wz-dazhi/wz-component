@@ -44,7 +44,7 @@ public class LogAspect {
         Object[] args = point.getArgs();
         log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJsonString(args), point.getSignature().toShortString());
         try {
-            MDC.put("clientIp", IpUtil.getIpAddress(req));
+            MDC.put("clientIp", IpUtil.getIp(req));
             MDC.put("serverIp", InetAddress.getLocalHost().getHostAddress());
             MDC.put("api", req.getRequestURL().toString());
             Object r = point.proceed();

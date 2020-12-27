@@ -47,6 +47,27 @@ public class AbstractShiroConfig {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+        // 默认过滤静态资源
+        chainDefinition.addPathDefinition("/doc.html", "anon");
+        chainDefinition.addPathDefinition("/favicon.ico", "anon");
+        chainDefinition.addPathDefinition("/swagger-resources/configuration/ui", "anon");
+        chainDefinition.addPathDefinition("/swagger-resources/**", "anon");
+        chainDefinition.addPathDefinition("/v3/api-docs", "anon");
+        chainDefinition.addPathDefinition("/v3/api-docs**", "anon");
+        chainDefinition.addPathDefinition("/webjars/css/**", "anon");
+        chainDefinition.addPathDefinition("/webjars/js/**", "anon");
+        chainDefinition.addPathDefinition("/webjars/fonts/**", "anon");
+        chainDefinition.addPathDefinition("/webjars/img/**", "anon");
+        chainDefinition.addPathDefinition("/webjars/oauth/**", "anon");
+        chainDefinition.addPathDefinition("/webjars/**", "anon");
+        chainDefinition.addPathDefinition("/img/icons/**", "anon");
+        chainDefinition.addPathDefinition("/static/**", "anon");
+        chainDefinition.addPathDefinition("/img/**", "anon");
+        chainDefinition.addPathDefinition("/images/**", "anon");
+        chainDefinition.addPathDefinition("/css/**", "anon");
+        chainDefinition.addPathDefinition("/js/**", "anon");
+        chainDefinition.addPathDefinition("/fonts/**", "anon");
+        chainDefinition.addPathDefinition("/ui/**", "anon");
         shiroProperties.getPathDefinition().forEach(d -> chainDefinition.addPathDefinition(d.getPath(), d.getDefinition()));
         return chainDefinition;
     }

@@ -38,6 +38,12 @@ public abstract class AbstractShiroFilter extends AuthenticatingFilter {
     protected final ShiroProperties shiroProperties;
 
     /**
+     * 执行登录需要创建token
+     */
+    @Override
+    protected abstract AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception;
+
+    /**
      * 是否允许通过
      */
     @Override
@@ -71,7 +77,7 @@ public abstract class AbstractShiroFilter extends AuthenticatingFilter {
                 this.writeResponse(response, ResultUtil.fail(METHOD_NOT_ALLOWED));
                 return false;
             }
-            // 执行登录逻辑
+            // 执行登录逻辑，需要实现createToken方法
             return executeLogin(request, response);
         }
         this.writeResponse(response, ResultUtil.fail(ShiroEnum.UNAUTHORIZED));
@@ -82,22 +88,22 @@ public abstract class AbstractShiroFilter extends AuthenticatingFilter {
     protected boolean onLoginSuccess(AuthenticationToken t, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
         log.debug("登录成功: {}", t);
         // 生成 token 令牌
-        final String token = this.createToken(t, subject, (HttpServletRequest) request, (HttpServletResponse) response);
+        final String token = this.onGenerateToken(t, subject, (HttpServletRequest) request, (HttpServletResponse) response);
         this.writeResponse(response, ResultUtil.ok(token));
         return false;
     }
 
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-        log.error("登录失败. token: {}, error msg: {}, e: ", token, e.getMessage(), e);
+        log.error("登录失败. AuthenticationToken: {}, e: ", token, e);
         this.writeResponse(response, ResultUtil.fail(ResultEnum.REQUEST_ERROR.getErrorCode(), e.getMessage()));
         return false;
     }
 
     /**
-     * 创建token令牌
+     * 登录成功，生成token令牌
      */
-    protected abstract String createToken(AuthenticationToken t, Subject subject, HttpServletRequest req, HttpServletResponse resp);
+    protected abstract String onGenerateToken(AuthenticationToken t, Subject subject, HttpServletRequest req, HttpServletResponse resp);
 
     /**
      * 校验token
@@ -118,7 +124,7 @@ public abstract class AbstractShiroFilter extends AuthenticatingFilter {
         try {
             response.getWriter().write(JsonUtil.toJsonString(resObj));
         } catch (IOException e) {
-            log.error("响应异常. error msg: {}, e: ", e.getMessage(), e);
+            log.error("响应异常. e: ", e);
         }
     }
 

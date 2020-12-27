@@ -18,7 +18,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.fasterxml.jackson.module.kotlin.KotlinModule;
 import com.wz.common.constant.DateConsts;
 import lombok.extern.slf4j.Slf4j;
 
@@ -81,7 +80,9 @@ public final class JsonUtil {
         javaTimeModule.addSerializer(Date.class, new DateSerializer());
         javaTimeModule.addDeserializer(Date.class, new DateDeserializers.DateDeserializer());
 
-        MAPPER.registerModules(javaTimeModule, new KotlinModule());
+        // 支持kotlin模块， 需要引入kotlin依赖
+        //MAPPER.registerModules(javaTimeModule, new KotlinModule());
+        MAPPER.registerModules(javaTimeModule);
     }
 
     private JsonUtil() {

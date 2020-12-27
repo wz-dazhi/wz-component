@@ -9,36 +9,33 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>wz-webmvc</artifactId>
+    <artifactId>wz-logging</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-logging</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-web</artifactId>
-        </dependency>
-
-        <!-- springboot start -->
+        <!-- 排除springboot默认log框架 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter</artifactId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- springboot end -->
+
+        <!-- log4j2 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <!-- log4j2 异步使用环队列 -->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

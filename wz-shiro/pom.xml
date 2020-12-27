@@ -14,17 +14,37 @@
     <dependencies>
         <dependency>
             <groupId>com.wz</groupId>
+            <artifactId>wz-logging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wz</groupId>
+            <artifactId>wz-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wz</groupId>
             <artifactId>wz-redis</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.wz</groupId>
-            <artifactId>wz-web</artifactId>
+            <artifactId>wz-webmvc</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring-boot-web-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
