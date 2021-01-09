@@ -1,33 +1,25 @@
 package com.wz.datasource.config;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
-import com.baomidou.mybatisplus.autoconfigure.SpringBootVFS;
-import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.IllegalSQLInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.wz.datasource.enums.DBEnum;
-import com.wz.datasource.mybatisplus.intercepter.QueryStringEscapeInterceptor;
+import com.wz.datasource.mybatisplus.handler.MybatisPlusMetaObjectHandler;
+import com.wz.datasource.mybatisplus.interceptor.LikeQueryInterceptor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,29 +34,26 @@ import java.util.Map;
  * @version: 1.0
  **/
 @Slf4j
+@MapperScan({"com.**.mapper", "cn.**.mapper", "com.**.dao", "cn.**.dao"})
 @Configuration
-@EnableTransactionManagement
+@ComponentScan("com.wz.datasource")
+@AllArgsConstructor
 public class DataSourceConfig {
 
-    @Resource
-    private ResourceLoader resourceLoader;
-
-    @Resource
-    private MybatisPlusProperties plusProperties;
-
-    @Bean
+    @Bean(initMethod = "init", destroyMethod = "close")
     @ConfigurationProperties("spring.datasource.druid.master")
-    public DataSource masterDataSource() {
+    public DruidDataSource masterDataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 
-    @Bean
+    @Bean(initMethod = "init", destroyMethod = "close")
     @ConfigurationProperties("spring.datasource.druid.slave")
-    public DataSource slaveDataSource() {
+    public DruidDataSource slaveDataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 
     @Bean
+    @DependsOn({"masterDataSource", "slaveDataSource"})
     @Primary
     public DynamicDataSource dynamicDataSource(@Qualifier("masterDataSource") DataSource masterDataSource,
                                                @Qualifier("slaveDataSource") DataSource slaveDataSource) {
@@ -89,85 +78,21 @@ public class DataSourceConfig {
     }
 
     @Bean
-    @Primary
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("masterDataSource") DataSource master,
-                                               @Qualifier("slaveDataSource") DataSource slave) throws Exception {
-        MybatisSqlSessionFactoryBean sqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(this.dynamicDataSource(master, slave));
-        sqlSessionFactoryBean.setVfs(SpringBootVFS.class);
-        if (StringUtils.hasText(this.plusProperties.getConfigLocation())) {
-            sqlSessionFactoryBean.setConfigLocation(this.resourceLoader.getResource(this.plusProperties.getConfigLocation()));
-        }
-        // MP 拦截器
-        sqlSessionFactoryBean.setPlugins(mybatisPlusInterceptor(), queryStringEscapeInterceptor());
-        // MP 全局配置，更多内容进入类看注释
-        final GlobalConfig.DbConfig dbConfig = new GlobalConfig.DbConfig()
-                .setIdType(IdType.AUTO)
-                .setTableUnderline(true);
-        GlobalConfig globalConfig = new GlobalConfig()
-                .setDbConfig(dbConfig)
-                .setBanner(false);
-        sqlSessionFactoryBean.setGlobalConfig(globalConfig);
-
-        if (StringUtils.hasLength(this.plusProperties.getTypeAliasesPackage())) {
-            sqlSessionFactoryBean.setTypeAliasesPackage(this.plusProperties.getTypeAliasesPackage());
-        }
-        if (StringUtils.hasLength(this.plusProperties.getTypeHandlersPackage())) {
-            sqlSessionFactoryBean.setTypeHandlersPackage(this.plusProperties.getTypeHandlersPackage());
-        }
-        if (StringUtils.hasLength(this.plusProperties.getTypeEnumsPackage())) {
-            sqlSessionFactoryBean.setTypeEnumsPackage(this.plusProperties.getTypeEnumsPackage());
-        }
-        if (!ObjectUtils.isEmpty(this.plusProperties.resolveMapperLocations())) {
-            sqlSessionFactoryBean.setMapperLocations(this.plusProperties.resolveMapperLocations());
-        }
-        return sqlSessionFactoryBean.getObject();
-    }
-
-    @Bean
-    @Primary
-    @Resource
-    public PlatformTransactionManager masterTransactionManager(DynamicDataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
-
-    @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        // 添加插件需要注意插入顺序
         final MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(paginationInnerInterceptor());
-        interceptor.addInnerInterceptor(optimisticLockerInnerInterceptor());
-        // 性能插件
-        //interceptor.addInnerInterceptor(illegalSQLInnerInterceptor());
+        // like sql过滤
+        interceptor.addInnerInterceptor(new LikeQueryInterceptor());
+        // mybatis-plus分页插件
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        // 乐观锁插件
+        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         return interceptor;
     }
 
-    /**
-     * mybatis-plus分页插件
-     */
-    private PaginationInnerInterceptor paginationInnerInterceptor() {
-        return new PaginationInnerInterceptor(DbType.MYSQL);
-    }
-
-    /**
-     * 乐观锁插件
-     */
-    private OptimisticLockerInnerInterceptor optimisticLockerInnerInterceptor() {
-        return new OptimisticLockerInnerInterceptor();
-    }
-
-    /**
-     * sql性能规范
-     */
-    private IllegalSQLInnerInterceptor illegalSQLInnerInterceptor() {
-        return new IllegalSQLInnerInterceptor();
-    }
-
-    /**
-     * sql 模糊查询处理特殊字符
-     */
     @Bean
-    public QueryStringEscapeInterceptor queryStringEscapeInterceptor() {
-        return new QueryStringEscapeInterceptor();
+    public MybatisPlusMetaObjectHandler mybatisPlusMetaObjectHandler() {
+        return new MybatisPlusMetaObjectHandler();
     }
 
 }

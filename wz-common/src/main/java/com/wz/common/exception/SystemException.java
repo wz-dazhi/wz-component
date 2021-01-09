@@ -12,8 +12,6 @@ import com.wz.common.enums.ResultEnum;
  **/
 public class SystemException extends Exception {
 
-    private IErrorCode iErrorCode;
-
     private String code;
 
     private String msg;
@@ -23,18 +21,17 @@ public class SystemException extends Exception {
     }
 
     public SystemException(IErrorCode iErrorCode) {
-        this(iErrorCode, iErrorCode.getErrorCode(), iErrorCode.getErrorMsg());
+        this(iErrorCode.getCode(), iErrorCode.getMsg());
     }
 
     public SystemException(String msg) {
-        this(ResultEnum.SYSTEM_ERROR, ResultEnum.SYSTEM_ERROR.getErrorCode(), msg);
+        this(ResultEnum.SYSTEM_ERROR.getCode(), msg);
     }
 
-    private SystemException(IErrorCode iErrorCode, String code, String msg) {
+    private SystemException(String code, String msg) {
         super(msg);
         this.code = code;
         this.msg = msg;
-        this.iErrorCode = iErrorCode;
     }
 
     public String getCode() {

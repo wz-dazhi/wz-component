@@ -30,6 +30,8 @@ public class EncryptWebMvcConfig extends WebMvcConfig {
 
     @Override
     public Validator getValidator() {
+        // 避免冲突, 上下文中只能存在一个Validator
         return null;
     }
+
 }

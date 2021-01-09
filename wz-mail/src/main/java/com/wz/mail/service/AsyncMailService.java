@@ -16,5 +16,5 @@ import java.util.concurrent.Future;
  */
 public interface AsyncMailService {
 
-    Future<Result> send(MailMsg msg, boolean isHtml);
+    Future<Result<Boolean>> send(MailMsg msg, boolean isHtml);
 }

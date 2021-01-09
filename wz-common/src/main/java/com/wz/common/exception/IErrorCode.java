@@ -15,12 +15,12 @@ public interface IErrorCode {
      *
      * @return
      */
-    String getErrorCode();
+    String getCode();
 
     /**
      * 错误信息
      *
      * @return
      */
-    String getErrorMsg();
+    String getMsg();
 }

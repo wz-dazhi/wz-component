@@ -64,26 +64,7 @@ public class DateConverterConfig {
         return new DateConverter();
     }
 
-    /**
-     * 格式化日期
-     *
-     * @param dateStr String 字符型日期
-     * @param format  String 格式
-     * @return Date 日期
-     */
-    private Date parseDate(String dateStr, String format) throws SystemException {
-        Date date;
-        DateFormat dateFormat = new SimpleDateFormat(format);
-        try {
-            date = dateFormat.parse(dateStr);
-        } catch (ParseException e) {
-            log.error("<<< date formatting exception msg: {}, e: {}", e.getMessage(), e);
-            throw new SystemException(ResultEnum.SYSTEM_ERROR);
-        }
-        return date;
-    }
-
-    class DateConverter implements Converter<String, Date> {
+    private static class DateConverter implements Converter<String, Date> {
         @Override
         public Date convert(String source) {
             if (StringUtil.isBlank(source) || StringUtil.isBlank(source.trim())) {
@@ -105,9 +86,28 @@ public class DateConverterConfig {
                 throw new IllegalArgumentException("Invalid boolean value '" + source + "'");
             }
         }
+
+        /**
+         * 格式化日期
+         *
+         * @param dateStr String 字符型日期
+         * @param format  String 格式
+         * @return Date 日期
+         */
+        private static Date parseDate(String dateStr, String format) throws SystemException {
+            Date date;
+            DateFormat dateFormat = new SimpleDateFormat(format);
+            try {
+                date = dateFormat.parse(dateStr);
+            } catch (ParseException e) {
+                log.error("<<< date formatting exception msg: {}, e: {}", e.getMessage(), e);
+                throw new SystemException(ResultEnum.SYSTEM_ERROR);
+            }
+            return date;
+        }
     }
 
-    class LocalTimeConverter implements Converter<String, LocalTime> {
+    private static class LocalTimeConverter implements Converter<String, LocalTime> {
         @Override
         public LocalTime convert(String source) {
             if (StringUtil.isBlank(source) || StringUtil.isBlank(source.trim())) {
@@ -117,7 +117,7 @@ public class DateConverterConfig {
         }
     }
 
-    class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
+    private static class LocalDateTimeConverter implements Converter<String, LocalDateTime> {
         @Override
         public LocalDateTime convert(String source) {
             if (StringUtil.isBlank(source) || StringUtil.isBlank(source.trim())) {
@@ -127,7 +127,7 @@ public class DateConverterConfig {
         }
     }
 
-    class LocalDateConverter implements Converter<String, LocalDate> {
+    private static class LocalDateConverter implements Converter<String, LocalDate> {
         @Override
         public LocalDate convert(String source) {
             if (StringUtil.isBlank(source) || StringUtil.isBlank(source.trim())) {

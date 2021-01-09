@@ -1,7 +1,7 @@
 package com.wz.mail.service.impl;
 
 import com.wz.common.model.Result;
-import com.wz.common.util.ResultUtil;
+import com.wz.common.util.Results;
 import com.wz.common.util.StringUtil;
 import com.wz.mail.bean.AttachmentInlineMailMsg;
 import com.wz.mail.bean.AttachmentMailMsg;
@@ -23,8 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static com.wz.common.enums.ResultEnum.REQUEST_ERROR;
-
 /**
  * @projectName: wz-component
  * @package: com.wz.mail.service.impl
@@ -44,14 +42,14 @@ public class MailServiceImpl implements MailService {
      * 发送邮件
      */
     @Override
-    public Result send(@NonNull MailMsg msg, boolean isHtml) {
+    public Result<Boolean> send(@NonNull MailMsg msg, boolean isHtml) {
         log.debug(">>> 开始发送邮件: {}, isHtml: {}", msg, isHtml);
         StringUtil.requireNonNull(msg.getFrom(), "发送人[from]不能为空");
         Objects.requireNonNull(msg.getTo(), "接收人[to]不能为空");
         return this.start(msg, isHtml);
     }
 
-    private <S extends MailMsg> Result start(S s, boolean isHtml) {
+    private <S extends MailMsg> Result<Boolean> start(S s, boolean isHtml) {
         try {
             MimeMessage message = sender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -72,11 +70,11 @@ public class MailServiceImpl implements MailService {
             }
 
             sender.send(message);
-            return ResultUtil.ok();
+            return Results.ok(true);
         } catch (Exception e) {
             String msg = e.getMessage();
             log.error(">>> 发送邮件发生异常. msg: {}, e: ", msg, e);
-            return ResultUtil.fail(REQUEST_ERROR.getErrorCode(), msg);
+            return Results.fail(msg);
         }
     }
 

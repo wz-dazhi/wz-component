@@ -48,10 +48,20 @@ public class ValidatorConfig {
     }
 
     @Bean
-    public Validator validator() {
+    public LocalValidatorFactoryBean localValidatorFactoryBean(MessageSource messageSource) {
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-        validator.setValidationMessageSource(messageSource());
+        validator.setValidationMessageSource(messageSource);
         return validator;
+    }
+
+    @Bean
+    public Validator validator(MessageSource messageSource) {
+        return this.localValidatorFactoryBean(messageSource);
+    }
+
+    @Bean
+    public org.springframework.validation.Validator springValidator(MessageSource messageSource) {
+        return this.localValidatorFactoryBean(messageSource);
     }
 
 }

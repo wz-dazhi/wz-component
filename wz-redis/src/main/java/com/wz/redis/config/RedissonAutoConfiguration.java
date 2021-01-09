@@ -1,12 +1,15 @@
 package com.wz.redis.config;
 
+import com.wz.common.util.StringUtil;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.config.ConfigSupport;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Sentinel;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,14 +25,17 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author wangzhi
  */
+@Slf4j
 @Configuration
 @AllArgsConstructor
 @ConditionalOnClass({Redisson.class})
 @EnableConfigurationProperties({RedissonProperties.class, RedisProperties.class})
+@ConditionalOnProperty(name = "spring.redis.redisson.enable", havingValue = "true")
 public class RedissonAutoConfiguration {
 
     private final RedissonProperties redissonProperties;
@@ -39,10 +45,8 @@ public class RedissonAutoConfiguration {
     @Bean(destroyMethod = "shutdown")
     @SuppressWarnings("unchecked")
     @ConditionalOnMissingBean(RedissonClient.class)
+    @ConditionalOnProperty(name = "spring.redis.redisson.enable", havingValue = "true")
     public RedissonClient redissonClient() {
-        if (!redissonProperties.isEnable()) {
-            return null;
-        }
         Config config;
         Method clusterMethod = ReflectionUtils.findMethod(RedisProperties.class, "getCluster");
         Method timeoutMethod = ReflectionUtils.findMethod(RedisProperties.class, "getTimeout");
@@ -57,21 +61,21 @@ public class RedissonAutoConfiguration {
             timeout = (Integer) timeoutValue;
         }
 
-        if (redissonProperties.getConfig() != null) {
+        if (StringUtil.isNotBlank(redissonProperties.getConfig())) {
             try {
                 InputStream is = getConfigStream();
-                ConfigSupport support = new ConfigSupport();
-                config = support.fromJSON(is, Config.class);
+                config = Config.fromYAML(is);
             } catch (IOException e) {
                 // trying next format
                 try {
                     InputStream is = getConfigStream();
-                    config = Config.fromYAML(is);
+                    ConfigSupport support = new ConfigSupport();
+                    config = support.fromJSON(is, Config.class);
                 } catch (IOException e1) {
                     throw new IllegalArgumentException("Can't parse config", e1);
                 }
             }
-        } else if (redisProperties.getSentinel() != null) {
+        } else if (Objects.nonNull(redisProperties.getSentinel())) {
             Method nodesMethod = ReflectionUtils.findMethod(Sentinel.class, "getNodes");
             Object nodesValue = ReflectionUtils.invokeMethod(nodesMethod, redisProperties.getSentinel());
 
@@ -89,7 +93,7 @@ public class RedissonAutoConfiguration {
                     .setDatabase(redisProperties.getDatabase())
                     .setConnectTimeout(timeout)
                     .setPassword(redisProperties.getPassword());
-        } else if (clusterMethod != null && ReflectionUtils.invokeMethod(clusterMethod, redisProperties) != null) {
+        } else if (Objects.nonNull(clusterMethod) && ReflectionUtils.invokeMethod(clusterMethod, redisProperties) != null) {
             Object clusterObject = ReflectionUtils.invokeMethod(clusterMethod, redisProperties);
             Method nodesMethod = ReflectionUtils.findMethod(clusterObject.getClass(), "getNodes");
             List<String> nodesObject = (List) ReflectionUtils.invokeMethod(nodesMethod, clusterObject);
@@ -116,7 +120,9 @@ public class RedissonAutoConfiguration {
                     .setPassword(redisProperties.getPassword());
         }
 
-        return Redisson.create(config);
+        final RedissonClient redissonClient = Redisson.create(config);
+        log.info(">>> RedissonClient id: [{}]", redissonClient.getId());
+        return redissonClient;
     }
 
     private String[] convert(List<String> nodesObject) {
@@ -135,6 +141,5 @@ public class RedissonAutoConfiguration {
         Resource resource = ctx.getResource(redissonProperties.getConfig());
         return resource.getInputStream();
     }
-
 
 }

@@ -1,4 +1,4 @@
-package com.wz.common.model;
+package com.wz.datasource.mybatisplus.model;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -11,8 +11,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @projectName: wz
- * @package: com.wz.common.model
+ * @projectName: wz-datasource
+ * @package: com.wz.datasource.mybatisplus.model
  * @className: BaseEntity
  * @description:
  * @author: Zhi Wang
@@ -20,10 +20,12 @@ import java.time.LocalDateTime;
  * @version: 1.0
  **/
 @Data
-public class BaseEntity implements Serializable {
+public class BaseBean implements Serializable {
     public static final String COL_ID = "id";
     public static final String COL_CREATE_TIME = "create_time";
     public static final String COL_UPDATE_TIME = "update_time";
+    public static final String FIELD_CREATE_TIME = "createTime";
+    public static final String FIELD_UPDATE_TIME = "updateTime";
 
     /**
      * 主键
@@ -47,4 +49,5 @@ public class BaseEntity implements Serializable {
     public String toString() {
         return JsonUtil.toJsonString(this);
     }
+
 }

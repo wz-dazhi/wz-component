@@ -4,9 +4,10 @@ import com.wz.common.exception.SystemException;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.MapUtil;
 import com.wz.common.util.StringUtil;
-import com.wz.encrypt.algorithm.EncryptAlgorithm;
+import com.wz.encrypt.algorithm.SignAlgorithm;
 import com.wz.encrypt.annotation.Sign;
 import com.wz.encrypt.auto.EncryptProperties;
+import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Map;
 
 import static com.wz.encrypt.enums.EncryptEnum.*;
@@ -37,7 +40,7 @@ public class SignInterceptor implements HandlerInterceptor {
     private static final String SIGN = "sign";
     private static final String SIGN_TIME = "timestamp";
 
-    private final EncryptAlgorithm algorithm;
+    private final SignAlgorithm signAlgorithm;
     private final EncryptProperties properties;
 
     /**
@@ -45,7 +48,7 @@ public class SignInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
-        if (!(handler instanceof HandlerMethod)) {
+        if (!(handler instanceof HandlerMethod) || HttpMethod.OPTIONS.name().equals(req.getMethod())) {
             return true;
         }
         HandlerMethod m = (HandlerMethod) handler;
@@ -54,14 +57,23 @@ public class SignInterceptor implements HandlerInterceptor {
             return true;
         }
         resp.setCharacterEncoding("UTF-8");
+        // 校验sign
+        Map<String, Object> map = this.verifySign(req);
+
+        // 校验参数是否被篡改
+        this.verifyParams(map, req);
+        return true;
+    }
+
+    private Map<String, Object> verifySign(HttpServletRequest req) throws Exception {
         String sign = req.getHeader(SIGN);
         log.debug(">>> Request header sign: {}", sign);
         if (StringUtil.isBlank(sign)) {
             log.error("非法请求:缺少签名信息");
             throw new SystemException(NOT_EXIST_SIGNATURE);
         }
-        // 签名算法暂时与加解密算法一致
-        String decryptSign = algorithm.decrypt(sign, properties.getKey());
+        // 签名算法
+        String decryptSign = signAlgorithm.decrypt(sign, properties.getKey());
         log.debug(">>> Decrypt header sign: {}", decryptSign);
         Map<String, Object> map = JsonUtil.toHashMap(decryptSign, String.class, Object.class);
         if (MapUtil.isEmpty(map)) {
@@ -78,24 +90,41 @@ public class SignInterceptor implements HandlerInterceptor {
         if (time > properties.getSignExpireTime() * 60000) {
             throw new SystemException(REQUEST_EXPIRED);
         }
+        return map;
+    }
 
-        // POST请求只处理时间
-        // GET请求处理参数和时间
+    private void verifyParams(Map<String, Object> map, HttpServletRequest req) throws SystemException {
+        map.remove(SIGN_TIME);
+        // GET请求处理参数
         if (HttpMethod.GET.name().equals(req.getMethod())) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                if (!SIGN_TIME.equals(key)) {
-                    String signValue = String.valueOf(value);
-                    String reqValue = String.valueOf(req.getParameter(key));
-                    if (!signValue.equals(reqValue)) {
-                        log.error(">>> 非法请求:参数被篡改. key: {}, signValue: {}, reqValue: {}", key, signValue, reqValue);
-                        throw new SystemException(PARAMETER_TAMPERED);
-                    }
+                this.doVerifyParams(entry, String.valueOf(req.getParameter(entry.getKey())));
+            }
+        } else {
+            // POST PUT DELETE 处理Body
+            try {
+                @Cleanup final BufferedReader reader = req.getReader();
+                final String body = reader.lines()
+                        .reduce(String::concat)
+                        .orElseThrow(SystemException::new);
+                Map<String, Object> bodyMap = JsonUtil.toHashMap(body, String.class, Object.class);
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    this.doVerifyParams(entry, String.valueOf(bodyMap.get(entry.getKey())));
                 }
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                throw new SystemException();
             }
         }
-        return true;
+    }
+
+    private void doVerifyParams(Map.Entry<String, Object> entry, String reqValue) throws SystemException {
+        Object value = entry.getValue();
+        String signValue = String.valueOf(value);
+        if (!signValue.equals(reqValue)) {
+            log.error(">>> 非法请求:参数被篡改. key: {}, signValue: {}, reqValue: {}", entry.getKey(), signValue, reqValue);
+            throw new SystemException(PARAMETER_TAMPERED);
+        }
     }
 
 }

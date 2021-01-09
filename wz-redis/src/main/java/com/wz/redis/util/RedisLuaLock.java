@@ -1,6 +1,7 @@
 package com.wz.redis.util;
 
 import com.wz.common.constant.Consts;
+import com.wz.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -68,8 +69,8 @@ public class RedisLuaLock {
 
     public RedisLuaLock(RedisTemplate<String, String> redisTemplate, String key, String requestId) {
         this.redisTemplate = Objects.requireNonNull(redisTemplate, "RedisTemplate 不能为null.");
-        this.key = this.key + Objects.requireNonNull(key, "Key 不能为null.");
-        this.requestId = Objects.requireNonNull(requestId, "RequestId 不能为null.");
+        this.key = this.key + StringUtil.requireNonNull(key, "Key 不能为null.");
+        this.requestId = (String) StringUtil.requireNonNull(requestId, "RequestId 不能为null.");
     }
 
     public RedisLuaLock(RedisTemplate<String, String> redisTemplate, String key, String requestId, long expire) {

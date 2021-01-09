@@ -11,7 +11,10 @@ import java.math.BigDecimal;
  * @date: 2020-03-03 12:48
  * @version: 1.0
  */
-public class DecimalUtil {
+public final class DecimalUtil {
+
+    private DecimalUtil() {
+    }
 
     public static BigDecimal add(double v1, double v2) {
         return new BigDecimal(Double.toString(v1))

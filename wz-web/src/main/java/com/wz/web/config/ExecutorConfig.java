@@ -2,11 +2,11 @@ package com.wz.web.config;
 
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskDecorator;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -24,6 +24,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date: 2019/3/1 3:41 PM
  * @version: 1.0
  **/
+@EnableAsync
 @Configuration
 @EnableConfigurationProperties(ThreadPoolProperties.class)
 public class ExecutorConfig {
@@ -35,7 +36,6 @@ public class ExecutorConfig {
      * 自定义spring线程池
      */
     @Bean
-    @ConditionalOnMissingBean
     public Executor executor(ThreadPoolProperties prop) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setThreadNamePrefix(applicationName + "-");
@@ -49,7 +49,7 @@ public class ExecutorConfig {
         return executor;
     }
 
-    private class ExecutorTaskDecorator implements TaskDecorator {
+    private static class ExecutorTaskDecorator implements TaskDecorator {
         @Override
         public Runnable decorate(Runnable r) {
             // copy MDC context

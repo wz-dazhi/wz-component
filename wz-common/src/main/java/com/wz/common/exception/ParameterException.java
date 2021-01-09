@@ -12,8 +12,6 @@ import com.wz.common.enums.ResultEnum;
  **/
 public class ParameterException extends RuntimeException {
 
-    private IErrorCode iErrorCode;
-
     private String code;
 
     private String msg;
@@ -23,22 +21,17 @@ public class ParameterException extends RuntimeException {
     }
 
     public ParameterException(IErrorCode iErrorCode) {
-        this(iErrorCode, iErrorCode.getErrorCode(), iErrorCode.getErrorMsg());
+        this(iErrorCode.getCode(), iErrorCode.getMsg());
     }
 
     public ParameterException(String msg) {
-        this(ResultEnum.PARAM_ERROR, ResultEnum.PARAM_ERROR.getErrorCode(), msg);
+        this(ResultEnum.PARAM_ERROR.getCode(), msg);
     }
 
     public ParameterException(String code, String msg) {
-        this(ResultEnum.SYSTEM_ERROR, code, msg);
-    }
-
-    private ParameterException(IErrorCode iErrorCode, String code, String msg) {
         super(msg);
         this.code = code;
         this.msg = msg;
-        this.iErrorCode = iErrorCode;
     }
 
     public String getCode() {

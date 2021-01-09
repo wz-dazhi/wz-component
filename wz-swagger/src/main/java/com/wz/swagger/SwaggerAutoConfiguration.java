@@ -1,18 +1,17 @@
 package com.wz.swagger;
 
-import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.AntPathMatcher;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.RequestParameterBuilder;
 import springfox.documentation.builders.ResponseBuilder;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -29,9 +28,8 @@ import static com.google.common.collect.Lists.newArrayList;
 /**
  * @author wangzhi
  */
-@EnableOpenApi
-@EnableKnife4j
 @Configuration
+@Import(SwaggerConfiguration.class)
 @EnableConfigurationProperties(SwaggerProperties.class)
 public class SwaggerAutoConfiguration {
 
@@ -62,6 +60,7 @@ public class SwaggerAutoConfiguration {
 
         // exclude-path处理
         List<Predicate<String>> excludePath = new ArrayList<>();
+        excludePath.add(input -> new AntPathMatcher().match("/error", input));
         for (String path : swaggerProperties.getExcludePath()) {
             excludePath.add(input -> new AntPathMatcher().match(path, input));
         }
@@ -80,7 +79,9 @@ public class SwaggerAutoConfiguration {
             docketForBuilder.securitySchemes(Collections.singletonList(apiKey(swaggerProperties)));
         }
 
-        // 全局响应消息
+        // 默认全局响应消息
+        defaultGlobalResponseMessage(swaggerProperties.getUseDefaultResponseMessages(), docketForBuilder);
+        // 自定义全局响应消息
         buildGlobalResponseMessage(swaggerProperties, docketForBuilder);
 
         Docket docket = docketForBuilder.select()
@@ -164,10 +165,13 @@ public class SwaggerAutoConfiguration {
      * 设置全局响应消息
      *
      * @param swaggerProperties swaggerProperties 支持 POST,GET,PUT,PATCH,DELETE,HEAD,OPTIONS,TRACE
-     * @param docket  swagger docket builder
+     * @param docket            swagger docket builder
      */
     public static void buildGlobalResponseMessage(SwaggerProperties swaggerProperties, Docket docket) {
         SwaggerProperties.GlobalResponseMessage globalResponseMessages = swaggerProperties.getGlobalResponseMessage();
+        if (Objects.isNull(globalResponseMessages)) {
+            return;
+        }
         /* POST,GET,PUT,PATCH,DELETE,HEAD,OPTIONS,TRACE 响应消息体 **/
         List<Response> postResponseMessages = getResponseList(globalResponseMessages.getPost());
         List<Response> getResponseMessages = getResponseList(globalResponseMessages.getGet());
@@ -207,4 +211,29 @@ public class SwaggerAutoConfiguration {
 
         return responseMessages;
     }
+
+    public static void defaultGlobalResponseMessage(boolean useDefaultResponseMessages, Docket docket) {
+        if (!useDefaultResponseMessages) {
+            return;
+        }
+        final Response ok = new ResponseBuilder().code("0").description("成功").build();
+        final Response paramsError = new ResponseBuilder().code("-1").description("参数错误").build();
+        final Response serverError = new ResponseBuilder().code("-2").description("服务器开小差, 请稍后再试").build();
+        final Response requestError = new ResponseBuilder().code("-3").description("请求失败, 请稍后再试").build();
+        List<Response> responses = new ArrayList<>();
+        responses.add(ok);
+        responses.add(paramsError);
+        responses.add(serverError);
+        responses.add(requestError);
+        docket.useDefaultResponseMessages(false)
+                .globalResponses(HttpMethod.POST, responses)
+                .globalResponses(HttpMethod.GET, responses)
+                .globalResponses(HttpMethod.PUT, responses)
+                .globalResponses(HttpMethod.PATCH, responses)
+                .globalResponses(HttpMethod.DELETE, responses)
+                .globalResponses(HttpMethod.HEAD, responses)
+                .globalResponses(HttpMethod.OPTIONS, responses)
+                .globalResponses(HttpMethod.TRACE, responses);
+    }
+
 }

@@ -18,12 +18,12 @@ public class ThreadPoolProperties {
     /**
      * 核心线程数
      */
-    private int corePoolSize = 10;
+    private int corePoolSize = 4;
 
     /**
      * 最大线程数
      */
-    private int maxPoolSize = 20;
+    private int maxPoolSize = 8;
 
     /**
      * 队列最大长度

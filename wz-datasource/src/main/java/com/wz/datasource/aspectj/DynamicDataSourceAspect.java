@@ -32,7 +32,9 @@ public class DynamicDataSourceAspect {
      */
     private final String[] QUERY_PREFIX = {"select", "find", "get", "load", "query"};
 
-    @Pointcut("execution( * com..mapper..*.*(..) )")
+    @Pointcut("execution( * com..mapper..*.*(..) ) " +
+            "|| execution( * cn..mapper..*.*(..) ) " +
+            "|| @annotation(com.wz.datasource.annotation.Master)")
     private void mapperAspect() {
     }
 

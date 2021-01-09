@@ -1,9 +1,15 @@
 package com.wz.common.util;
 
+import cn.hutool.core.lang.TypeReference;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 
 /**
  * @projectName: wz-common
@@ -15,44 +21,81 @@ import org.springframework.stereotype.Component;
  * @version: 1.0
  **/
 @Component
-public class SpringContextUtil implements ApplicationContextAware {
+public final class SpringContextUtil implements ApplicationContextAware {
 
     /**
      * Spring应用上下文环境
      */
-    private static ApplicationContext context;
+    private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {
-        SpringContextUtil.context = context;
+        SpringContextUtil.applicationContext = context;
     }
 
     /**
      * @return ApplicationContext
      */
     public static ApplicationContext getApplicationContext() {
-        return context;
+        return applicationContext;
     }
 
     /**
      * 通过name获取 Bean.
      */
-    public static Object getBean(String name) {
-        return getApplicationContext().getBean(name);
+    public static <T> T getBean(String name) {
+        return (T) applicationContext.getBean(name);
     }
 
     /**
      * 通过class获取Bean.
      */
     public static <T> T getBean(Class<T> clazz) {
-        return getApplicationContext().getBean(clazz);
+        return applicationContext.getBean(clazz);
     }
 
     /**
      * 通过name,以及Clazz返回指定的Bean
      */
     public static <T> T getBean(String name, Class<T> clazz) {
-        return getApplicationContext().getBean(name, clazz);
+        return applicationContext.getBean(name, clazz);
+    }
+
+    /**
+     * 通过类型参考返回带泛型参数的Bean
+     *
+     * @param reference 类型参考，用于持有转换后的泛型类型
+     * @param <T>       Bean类型
+     * @return 带泛型参数的Bean
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getBean(TypeReference<T> reference) {
+        final ParameterizedType parameterizedType = (ParameterizedType) reference.getType();
+        final Class<T> rawType = (Class<T>) parameterizedType.getRawType();
+        final Class<?>[] genericTypes = Arrays.stream(parameterizedType.getActualTypeArguments()).map(type -> (Class<?>) type).toArray(Class[]::new);
+        final String[] beanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(rawType, genericTypes));
+        return getBean(beanNames[0], rawType);
+    }
+
+    /**
+     * 动态向Spring注册Bean
+     *
+     * @param <T>      Bean类型
+     * @param beanName 名称
+     * @param bean     bean
+     */
+    public static <T> void registerBean(String beanName, T bean) {
+        ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
+        context.getBeanFactory().registerSingleton(beanName, bean);
+    }
+
+    /**
+     * 获取当前的环境配置，无配置返回null
+     *
+     * @return 当前的环境配置
+     */
+    public static String[] getActiveProfiles() {
+        return applicationContext.getEnvironment().getActiveProfiles();
     }
 
     /**
@@ -61,8 +104,18 @@ public class SpringContextUtil implements ApplicationContextAware {
      * @return dev, test, pro
      */
     public static String getActiveProfile() {
-        String[] profiles = getApplicationContext().getEnvironment().getActiveProfiles();
-        return 0 == profiles.length ? "" : profiles[0];
+        String[] profiles = getActiveProfiles();
+        return (null == profiles || 0 == profiles.length) ? null : profiles[0];
+    }
+
+    /**
+     * 获取配置文件配置项的值
+     *
+     * @param key 配置项key
+     * @return 属性值
+     */
+    public static String getProperty(String key) {
+        return applicationContext.getEnvironment().getProperty(key);
     }
 
 }

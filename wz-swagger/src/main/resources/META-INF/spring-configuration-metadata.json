@@ -1,217 +1,228 @@
 {
-  "hints": [],
   "groups": [
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger",
-      "type": "com.wz.swagger.SwaggerProperties"
+      "name": "api.swagger",
+      "type": "com.wz.swagger.SwaggerProperties",
+      "sourceType": "com.wz.swagger.SwaggerProperties"
     },
     {
+      "name": "api.swagger.authorization",
+      "type": "com.wz.swagger.SwaggerProperties$Authorization",
       "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger.authorization",
-      "type": "com.wz.swagger.SwaggerProperties$Authorization"
+      "sourceMethod": "getAuthorization()"
     },
     {
+      "name": "api.swagger.contact",
+      "type": "com.wz.swagger.SwaggerProperties$Contact",
       "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger.contact",
-      "type": "com.wz.swagger.SwaggerProperties$Contact"
+      "sourceMethod": "getContact()"
     },
     {
+      "name": "api.swagger.global-response-message",
+      "type": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
       "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger.global-response-message",
-      "type": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
+      "sourceMethod": "getGlobalResponseMessage()"
     }
   ],
   "properties": [
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": true,
-      "name": "swagger.apply-default-response-messages",
+      "name": "api.swagger.apply-default-response-messages",
+      "type": "java.lang.Boolean",
       "description": "是否使用默认预定义的响应消息 ，默认 true",
-      "type": "java.lang.Boolean"
-    },
-    {
       "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "default-api",
-      "name": "swagger.group-name",
-      "description": "分组",
-      "type": "java.lang.String"
+      "defaultValue": true
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$Authorization",
-      "defaultValue": "TOKEN",
-      "name": "swagger.authorization.key-name",
+      "name": "api.swagger.authorization.key-name",
+      "type": "java.lang.String",
       "description": "鉴权传递的Header参数",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties$Authorization",
+      "defaultValue": "TOKEN"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$Authorization",
-      "defaultValue": "Authorization",
-      "name": "swagger.authorization.name",
+      "name": "api.swagger.authorization.name",
+      "type": "java.lang.String",
       "description": "鉴权策略ID，对应 SecurityReferences ID",
-      "type": "java.lang.String"
-    },
-    {
       "sourceType": "com.wz.swagger.SwaggerProperties$Authorization",
-      "defaultValue": "ApiKey",
-      "name": "swagger.authorization.type",
+      "defaultValue": "Authorization"
+    },
+    {
+      "name": "api.swagger.authorization.type",
+      "type": "java.lang.String",
       "description": "鉴权策略，可选 ApiKey | BasicAuth | None，默认ApiKey",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties$Authorization",
+      "defaultValue": "ApiKey"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "",
-      "name": "swagger.base-package",
+      "name": "api.swagger.base-package",
+      "type": "java.lang.String",
       "description": "swagger会解析的包路径",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": ""
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger.base-path",
+      "name": "api.swagger.base-path",
+      "type": "java.util.List<java.lang.String>",
       "description": "swagger会解析的url规则",
-      "type": "java.util.List<java.lang.String>"
+      "sourceType": "com.wz.swagger.SwaggerProperties"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$Contact",
-      "defaultValue": "",
-      "name": "swagger.contact.email",
+      "name": "api.swagger.contact.email",
+      "type": "java.lang.String",
       "description": "联系人email",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties$Contact",
+      "defaultValue": ""
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$Contact",
-      "defaultValue": "",
-      "name": "swagger.contact.name",
+      "name": "api.swagger.contact.name",
+      "type": "java.lang.String",
       "description": "联系人",
-      "type": "java.lang.String"
-    },
-    {
       "sourceType": "com.wz.swagger.SwaggerProperties$Contact",
-      "defaultValue": "",
-      "name": "swagger.contact.url",
+      "defaultValue": ""
+    },
+    {
+      "name": "api.swagger.contact.url",
+      "type": "java.lang.String",
       "description": "联系人url",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties$Contact",
+      "defaultValue": ""
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "",
-      "name": "swagger.description",
+      "name": "api.swagger.description",
+      "type": "java.lang.String",
       "description": "描述",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": ""
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger.enabled",
+      "name": "api.swagger.enabled",
+      "type": "java.lang.Boolean",
       "description": "是否开启swagger",
-      "type": "java.lang.Boolean"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": false
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger.exclude-path",
+      "name": "api.swagger.exclude-path",
+      "type": "java.util.List<java.lang.String>",
       "description": "在basePath基础上需要排除的url规则",
-      "type": "java.util.List<java.lang.String>"
+      "sourceType": "com.wz.swagger.SwaggerProperties"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger.global-operation-parameters",
+      "name": "api.swagger.global-request-parameters",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalRequestParameter>",
       "description": "全局参数配置",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalRequestParameter>"
+      "sourceType": "com.wz.swagger.SwaggerProperties"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
-      "name": "swagger.global-response-message.delete",
+      "name": "api.swagger.global-response-message.delete",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalResponseMessageBody>",
       "description": "DELETE 响应消息体",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalResponseMessageBody>"
+      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
-      "name": "swagger.global-response-message.get",
+      "name": "api.swagger.global-response-message.get",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalResponseMessageBody>",
       "description": "GET 响应消息体",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalResponseMessageBody>"
+      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
-      "name": "swagger.global-response-message.head",
+      "name": "api.swagger.global-response-message.head",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalResponseMessageBody>",
       "description": "HEAD 响应消息体",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalResponseMessageBody>"
+      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
-      "name": "swagger.global-response-message.options",
+      "name": "api.swagger.global-response-message.options",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalResponseMessageBody>",
       "description": "OPTIONS 响应消息体",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalResponseMessageBody>"
+      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
-      "name": "swagger.global-response-message.patch",
+      "name": "api.swagger.global-response-message.patch",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalResponseMessageBody>",
       "description": "PATCH 响应消息体",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalResponseMessageBody>"
+      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
-      "name": "swagger.global-response-message.post",
+      "name": "api.swagger.global-response-message.post",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalResponseMessageBody>",
       "description": "POST 响应消息体",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalResponseMessageBody>"
+      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
-      "name": "swagger.global-response-message.put",
+      "name": "api.swagger.global-response-message.put",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalResponseMessageBody>",
       "description": "PUT 响应消息体",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalResponseMessageBody>"
+      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage",
-      "name": "swagger.global-response-message.trace",
+      "name": "api.swagger.global-response-message.trace",
+      "type": "java.util.List<com.wz.swagger.SwaggerProperties$GlobalResponseMessageBody>",
       "description": "TRACE 响应消息体",
-      "type": "java.util.List<com.wz.swagger.SwaggerProperties.GlobalResponseMessageBody>"
+      "sourceType": "com.wz.swagger.SwaggerProperties$GlobalResponseMessage"
     },
     {
+      "name": "api.swagger.group-name",
+      "type": "java.lang.String",
+      "description": "分组",
       "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "",
-      "name": "swagger.host",
+      "defaultValue": "default-api"
+    },
+    {
+      "name": "api.swagger.host",
+      "type": "java.lang.String",
       "description": "host信息",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": ""
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "name": "swagger.ignored-parameter-types",
+      "name": "api.swagger.ignored-parameter-types",
+      "type": "java.util.List<java.lang.Class<?>>",
       "description": "忽略的参数类型",
-      "type": "java.util.List<java.lang.Class<?>>"
+      "sourceType": "com.wz.swagger.SwaggerProperties"
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "",
-      "name": "swagger.license",
+      "name": "api.swagger.license",
+      "type": "java.lang.String",
       "description": "许可证",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": ""
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "",
-      "name": "swagger.license-url",
+      "name": "api.swagger.license-url",
+      "type": "java.lang.String",
       "description": "许可证URL",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": ""
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "",
-      "name": "swagger.terms-of-service-url",
+      "name": "api.swagger.terms-of-service-url",
+      "type": "java.lang.String",
       "description": "服务条款URL",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": ""
     },
     {
-      "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "",
-      "name": "swagger.title",
+      "name": "api.swagger.title",
+      "type": "java.lang.String",
       "description": "标题",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": ""
     },
     {
+      "name": "api.swagger.use-default-response-messages",
+      "type": "java.lang.Boolean",
+      "description": "是否使用框架内自定义响应消息, 默认为true",
       "sourceType": "com.wz.swagger.SwaggerProperties",
-      "defaultValue": "",
-      "name": "swagger.version",
+      "defaultValue": true
+    },
+    {
+      "name": "api.swagger.version",
+      "type": "java.lang.String",
       "description": "版本",
-      "type": "java.lang.String"
+      "sourceType": "com.wz.swagger.SwaggerProperties",
+      "defaultValue": ""
     }
-  ]
+  ],
+  "hints": []
 }

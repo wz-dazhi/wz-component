@@ -2,7 +2,7 @@ package com.wz.shiro.filter;
 
 import com.wz.common.enums.ResultEnum;
 import com.wz.common.util.JsonUtil;
-import com.wz.common.util.ResultUtil;
+import com.wz.common.util.Results;
 import com.wz.common.util.StringUtil;
 import com.wz.shiro.bean.ShiroProperties;
 import com.wz.shiro.enums.ShiroEnum;
@@ -74,13 +74,13 @@ public abstract class AbstractShiroFilter extends AuthenticatingFilter {
             // 限制只能POST登录
             if (!req.getMethod().equalsIgnoreCase(POST_METHOD)) {
                 log.warn("Method is not Allowed. request uri: {}, method: {}", req.getRequestURI(), req.getMethod());
-                this.writeResponse(response, ResultUtil.fail(METHOD_NOT_ALLOWED));
+                this.writeResponse(response, Results.fail(METHOD_NOT_ALLOWED));
                 return false;
             }
             // 执行登录逻辑，需要实现createToken方法
             return executeLogin(request, response);
         }
-        this.writeResponse(response, ResultUtil.fail(ShiroEnum.UNAUTHORIZED));
+        this.writeResponse(response, Results.fail(ShiroEnum.UNAUTHORIZED));
         return false;
     }
 
@@ -89,14 +89,14 @@ public abstract class AbstractShiroFilter extends AuthenticatingFilter {
         log.debug("登录成功: {}", t);
         // 生成 token 令牌
         final String token = this.onGenerateToken(t, subject, (HttpServletRequest) request, (HttpServletResponse) response);
-        this.writeResponse(response, ResultUtil.ok(token));
+        this.writeResponse(response, Results.ok(token));
         return false;
     }
 
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
         log.error("登录失败. AuthenticationToken: {}, e: ", token, e);
-        this.writeResponse(response, ResultUtil.fail(ResultEnum.REQUEST_ERROR.getErrorCode(), e.getMessage()));
+        this.writeResponse(response, Results.fail(ResultEnum.REQUEST_ERROR.getCode(), e.getMessage()));
         return false;
     }
 

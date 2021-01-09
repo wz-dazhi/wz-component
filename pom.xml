@@ -63,10 +63,6 @@
         <shiro-spring-boot-web-starter.version>1.7.0</shiro-spring-boot-web-starter.version>
         <shiro-redis.version>3.3.1</shiro-redis.version>
         <disruptor.version>3.4.2</disruptor.version>
-        <!-- logging -->
-        <slf4j.version>2.0.0-alpha1</slf4j.version>
-        <log4j.version>2.14.0</log4j.version>
-        <logback.version>1.2.3</logback.version>
     </properties>
 
     <dependencyManagement>
@@ -149,28 +145,6 @@
                 <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <!-- logging -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j18-impl</artifactId>
-                <version>${log4j.version}</version>
             </dependency>
 
             <!-- thymeleaf java8日期格式化 -->

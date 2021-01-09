@@ -29,7 +29,7 @@ public class AsyncMailServiceImpl implements AsyncMailService {
     private final MailService mailService;
 
     @Override
-    public Future<Result> send(MailMsg msg, boolean isHtml) {
+    public Future<Result<Boolean>> send(MailMsg msg, boolean isHtml) {
         return AsyncResult.forValue(mailService.send(msg, isHtml));
     }
 

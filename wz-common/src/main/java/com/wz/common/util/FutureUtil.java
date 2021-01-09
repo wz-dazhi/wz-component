@@ -12,13 +12,16 @@ import java.util.concurrent.Future;
  * @date: 2019-11-21 18:35
  * @version: 1.0
  */
-public class FutureUtil<T> {
+public final class FutureUtil {
 
-    public void cancelList(List<Future<T>> futures) {
-        futures.parallelStream().forEach(this::cancel);
+    private FutureUtil() {
     }
 
-    public void cancel(Future<T> f) {
+    public static <T> void cancelList(List<Future<T>> futures) {
+        futures.parallelStream().forEach(FutureUtil::cancel);
+    }
+
+    public static <T> void cancel(Future<T> f) {
         if (f.isDone()) {
             f.cancel(true);
         }

@@ -2,8 +2,10 @@ package com.wz.redis.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionCommands;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -20,6 +22,7 @@ import javax.annotation.Resource;
  * @author: Zhi Wang
  * @createDate: 2018/9/8 下午7:02
  **/
+@Slf4j
 @Configuration
 @AllArgsConstructor
 public class RedisConfig {
@@ -45,6 +48,10 @@ public class RedisConfig {
         redisTemplate.setHashValueSerializer(jsonRedisSerializer);
         redisConnectionFactory.setValidateConnection(true);
         redisTemplate.setConnectionFactory(redisConnectionFactory);
+        // 初始化RedisTemplate
+        redisTemplate.afterPropertiesSet();
+        final String pong = redisTemplate.execute(RedisConnectionCommands::ping);
+        log.info(">>> RedisTemplate ping: [{}]", pong);
         return redisTemplate;
     }
 

@@ -10,7 +10,7 @@ import com.wz.common.constant.DateConsts;
 import com.wz.common.model.Result;
 import com.wz.common.util.DateUtil;
 import com.wz.common.util.JsonUtil;
-import com.wz.common.util.ResultUtil;
+import com.wz.common.util.Results;
 import com.wz.common.util.StringUtil;
 import com.wz.qiniu.config.QiniuProperties;
 import com.wz.qiniu.enums.QiniuEnum;
@@ -44,10 +44,10 @@ public class QiniuServiceImpl implements QiniuService {
         key = this.getKey(file.getName(), key);
         try {
             Response res = uploadManager.put(file, key, getToken(key));
-            return ResultUtil.ok(JsonUtil.toBean(res.bodyString(), DefaultPutRet.class));
+            return Results.ok(JsonUtil.toBean(res.bodyString(), DefaultPutRet.class));
         } catch (QiniuException e) {
             log.error("上传文件失败. msg: {}, e: ", e.error(), e);
-            return ResultUtil.fail(QiniuEnum.UPLOAD_FAIL);
+            return Results.fail(QiniuEnum.UPLOAD_FAIL);
         }
     }
 
@@ -61,10 +61,10 @@ public class QiniuServiceImpl implements QiniuService {
         key = this.getKey(null, key);
         try {
             Response res = uploadManager.put(is, key, getToken(key), params, mime);
-            return ResultUtil.ok(JsonUtil.toBean(res.bodyString(), DefaultPutRet.class));
+            return Results.ok(JsonUtil.toBean(res.bodyString(), DefaultPutRet.class));
         } catch (QiniuException e) {
             log.error("上传文件失败. msg: {}, e: ", e.error(), e);
-            return ResultUtil.fail(QiniuEnum.UPLOAD_FAIL);
+            return Results.fail(QiniuEnum.UPLOAD_FAIL);
         }
     }
 

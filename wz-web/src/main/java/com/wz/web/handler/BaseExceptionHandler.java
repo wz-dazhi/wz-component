@@ -5,7 +5,7 @@ import com.wz.common.exception.BusinessException;
 import com.wz.common.exception.ParameterException;
 import com.wz.common.exception.SystemException;
 import com.wz.common.model.Result;
-import com.wz.common.util.ResultUtil;
+import com.wz.common.util.Results;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -64,7 +64,7 @@ abstract class BaseExceptionHandler {
             msg = "[" + paramName + "] " + v.getMessage();
         } else {
             this.error(req, resp, e);
-            msg = ResultEnum.PARAM_ERROR.getErrorMsg();
+            msg = ResultEnum.PARAM_ERROR.getMsg();
         }
         return msg;
     }
@@ -73,16 +73,16 @@ abstract class BaseExceptionHandler {
         Result<Void> result;
         if (e instanceof SystemException) {
             SystemException se = (SystemException) e;
-            result = ResultUtil.fail(se.getCode(), se.getMsg());
+            result = Results.fail(se.getCode(), se.getMsg());
         } else if (e instanceof BusinessException) {
             BusinessException se = (BusinessException) e;
-            result = ResultUtil.fail(se.getCode(), se.getMsg());
+            result = Results.fail(se.getCode(), se.getMsg());
         } else if (e instanceof ParameterException) {
             ParameterException se = (ParameterException) e;
-            result = ResultUtil.fail(se.getCode(), se.getMsg());
+            result = Results.fail(se.getCode(), se.getMsg());
         } else {
             this.error(req, resp, e);
-            result = ResultUtil.fail();
+            result = Results.fail();
         }
         return result;
     }

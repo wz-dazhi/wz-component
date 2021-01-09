@@ -17,7 +17,7 @@ import java.util.Objects;
  * @date: 2018/12/28 下午3:19
  * @version: 1.0
  **/
-public class StringUtil {
+public final class StringUtil {
 
     private StringUtil() {
     }

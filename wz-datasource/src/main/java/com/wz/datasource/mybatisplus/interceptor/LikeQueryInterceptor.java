@@ -1,57 +1,51 @@
-package com.wz.datasource.mybatisplus.intercepter;
+package com.wz.datasource.mybatisplus.interceptor;
 
+import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
 /**
  * @author wangzhi
  * @description: SQL拦截器. 处理like模糊查询特殊字符过滤: % _
  */
-@Intercepts(@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}))
-public class QueryStringEscapeInterceptor implements Interceptor {
+public class LikeQueryInterceptor implements InnerInterceptor {
 
+    /**
+     * <p>
+     * 改改sql啥的
+     *
+     * @param executor      Executor(可能是代理对象)
+     * @param ms            MappedStatement
+     * @param parameter     parameter
+     * @param rowBounds     rowBounds
+     * @param resultHandler resultHandler
+     * @param boundSql      boundSql
+     */
     @Override
-    public Object intercept(Invocation invocation) throws Throwable {
-        // 拦截sql
-        Object[] args = invocation.getArgs();
-        MappedStatement statement = (MappedStatement) args[0];
-        Object parameterObject = args[1];
-        BoundSql boundSql = statement.getBoundSql(parameterObject);
-        String sql = boundSql.getSql();
-        // 处理特殊字符
-        modifyLikeSql(sql, parameterObject, boundSql);
-        // 返回
-        return invocation.proceed();
-    }
-
-    @Override
-    public Object plugin(Object target) {
-        return Plugin.wrap(target, this);
-    }
-
-    @Override
-    public void setProperties(Properties properties) {
-    }
-
-    private void modifyLikeSql(String sql, Object parameterObject, BoundSql boundSql) {
-        if (!(parameterObject instanceof HashMap)) {
+    public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) throws SQLException {
+        if (!(parameter instanceof HashMap)) {
             return;
         }
+        final String sql = boundSql.getSql();
         if (!sql.toLowerCase().contains(" like ") || !sql.toLowerCase().contains("?")) {
             return;
         }
+        this.modifyLikeSql(sql, parameter, boundSql);
+    }
+
+    private void modifyLikeSql(String sql, Object parameterObject, BoundSql boundSql) {
+        HashMap<String, Object> parameter = (HashMap) parameterObject;
         // 获取关键字的个数（去重）
         String[] strList = sql.split("\\?");
         Set<String> keyNames = new HashSet<>();
@@ -62,10 +56,7 @@ public class QueryStringEscapeInterceptor implements Interceptor {
             }
         }
         // 对关键字进行特殊字符“清洗”，如果有特殊字符的，在特殊字符前添加转义字符（\）
-        for (String keyName : keyNames) {
-            HashMap<String, Object> parameter = (HashMap) parameterObject;
-            this.setParam(parameter, keyName, sql);
-        }
+        keyNames.forEach(keyName -> this.setParam(parameter, keyName, sql));
     }
 
     private String escapeChar(String before) {

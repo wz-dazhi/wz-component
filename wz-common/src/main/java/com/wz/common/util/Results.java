@@ -5,23 +5,20 @@ import com.wz.common.exception.IErrorCode;
 import com.wz.common.model.Result;
 
 /**
- * @version 1.0
  * @projectName: wz
  * @package: com.common.util
- * @className: ResultUtil
+ * @className: Results
  * @description: 返回工具类
  * @author: Zhi Wang
  * @createDate: 2018/9/9 上午11:52
  **/
-public class ResultUtil {
+public final class Results {
 
-    private ResultUtil() {
+    private Results() {
     }
 
     /**
      * 默认成功
-     *
-     * @return
      */
     public static <T> Result<T> ok() {
         return ok(null);
@@ -29,13 +26,16 @@ public class ResultUtil {
 
     /**
      * 成功返回对象
-     *
-     * @param t
-     * @return
      */
     public static <T> Result<T> ok(T t) {
-        ResultEnum ok = ResultEnum.OK;
-        return new Result<>(ok.getErrorCode(), ok.getErrorMsg(), t);
+        return ok(t, ResultEnum.OK.getMsg());
+    }
+
+    /**
+     * 成功, 并携带自定义msg
+     */
+    public static <T> Result<T> ok(T t, String msg) {
+        return new Result<>(ResultEnum.OK.getCode(), msg, t);
     }
 
     /**
@@ -44,8 +44,8 @@ public class ResultUtil {
      * @return
      */
     public static <T> Result<T> fail() {
-        ResultEnum se = ResultEnum.SYSTEM_ERROR;
-        return fail(se.getErrorCode(), se.getErrorMsg());
+        ResultEnum se = ResultEnum.REQUEST_ERROR;
+        return fail(se.getCode(), se.getMsg());
     }
 
     /**
@@ -66,7 +66,14 @@ public class ResultUtil {
      * @return
      */
     public static <T> Result<T> fail(IErrorCode ec) {
-        return fail(ec.getErrorCode(), ec.getErrorMsg());
+        return fail(ec.getCode(), ec.getMsg());
+    }
+
+    /**
+     * 失败
+     */
+    public static <T> Result<T> fail(String msg) {
+        return fail(ResultEnum.REQUEST_ERROR.getCode(), msg);
     }
 
 }

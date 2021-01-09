@@ -45,7 +45,7 @@ public enum EncryptEnum implements IErrorCode {
      * @return
      */
     @Override
-    public String getErrorCode() {
+    public String getCode() {
         return this.code;
     }
 
@@ -55,7 +55,7 @@ public enum EncryptEnum implements IErrorCode {
      * @return
      */
     @Override
-    public String getErrorMsg() {
+    public String getMsg() {
         return Resources.getMessage("i18n/encrypt/encrypt", this.code);
     }
 }

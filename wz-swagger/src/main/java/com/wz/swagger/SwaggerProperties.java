@@ -11,7 +11,7 @@ import java.util.List;
  * @author wangzhi
  */
 @Data
-@ConfigurationProperties("swagger")
+@ConfigurationProperties("api.swagger")
 public class SwaggerProperties {
 
     /**
@@ -53,6 +53,11 @@ public class SwaggerProperties {
      * 是否使用默认预定义的响应消息 ，默认 true
      **/
     private Boolean applyDefaultResponseMessages = true;
+
+    /**
+     * 是否使用框架内自定义响应消息, 默认为true
+     */
+    private Boolean useDefaultResponseMessages = true;
 
     /**
      * 忽略的参数类型

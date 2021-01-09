@@ -12,12 +12,13 @@ public class RedissonProperties {
 
     /**
      * redisson 的配置文件, JSON/YAML
+     * classpath:redisson.yml
      */
-    private String config = "classpath:redisson.yml";
+    private String config;
 
     /**
      * 是否启用Redisson, 默认不启用
      */
-    private boolean enable;
+    private boolean enable = false;
 
 }

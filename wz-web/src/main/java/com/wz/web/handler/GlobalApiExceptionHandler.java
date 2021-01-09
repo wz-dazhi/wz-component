@@ -2,7 +2,7 @@ package com.wz.web.handler;
 
 import com.wz.common.enums.ResultEnum;
 import com.wz.common.model.Result;
-import com.wz.common.util.ResultUtil;
+import com.wz.common.util.Results;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,7 +26,7 @@ public class GlobalApiExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class, IllegalStateException.class})
     public Result<Void> paramException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
-        return ResultUtil.fail(ResultEnum.PARAM_ERROR.getErrorCode(), super.paramHandlerException(req, resp, e));
+        return Results.fail(ResultEnum.PARAM_ERROR.getCode(), super.paramHandlerException(req, resp, e));
     }
 
     @ExceptionHandler(Exception.class)

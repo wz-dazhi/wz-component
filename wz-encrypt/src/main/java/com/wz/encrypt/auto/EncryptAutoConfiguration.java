@@ -1,7 +1,9 @@
 package com.wz.encrypt.auto;
 
 import com.wz.encrypt.algorithm.DefaultEncryptAlgorithm;
+import com.wz.encrypt.algorithm.DefaultSignAlgorithm;
 import com.wz.encrypt.algorithm.EncryptAlgorithm;
+import com.wz.encrypt.algorithm.SignAlgorithm;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -26,6 +28,12 @@ public class EncryptAutoConfiguration {
     @ConditionalOnMissingBean
     public EncryptAlgorithm encryptAlgorithm() {
         return new DefaultEncryptAlgorithm();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SignAlgorithm signAlgorithm() {
+        return new DefaultSignAlgorithm();
     }
 
 }

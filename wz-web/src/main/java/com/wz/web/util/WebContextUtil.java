@@ -16,7 +16,11 @@ import javax.servlet.http.HttpSession;
  * @date: 2019-09-20 17:25
  * @version: 1.0
  */
-public class WebContextUtil {
+public final class WebContextUtil {
+
+    private WebContextUtil() {
+    }
+
     public static HttpServletRequest getRequest() {
         return servletRequestAttributes().getRequest();
     }
@@ -29,7 +33,8 @@ public class WebContextUtil {
         return getRequest().getSession();
     }
 
-    private static ServletRequestAttributes servletRequestAttributes() {
+    public static ServletRequestAttributes servletRequestAttributes() {
         return (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
     }
+
 }

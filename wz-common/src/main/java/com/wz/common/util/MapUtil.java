@@ -23,7 +23,10 @@ import java.util.Map;
  * @createDate: 2018/9/8 下午11:42
  **/
 @Slf4j
-public class MapUtil {
+public final class MapUtil {
+
+    private MapUtil() {
+    }
 
     /**
      * 将对象装换为map

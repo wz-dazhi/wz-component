@@ -32,12 +32,12 @@ public enum ShiroEnum implements IErrorCode {
     }
 
     @Override
-    public String getErrorCode() {
+    public String getCode() {
         return this.code;
     }
 
     @Override
-    public String getErrorMsg() {
+    public String getMsg() {
         return Resources.getMessage("i18n/shiro/shiro", this.code);
     }
 }

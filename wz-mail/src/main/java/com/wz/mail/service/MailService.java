@@ -26,6 +26,6 @@ public interface MailService {
      * @see AttachmentMailMsg 附件邮件
      * @see com.wz.mail.bean.InlineMailMsg 内联静态资源邮件
      */
-    Result send(MailMsg msg, boolean isHtml);
+    Result<Boolean> send(MailMsg msg, boolean isHtml);
 
 }

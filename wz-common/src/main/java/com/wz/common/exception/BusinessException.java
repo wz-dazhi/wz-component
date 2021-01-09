@@ -12,8 +12,6 @@ import com.wz.common.enums.ResultEnum;
  **/
 public class BusinessException extends RuntimeException {
 
-    private IErrorCode iErrorCode;
-
     private String code;
 
     private String msg;
@@ -23,18 +21,13 @@ public class BusinessException extends RuntimeException {
     }
 
     public BusinessException(IErrorCode iErrorCode) {
-        this(iErrorCode, iErrorCode.getErrorCode(), iErrorCode.getErrorMsg());
+        this(iErrorCode.getCode(), iErrorCode.getMsg());
     }
 
     public BusinessException(String code, String msg) {
-        this(ResultEnum.REQUEST_ERROR, code, msg);
-    }
-
-    private BusinessException(IErrorCode iErrorCode, String code, String msg) {
         super(msg);
         this.code = code;
         this.msg = msg;
-        this.iErrorCode = iErrorCode;
     }
 
     public String getCode() {

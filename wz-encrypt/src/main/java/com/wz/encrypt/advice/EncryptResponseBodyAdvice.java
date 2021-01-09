@@ -41,22 +41,19 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return true;
+        return !properties.isDebug() && Objects.requireNonNull(returnType.getMethod()).isAnnotationPresent(Encrypt.class);
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter parameter, MediaType selectedContentType,
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
-        if (!properties.isDebug() && Objects.requireNonNull(parameter.getMethod()).isAnnotationPresent(Encrypt.class)) {
-            try {
-                return this.encryptData(body);
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                return body;
-            }
+        try {
+            return this.encryptData(body);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return body;
         }
-        return body;
     }
 
     private Object encryptData(Object body) throws Exception {
@@ -64,9 +61,7 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         String content = JsonUtil.toJsonString(body);
         log.debug("Starting encrypt date: {}", content);
         String key = properties.getKey();
-        if (StringUtil.isBlank(key)) {
-            throw new NullPointerException("请配置spring.encrypt.key");
-        }
+        StringUtil.requireNonNull(key, "请配置spring.encrypt.key");
         String result = algorithm.encrypt(content, key);
         log.debug("Encrypt Time: {} ms", sw.stop().elapsed(TimeUnit.MILLISECONDS));
         return result;

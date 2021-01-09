@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,16 +43,12 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
     private final EncryptAlgorithm algorithm;
 
     @Override
-    public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return true;
+    public boolean supports(MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+        return Objects.nonNull(parameter.getMethodAnnotation(Decrypt.class)) && !properties.isDebug();
     }
 
     @Override
     public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        if (parameter.getMethodAnnotation(Decrypt.class) == null || properties.isDebug()) {
-            log.debug("Decrypt is null or properties is debug.");
-            return inputMessage;
-        }
         try {
             return new ApiHttpInputMessage(inputMessage, algorithm, properties.getKey(), properties.getCharset());
         } catch (Exception e) {
@@ -70,7 +67,7 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         return body;
     }
 
-    private class ApiHttpInputMessage implements HttpInputMessage {
+    private static class ApiHttpInputMessage implements HttpInputMessage {
         private InputStream body;
         private HttpHeaders headers;
 

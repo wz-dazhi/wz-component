@@ -11,7 +11,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * @projectName: wz-redis
  * @package: com.wz.redis.annotation
- * @className: LuaLock
+ * @className: RedissonLock
  * @description:
  * @author: Zhi
  * @date: 2020-05-18 17:55
@@ -20,17 +20,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Target({METHOD})
 @Retention(RUNTIME)
-public @interface LuaLock {
+public @interface RedissonLock {
 
     /**
      * redis锁key
      */
     String key();
-
-    /**
-     * redis锁value值
-     */
-    String requestId();
 
     /**
      * 锁过期时间, 默认1秒
