@@ -5,6 +5,7 @@ import com.wz.encrypt.interceptor.SignInterceptor;
 import com.wz.webmvc.config.WebMvcConfig;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
@@ -25,7 +26,12 @@ public class EncryptWebMvcConfig extends WebMvcConfig {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(signInterceptor).addPathPatterns(encryptProperties.getSignPath());
+        // 开启签名
+        if (encryptProperties.isSignEnable()) {
+            registry.addInterceptor(signInterceptor)
+                    .addPathPatterns(encryptProperties.getSignPath())
+                    .order(Ordered.HIGHEST_PRECEDENCE);
+        }
     }
 
     @Override

@@ -34,7 +34,7 @@ import java.util.Set;
 @Slf4j
 abstract class BaseExceptionHandler {
 
-    String paramHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+    protected String paramHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         String msg;
         if (e instanceof BindException) {
             // 对象绑定(form 表单 or URL params)
@@ -69,7 +69,7 @@ abstract class BaseExceptionHandler {
         return msg;
     }
 
-    Result<Void> otherHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+    protected Result<Void> otherHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         Result<Void> result;
         if (e instanceof SystemException) {
             SystemException se = (SystemException) e;
@@ -87,7 +87,7 @@ abstract class BaseExceptionHandler {
         return result;
     }
 
-    private void error(HttpServletRequest req, HttpServletResponse resp, Throwable t) {
+    protected void error(HttpServletRequest req, HttpServletResponse resp, Throwable t) {
         log.error("<<< A run exception has occurred, uri: [{}] msg: [{}], e: ", req.getRequestURI(), t.getMessage(), t);
         resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
         resp.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");

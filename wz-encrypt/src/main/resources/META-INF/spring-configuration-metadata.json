@@ -17,10 +17,16 @@
     },
     {
       "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "name": "api.encrypt.sign-key",
+      "type": "java.lang.String",
+      "description": "签名key, 可以跟加密key一致"
+    },
+    {
+      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
       "name": "api.encrypt.debug",
       "type": "java.lang.Boolean",
-      "description": "是否开启调试模式",
-      "defaultValue": "true"
+      "description": "加密, 是否开启调试模式",
+      "defaultValue": "false"
     },
     {
       "sourceType": "com.wz.encrypt.auto.EncryptProperties",
@@ -31,17 +37,10 @@
     },
     {
       "sourceType": "com.wz.encrypt.auto.EncryptProperties",
-      "name": "api.encrypt.charset",
-      "type": "java.lang.String",
-      "description": "字符集",
-      "defaultValue": "UTF-8"
-    },
-    {
-      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
       "name": "api.encrypt.sign-enable",
       "type": "java.lang.Boolean",
       "description": "签名开关",
-      "defaultValue": "false"
+      "defaultValue": "true"
     },
     {
       "sourceType": "com.wz.encrypt.auto.EncryptProperties",

@@ -17,29 +17,29 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class EncryptProperties {
 
     /**
+     * 加密, 是否开启调试模式
+     */
+    private boolean debug = false;
+
+    /**
      * 加解密key
      */
     private String key;
 
     /**
-     * 是否开启调试模式
+     * 签名开关
      */
-    private boolean debug = true;
+    private boolean signEnable = true;
+
+    /**
+     * 签名key, 可以跟加密key一致
+     */
+    private String signKey;
 
     /**
      * 签名过期时间（分钟)
      */
     private long signExpireTime = 10L;
-
-    /**
-     * 字符集
-     */
-    private String charset = "UTF-8";
-
-    /**
-     * 签名开关
-     */
-    private boolean signEnable;
 
     /**
      * 校验签名的controller

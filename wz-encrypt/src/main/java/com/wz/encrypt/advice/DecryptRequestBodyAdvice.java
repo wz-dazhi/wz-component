@@ -4,6 +4,7 @@ import com.google.common.base.Stopwatch;
 import com.wz.encrypt.algorithm.EncryptAlgorithm;
 import com.wz.encrypt.annotation.Decrypt;
 import com.wz.encrypt.auto.EncryptProperties;
+import com.wz.encrypt.constant.EncryptConsts;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,7 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
     @Override
     public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
         try {
-            return new ApiHttpInputMessage(inputMessage, algorithm, properties.getKey(), properties.getCharset());
+            return new ApiHttpInputMessage(inputMessage, algorithm, properties.getKey(), EncryptConsts.CHARSET_UTF_8);
         } catch (Exception e) {
             log.error("Request Body decrypt fail. msg: {}, e: ", e.getMessage(), e);
             return inputMessage;

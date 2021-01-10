@@ -4,10 +4,13 @@ import com.wz.common.exception.SystemException;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.MapUtil;
 import com.wz.common.util.StringUtil;
+import com.wz.encrypt.algorithm.EncryptAlgorithm;
 import com.wz.encrypt.algorithm.SignAlgorithm;
+import com.wz.encrypt.annotation.Decrypt;
 import com.wz.encrypt.annotation.Sign;
 import com.wz.encrypt.auto.EncryptProperties;
-import lombok.Cleanup;
+import com.wz.encrypt.constant.EncryptConsts;
+import com.wz.web.wrapper.RequestBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -17,11 +20,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
-import static com.wz.encrypt.enums.EncryptEnum.*;
+import static com.wz.encrypt.enums.EncryptEnum.NOT_EXIST_SIGNATURE;
+import static com.wz.encrypt.enums.EncryptEnum.NOT_EXIST_SIGNATURE_TIME;
+import static com.wz.encrypt.enums.EncryptEnum.PARAMETER_TAMPERED;
+import static com.wz.encrypt.enums.EncryptEnum.REQUEST_EXPIRED;
 
 /**
  * @projectName: wz
@@ -36,11 +41,8 @@ import static com.wz.encrypt.enums.EncryptEnum.*;
 @Component
 @RequiredArgsConstructor
 public class SignInterceptor implements HandlerInterceptor {
-
-    private static final String SIGN = "sign";
-    private static final String SIGN_TIME = "timestamp";
-
     private final SignAlgorithm signAlgorithm;
+    private final EncryptAlgorithm encryptAlgorithm;
     private final EncryptProperties properties;
 
     /**
@@ -56,34 +58,34 @@ public class SignInterceptor implements HandlerInterceptor {
         if (!properties.isSignEnable() || !m.hasMethodAnnotation(Sign.class)) {
             return true;
         }
-        resp.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding(EncryptConsts.CHARSET_UTF_8);
         // 校验sign
         Map<String, Object> map = this.verifySign(req);
 
         // 校验参数是否被篡改
-        this.verifyParams(map, req);
+        this.verifyParams(map, req, m);
         return true;
     }
 
     private Map<String, Object> verifySign(HttpServletRequest req) throws Exception {
-        String sign = req.getHeader(SIGN);
+        String sign = req.getHeader(EncryptConsts.SIGN);
         log.debug(">>> Request header sign: {}", sign);
         if (StringUtil.isBlank(sign)) {
             log.error("非法请求:缺少签名信息");
             throw new SystemException(NOT_EXIST_SIGNATURE);
         }
         // 签名算法
-        String decryptSign = signAlgorithm.decrypt(sign, properties.getKey());
+        String decryptSign = signAlgorithm.decrypt(sign, properties.getSignKey());
         log.debug(">>> Decrypt header sign: {}", decryptSign);
         Map<String, Object> map = JsonUtil.toHashMap(decryptSign, String.class, Object.class);
         if (MapUtil.isEmpty(map)) {
             throw new SystemException(NOT_EXIST_SIGNATURE);
         }
-        if (null == map.get(SIGN_TIME)) {
+        if (null == map.get(EncryptConsts.SIGN_TIME)) {
             throw new SystemException(NOT_EXIST_SIGNATURE_TIME);
         }
         long currentTime = System.currentTimeMillis();
-        long signTime = (long) map.get(SIGN_TIME);
+        long signTime = (long) map.get(EncryptConsts.SIGN_TIME);
         long time = currentTime - signTime;
         log.debug(">>> Sign verify currentTime: {}, signTime: {}, diff: {}", currentTime, signTime, time);
         // 签名时间和服务器时间相差 ? 分钟以上则认为是过期请求，此时间可以配置
@@ -93,8 +95,8 @@ public class SignInterceptor implements HandlerInterceptor {
         return map;
     }
 
-    private void verifyParams(Map<String, Object> map, HttpServletRequest req) throws SystemException {
-        map.remove(SIGN_TIME);
+    private void verifyParams(Map<String, Object> map, HttpServletRequest req, HandlerMethod m) throws SystemException {
+        map.remove(EncryptConsts.SIGN_TIME);
         // GET请求处理参数
         if (HttpMethod.GET.name().equals(req.getMethod())) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
@@ -103,15 +105,26 @@ public class SignInterceptor implements HandlerInterceptor {
         } else {
             // POST PUT DELETE 处理Body
             try {
-                @Cleanup final BufferedReader reader = req.getReader();
-                final String body = reader.lines()
-                        .reduce(String::concat)
-                        .orElseThrow(SystemException::new);
-                Map<String, Object> bodyMap = JsonUtil.toHashMap(body, String.class, Object.class);
+                // 这里只能使用request包装类, 因为req.getReader()  req.getInputStream() 只能读取一次.
+                if (!(req instanceof RequestBodyWrapper)) {
+                    throw new SystemException();
+                }
+                String body = ((RequestBodyWrapper) req).getBody();
+                Map<String, Object> bodyMap;
+                // 加密数据, 需要先进行解密
+                if (Objects.nonNull(m.getMethodAnnotation(Decrypt.class)) && !properties.isDebug()) {
+                    String decryptBody = encryptAlgorithm.decrypt(body, properties.getKey());
+                    bodyMap = JsonUtil.toHashMap(decryptBody, String.class, Object.class);
+                } else {
+                    bodyMap = JsonUtil.toHashMap(body, String.class, Object.class);
+                }
+                bodyMap.remove(EncryptConsts.SIGN_TIME);
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
                     this.doVerifyParams(entry, String.valueOf(bodyMap.get(entry.getKey())));
                 }
-            } catch (IOException e) {
+            } catch (SystemException e) {
+                throw e;
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 throw new SystemException();
             }
