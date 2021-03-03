@@ -11,7 +11,6 @@ import com.wz.datasource.mybatisplus.handler.MybatisPlusMetaObjectHandler;
 import com.wz.datasource.mybatisplus.interceptor.LikeQueryInterceptor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +33,6 @@ import java.util.Map;
  * @version: 1.0
  **/
 @Slf4j
-@MapperScan({"com.**.mapper", "cn.**.mapper", "com.**.dao", "cn.**.dao"})
 @Configuration
 @ComponentScan("com.wz.datasource")
 @AllArgsConstructor
