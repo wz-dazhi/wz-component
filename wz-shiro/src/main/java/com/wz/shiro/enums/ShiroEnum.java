@@ -19,6 +19,11 @@ public enum ShiroEnum implements IErrorCode {
     UNAUTHORIZED("401"),
 
     /**
+     * 认证失败/登录失败
+     */
+    AUTHENTICATION_FAILED("401.1"),
+
+    /**
      * 请求方式不允许
      */
     METHOD_NOT_ALLOWED("405"),
