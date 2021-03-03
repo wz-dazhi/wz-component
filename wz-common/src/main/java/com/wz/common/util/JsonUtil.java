@@ -29,7 +29,21 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -56,7 +70,7 @@ public final class JsonUtil {
         // 允许字段为单引号
         MAPPER.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
         // 允许 json 存在没用引号括起来的 ascii 控制字符
-        MAPPER.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+        //MAPPER.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         // 允许 json 存在形如 // 或 /**/ 的注释
         MAPPER.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
         // 允许 json 生成器自动补全未匹配的括号
@@ -77,8 +91,8 @@ public final class JsonUtil {
         javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateConsts.DATE_HH_MM_SS_FORMATTER));
 
         //Date序列化和反序列化
-        javaTimeModule.addSerializer(Date.class, new DateSerializer());
-        javaTimeModule.addDeserializer(Date.class, new DateDeserializers.DateDeserializer());
+        javaTimeModule.addSerializer(Date.class, DateSerializer.instance);
+        javaTimeModule.addDeserializer(Date.class, DateDeserializers.DateDeserializer.instance);
 
         // 支持kotlin模块， 需要引入kotlin依赖
         //MAPPER.registerModules(javaTimeModule, new KotlinModule());

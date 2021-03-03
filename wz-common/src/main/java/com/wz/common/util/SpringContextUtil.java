@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * @projectName: wz-common
@@ -75,6 +76,27 @@ public final class SpringContextUtil implements ApplicationContextAware {
         final Class<?>[] genericTypes = Arrays.stream(parameterizedType.getActualTypeArguments()).map(type -> (Class<?>) type).toArray(Class[]::new);
         final String[] beanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(rawType, genericTypes));
         return getBean(beanNames[0], rawType);
+    }
+
+    /**
+     * 获取指定类型对应的所有Bean，包括子类
+     *
+     * @param <T>  Bean类型
+     * @param type 类、接口，null表示获取所有bean
+     * @return 类型对应的bean，key是bean注册的name，value是Bean
+     */
+    public static <T> Map<String, T> getBeansOfType(Class<T> type) {
+        return applicationContext.getBeansOfType(type);
+    }
+
+    /**
+     * 获取指定类型对应的Bean名称，包括子类
+     *
+     * @param type 类、接口，null表示获取所有bean名称
+     * @return bean名称
+     */
+    public static String[] getBeanNamesForType(Class<?> type) {
+        return applicationContext.getBeanNamesForType(type);
     }
 
     /**
