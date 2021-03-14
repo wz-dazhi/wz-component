@@ -194,6 +194,9 @@ public final class BeanCopierUtil {
          */
         @Override
         public Object convert(Object sourceValue, Class targetValueClass, Object targetSetMethodName) {
+            if (Objects.isNull(sourceValue)) {
+                return null;
+            }
             final Class<?> sourceValueClass = sourceValue.getClass();
             // 相同class对象, 直接返回
             if (sourceValueClass == targetValueClass) {
