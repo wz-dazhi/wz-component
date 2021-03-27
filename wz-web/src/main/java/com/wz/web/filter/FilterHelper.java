@@ -1,4 +1,4 @@
-package com.wz.shiro.filter;
+package com.wz.web.filter;
 
 import com.wz.common.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public final class FilterHelper {
     public static void writeResponse(ServletResponse response, Object resObj) {
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try {
-            response.getWriter().write(JsonUtil.toJsonString(resObj));
+            response.getWriter().write(JsonUtil.toJson(resObj));
         } catch (IOException e) {
             log.error("响应异常. e: ", e);
         }

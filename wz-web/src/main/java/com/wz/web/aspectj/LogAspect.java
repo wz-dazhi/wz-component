@@ -54,13 +54,13 @@ public class LogAspect {
         Stopwatch sw = Stopwatch.createStarted();
         MDC.put("linkId", UUIDUtil.getUUIDLowerCase());
         Object[] args = point.getArgs();
-        log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJsonString(args), point.getSignature().toShortString());
+        log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJson(args), point.getSignature().toShortString());
         try {
             MDC.put("clientIp", IpUtil.getIp(req));
             MDC.put("serverIp", InetAddress.getLocalHost().getHostAddress());
             MDC.put("api", req.getRequestURL().toString());
             Object r = point.proceed();
-            log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJsonString(r));
+            log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJson(r));
             return r;
         } finally {
             log.info("Uri: [{}], Time consuming: [{}]ms", uri, sw.stop().elapsed(TimeUnit.MILLISECONDS));

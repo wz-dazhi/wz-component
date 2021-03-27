@@ -139,7 +139,7 @@ public class RedisUtil {
      */
     public <T> T get(String key, Class<T> clazz) {
         StringUtil.requireNonNull(key, "key 不能为空");
-        return JsonUtil.toBean(JsonUtil.toJsonString(this.get(key)), clazz);
+        return JsonUtil.toBean(JsonUtil.toJson(this.get(key)), clazz);
     }
 
     /**
@@ -150,7 +150,7 @@ public class RedisUtil {
      */
     public <T> List<T> getList(String key, Class<T> clazz) {
         StringUtil.requireNonNull(key, "key 不能为空");
-        return JsonUtil.toArrayList(JsonUtil.toJsonString(this.get(key)), clazz);
+        return JsonUtil.toArrayList(JsonUtil.toJson(this.get(key)), clazz);
     }
 
     /**

@@ -30,9 +30,6 @@ public final class MapUtil {
 
     /**
      * 将对象装换为map
-     *
-     * @param bean
-     * @return
      */
     public static <T> Map<String, Object> beanToMap(T bean) {
         Map<String, Object> map = Maps.newHashMap();
@@ -45,10 +42,6 @@ public final class MapUtil {
 
     /**
      * 将map装换为javabean对象
-     *
-     * @param map
-     * @param bean
-     * @return
      */
     public static <T> T mapToBean(Map<String, Object> map, T bean) {
         if (null == bean) {
@@ -136,9 +129,6 @@ public final class MapUtil {
 
     /**
      * 将List<T>转换为List<Map<String, Object>>
-     *
-     * @param objList
-     * @return
      */
     public static <T> List<Map<String, Object>> objectsToMaps(List<T> objList) {
         List<Map<String, Object>> list = Lists.newArrayList();
@@ -150,10 +140,6 @@ public final class MapUtil {
 
     /**
      * 将List<Map<String,Object>>转换为List<T>
-     *
-     * @param maps
-     * @param clazz
-     * @return
      */
     public static <T> List<T> mapsToObjects(List<Map<String, Object>> maps, Class<T> clazz) {
         List<T> list = Lists.newArrayList();
@@ -162,7 +148,7 @@ public final class MapUtil {
                 try {
                     list.add(mapToBean(m, clazz.newInstance()));
                 } catch (InstantiationException | IllegalAccessException e) {
-                    log.error("Maps to Objects Error. maps: {}, bean name: {}, msg: {}", JsonUtil.toJsonString(maps), clazz.getName(), e.getMessage());
+                    log.error("Maps to Objects Error. maps: {}, bean name: {}, msg: {}", JsonUtil.toJson(maps), clazz.getName(), e.getMessage());
                 }
             });
         }

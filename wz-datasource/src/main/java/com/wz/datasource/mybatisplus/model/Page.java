@@ -206,7 +206,7 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
 
     @Override
     public String toString() {
-        return JsonUtil.toJsonString(this);
+        return JsonUtil.toJson(this);
     }
 
 }

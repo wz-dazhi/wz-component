@@ -40,6 +40,6 @@ public class MailMsg implements Serializable {
 
     @Override
     public String toString() {
-        return JsonUtil.toJsonString(this);
+        return JsonUtil.toJson(this);
     }
 }

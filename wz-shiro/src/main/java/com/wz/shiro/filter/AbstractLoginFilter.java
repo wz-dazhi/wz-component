@@ -8,6 +8,7 @@ import com.wz.common.util.StringUtil;
 import com.wz.shiro.annotation.Anon;
 import com.wz.shiro.bean.ShiroProperties;
 import com.wz.shiro.enums.ShiroEnum;
+import com.wz.web.filter.FilterHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;

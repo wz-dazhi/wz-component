@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * @projectName: wz
  * @package: com.common.model
  * @className: Result
  * @description: 结果响应
@@ -51,6 +50,6 @@ public class Result<T> implements Serializable {
 
     @Override
     public String toString() {
-        return JsonUtil.toJsonString(this);
+        return JsonUtil.toJson(this);
     }
 }

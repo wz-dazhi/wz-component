@@ -58,7 +58,7 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     private Object encryptData(Object body) throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
-        String content = JsonUtil.toJsonString(body);
+        String content = JsonUtil.toJson(body);
         log.debug("Starting encrypt date: {}", content);
         String key = properties.getKey();
         StringUtil.requireNonNull(key, "请配置spring.encrypt.key");

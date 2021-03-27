@@ -47,7 +47,7 @@ public class InlineMailMsg extends MailMsg {
 
         @Override
         public String toString() {
-            return JsonUtil.toJsonString(this);
+            return JsonUtil.toJson(this);
         }
     }
 }

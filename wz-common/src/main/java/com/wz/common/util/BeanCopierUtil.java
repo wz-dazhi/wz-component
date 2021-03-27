@@ -40,7 +40,8 @@ public final class BeanCopierUtil {
     /**
      * 使用BeanCopier拷贝对象属性
      * 1. target不能使用链式调用 {@link lombok.experimental.Accessors#chain}
-     * 2. 只会拷贝source,target属性类型和名称完全一致的字段
+     * 2. 只会拷贝source,target属性类型和名称(必须)完全一致的字段
+     * 3. 源和目标必须存在一致的set方法和get方法, 不然会报null指针
      *
      * @param source    源
      * @param target    目标
@@ -66,7 +67,8 @@ public final class BeanCopierUtil {
     /**
      * 使用BeanCopier拷贝对象属性
      * 1. target不能使用链式调用 {@link lombok.experimental.Accessors#chain}
-     * 2. 只会拷贝source,target属性类型和名称完全一致的字段
+     * 2. 只会拷贝source,target属性类型和名称(必须)完全一致的字段
+     * 3. 源和目标必须存在一致的set方法和get方法, 不然会报null指针
      *
      * @param source      源
      * @param targetClass 目标类对象
@@ -168,7 +170,7 @@ public final class BeanCopierUtil {
 
     /**
      * <p>
-     * 不推荐使用, 两个bean尽量属性名相同, 属性类型相同的字段
+     * 不推荐使用, 两个bean尽量属性名相同, 属性类型相同, set get相同.
      * 获取默认转换器, 此转换器有性能问题.
      * 如数据量不大, 可以使用.
      * 如数据量很大, 推荐使用mapstruct框架. 可以继承通用接口: {@link com.wz.common.mapstruct.BaseMapping}
@@ -234,7 +236,7 @@ public final class BeanCopierUtil {
                 }
             }
             // 不等于字符串, 通过json方式进行转换
-            final String json = JsonUtil.toJsonString(sourceValue);
+            final String json = JsonUtil.toJson(sourceValue);
             try {
                 return JsonUtil.toBean(json, targetValueClass);
             } catch (Exception e) {

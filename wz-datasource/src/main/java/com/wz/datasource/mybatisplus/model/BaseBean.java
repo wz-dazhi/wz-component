@@ -47,7 +47,7 @@ public class BaseBean implements Serializable {
 
     @Override
     public String toString() {
-        return JsonUtil.toJsonString(this);
+        return JsonUtil.toJson(this);
     }
 
 }

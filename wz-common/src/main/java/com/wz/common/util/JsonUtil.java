@@ -108,11 +108,8 @@ public final class JsonUtil {
 
     /**
      * 对象转json字符串
-     *
-     * @param t
-     * @return
      */
-    public static <T> String toJsonString(T t) {
+    public static <T> String toJson(T t) {
         Objects.requireNonNull(t, "t is null.");
         try {
             return MAPPER.writeValueAsString(t);
@@ -127,15 +124,14 @@ public final class JsonUtil {
      *
      * @param isPretty 是否需要格式化
      * @param t
-     * @return
      */
-    public static <T> String toJsonString(boolean isPretty, T t) {
+    public static <T> String toJson(boolean isPretty, T t) {
         try {
             if (isPretty) {
                 Objects.requireNonNull(t, "t is null.");
                 return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(t);
             } else {
-                return toJsonString(t);
+                return toJson(t);
             }
         } catch (JsonProcessingException e) {
             log.error("Bean 转json字符串发生异常. isPretty: {}, t: {}, msg: {}", isPretty, t, e.getMessage());
