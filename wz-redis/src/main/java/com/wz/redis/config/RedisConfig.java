@@ -1,13 +1,21 @@
 package com.wz.redis.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
+import com.wz.common.util.StringUtil;
+import com.wz.redis.serializer.KeySerializer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionCommands;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -24,8 +32,11 @@ import javax.annotation.Resource;
  **/
 @Slf4j
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RedisConfig {
+    @Value("#{ @environment['spring.redis.key-prefix'] }")
+    private String redisKeyPrefix;
+
     private final ObjectMapper objectMapper;
 
     /**
@@ -97,7 +108,7 @@ public class RedisConfig {
 
     @Bean
     public RedisSerializer<String> stringRedisSerializer() {
-        return new StringRedisSerializer();
+        return StringUtil.isBlank(redisKeyPrefix) ? new StringRedisSerializer() : new KeySerializer(redisKeyPrefix);
     }
 
 }

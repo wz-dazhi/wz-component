@@ -10,6 +10,11 @@
   ],
   "properties": [
     {
+      "name": "spring.redis.key-prefix",
+      "type": "java.lang.String",
+      "description": "redis key前缀, 对RedisTemplate生效"
+    },
+    {
       "sourceType": "com.wz.redis.config.RedissonProperties",
       "name": "spring.redis.redisson.config",
       "type": "java.lang.String",
