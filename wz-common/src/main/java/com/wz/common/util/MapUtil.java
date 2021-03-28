@@ -31,11 +31,11 @@ public final class MapUtil {
     /**
      * 将对象装换为map
      */
-    public static <T> Map<String, Object> beanToMap(T bean) {
-        Map<String, Object> map = Maps.newHashMap();
+    public static <T, V> Map<String, V> beanToMap(T bean) {
+        Map<String, V> map = Maps.newHashMap();
         if (bean != null) {
             BeanMap beanMap = BeanMap.create(bean);
-            beanMap.forEach((k, v) -> map.put(String.valueOf(k), v));
+            beanMap.forEach((k, v) -> map.put(String.valueOf(k), (V) v));
         }
         return map;
     }
@@ -43,7 +43,7 @@ public final class MapUtil {
     /**
      * 将map装换为javabean对象
      */
-    public static <T> T mapToBean(Map<String, Object> map, T bean) {
+    public static <T, V> T mapToBean(Map<String, V> map, T bean) {
         if (null == bean) {
             throw new NullPointerException("Map to bean error. bean is null...");
         }
@@ -53,14 +53,14 @@ public final class MapUtil {
         return bean;
     }
 
-    private static <T> void mapToBeanProcess(Map<String, Object> map, T bean) {
+    private static <T, V> void mapToBeanProcess(Map<String, V> map, T bean) {
         Field[] fields = bean.getClass().getDeclaredFields();
         for (Field f : fields) {
             setMap(f, map);
         }
     }
 
-    private static void setMap(Field f, Map<String, Object> map) {
+    private static <V> void setMap(Field f, Map<String, V> map) {
         if (!f.isAccessible()) {
             f.setAccessible(true);
         }
@@ -69,7 +69,7 @@ public final class MapUtil {
         Class<?> fieldType = f.getType();
         String typeName = fieldType.getTypeName();
         // Map value
-        Object value = map.get(fieldName);
+        V value = map.get(fieldName);
         if (null == value) {
             return;
         }
@@ -79,7 +79,7 @@ public final class MapUtil {
         }
 
         // 重新设置map value的类型
-        map.put(fieldName, getValue(typeName, String.valueOf(value)));
+        map.put(fieldName, (V) getValue(typeName, String.valueOf(value)));
     }
 
     private static Object getValue(String typeName, String value) {
@@ -130,8 +130,8 @@ public final class MapUtil {
     /**
      * 将List<T>转换为List<Map<String, Object>>
      */
-    public static <T> List<Map<String, Object>> objectsToMaps(List<T> objList) {
-        List<Map<String, Object>> list = Lists.newArrayList();
+    public static <T, V> List<Map<String, V>> objectsToMaps(List<T> objList) {
+        List<Map<String, V>> list = Lists.newArrayList();
         if (objList != null && objList.size() > 0) {
             objList.forEach(t -> list.add(beanToMap(t)));
         }
@@ -141,7 +141,7 @@ public final class MapUtil {
     /**
      * 将List<Map<String,Object>>转换为List<T>
      */
-    public static <T> List<T> mapsToObjects(List<Map<String, Object>> maps, Class<T> clazz) {
+    public static <T, V> List<T> mapsToObjects(List<Map<String, V>> maps, Class<T> clazz) {
         List<T> list = Lists.newArrayList();
         if (maps != null && maps.size() > 0) {
             maps.forEach(m -> {
@@ -155,11 +155,11 @@ public final class MapUtil {
         return list;
     }
 
-    public static boolean isEmpty(Map<?, ?> map) {
+    public static <K, V> boolean isEmpty(Map<K, V> map) {
         return null == map || map.isEmpty();
     }
 
-    public static boolean isNotEmpty(Map<?, ?> map) {
+    public static <K, V> boolean isNotEmpty(Map<K, V> map) {
         return !isEmpty(map);
     }
 

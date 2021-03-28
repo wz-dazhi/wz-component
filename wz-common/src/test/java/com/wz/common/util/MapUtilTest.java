@@ -19,8 +19,8 @@ public class MapUtilTest {
     public void beanToMap() {
         Bean b = new Bean("zhangsan", 18, BigDecimal.TEN, new Date(), LocalDateTime.now(), true, 1.1D, 1.2D, 2L, 2L, 3, 3, Bean.T.T2);
         Map<String, Object> map = MapUtil.beanToMap(b);
-        log.info("Bean to Map: {}", map);
-        log.info("Map to Bean: {}", MapUtil.mapToBean(map, new Bean()));
+        System.out.println("Bean to Map: " + map);
+        System.out.println("Map to Bean: " + MapUtil.mapToBean(map, new Bean()));
     }
 
     @Test
