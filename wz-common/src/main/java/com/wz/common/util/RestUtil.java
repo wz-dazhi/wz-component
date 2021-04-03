@@ -1,9 +1,13 @@
 package com.wz.common.util;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.json.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -130,8 +134,8 @@ public class RestUtil {
         System.out.println(entity.getBody());
 
         System.out.println("----------");
-        JSONObject jsonObject = r.get("http://www.tianqiapi.com/api?version=v9&appid=23035354&appsecret=8YvlPNrz", null, headers, JSONObject.class);
-        System.out.println(jsonObject);
+        JSONObject map = r.get("http://www.tianqiapi.com/api?version=v9&appid=23035354&appsecret=8YvlPNrz", null, headers, JSONObject.class);
+        System.out.println(map);
     }
 
 }
