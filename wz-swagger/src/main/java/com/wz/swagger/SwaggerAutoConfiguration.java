@@ -12,7 +12,14 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.RequestParameterBuilder;
 import springfox.documentation.builders.ResponseBuilder;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.BasicAuth;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.RequestParameter;
+import springfox.documentation.service.Response;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -33,7 +40,7 @@ import static com.google.common.collect.Lists.newArrayList;
 @EnableConfigurationProperties(SwaggerProperties.class)
 public class SwaggerAutoConfiguration {
 
-    @Bean
+    @Bean("defaultApi")
     public Docket defaultApi(SwaggerProperties swaggerProperties) {
         if (Objects.isNull(swaggerProperties) || !swaggerProperties.getEnabled()) {
             return new Docket(DocumentationType.OAS_30).enable(false);

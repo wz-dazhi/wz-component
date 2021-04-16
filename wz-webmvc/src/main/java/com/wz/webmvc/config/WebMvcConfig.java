@@ -1,11 +1,13 @@
 package com.wz.webmvc.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
@@ -23,6 +25,8 @@ import java.util.List;
 //@EnableWebMvc
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    @Value("${server.servlet.context-path:}")
+    private String contextPath;
     @Resource
     private Validator springValidator;
     @Resource
@@ -61,9 +65,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/public/**").addResourceLocations("classpath:/public/");
+        registry.addResourceHandler(contextPath + "/swagger-ui/**").addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
         registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("favicon.ico").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController(contextPath + "/swagger-ui/").setViewName("forward:" + contextPath + "/swagger-ui/index.html");
     }
 
 }

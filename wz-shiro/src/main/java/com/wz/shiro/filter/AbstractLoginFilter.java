@@ -92,6 +92,11 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
         if (isAnonUri) {
             return true;
         }
+        // 配置了anonStartUri, 直接通过
+        final boolean isStartAnonUri = this.isStartAnonUri(req);
+        if (isStartAnonUri) {
+            return true;
+        }
 
         final String token = this.getToken(req);
         // 判断是否登录. 如果登录请求, 不让通过. 在不通过的方法中执行登录逻辑
@@ -206,6 +211,22 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
                 // @Anon写在方法上
                 final boolean isMethodAnon = m.getMethod().isAnnotationPresent(Anon.class);
                 if (isMethodAnon) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否配置了start uri
+     */
+    protected boolean isStartAnonUri(HttpServletRequest req) {
+        final Set<String> anonStartUris = shiroProperties.getAnonStartUris();
+        if (anonStartUris != null && !anonStartUris.isEmpty()) {
+            final String uri = req.getRequestURI();
+            for (String startUri : anonStartUris) {
+                if (uri.startsWith(startUri)) {
                     return true;
                 }
             }

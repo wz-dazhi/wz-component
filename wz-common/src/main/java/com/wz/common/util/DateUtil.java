@@ -45,6 +45,28 @@ public final class DateUtil {
     }
 
     /**
+     * 两个日期相差的分钟数
+     *
+     * @param start 开始时间
+     * @param end   结束时间
+     * @return
+     */
+    public static long betweenMinutes(LocalDateTime start, LocalDateTime end) {
+        return ChronoUnit.MINUTES.between(start, end);
+    }
+
+    /**
+     * 两个日期相差的小时
+     *
+     * @param start 开始时间
+     * @param end   结束时间
+     * @return
+     */
+    public static long betweenHours(LocalDateTime start, LocalDateTime end) {
+        return ChronoUnit.HOURS.between(start, end);
+    }
+
+    /**
      * 两个日期相差的天数
      *
      * @param start 开始时间

@@ -67,6 +67,13 @@
       "description": "token名称",
       "sourceType": "com.wz.shiro.bean.ShiroProperties",
       "defaultValue": "token"
+    },
+    {
+      "name": "shiro.config.anon-start-uris",
+      "type": "java.util.Set<java.lang.String>",
+      "description": "不校验token的uri前缀",
+      "sourceType": "com.wz.shiro.bean.ShiroProperties",
+      "defaultValue": "[]"
     }
   ],
   "hints": []

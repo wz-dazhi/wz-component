@@ -5,7 +5,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @projectName: wz-shiro
@@ -63,4 +65,9 @@ public class ShiroProperties {
      * sessionDAO 缓存前缀, 默认 shiro:session:
      */
     private String sessionDaoKeyPrefix = "shiro:session:";
+
+    /**
+     * 不校验token的uri前缀
+     */
+    private Set<String> anonStartUris = new HashSet<>();
 }

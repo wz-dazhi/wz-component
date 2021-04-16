@@ -60,7 +60,7 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
 
     @Getter
     @Setter
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(value = "响应返回的列表")
     protected List<T> records = Collections.emptyList();
 
     @Getter
