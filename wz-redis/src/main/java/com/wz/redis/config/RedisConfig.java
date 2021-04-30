@@ -34,6 +34,8 @@ import javax.annotation.Resource;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
+    public static final String REDIS_TEMPLATE_BEAN = "redisTemplate";
+
     @Value("#{ @environment['spring.redis.key-prefix'] }")
     private String redisKeyPrefix;
 
@@ -45,7 +47,7 @@ public class RedisConfig {
      * @Description 实例化redisTemplate
      * @date 2018/1/2 17:36
      */
-    @Bean
+    @Bean(REDIS_TEMPLATE_BEAN)
     @Resource
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory, RedisSerializer<String> stringRedisSerializer) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
