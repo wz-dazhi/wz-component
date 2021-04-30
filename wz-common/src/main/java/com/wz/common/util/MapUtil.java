@@ -7,10 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.beans.BeanMap;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -142,17 +144,19 @@ public final class MapUtil {
      * 将List<Map<String,Object>>转换为List<T>
      */
     public static <T, V> List<T> mapsToObjects(List<Map<String, V>> maps, Class<T> clazz) {
-        List<T> list = Lists.newArrayList();
         if (maps != null && maps.size() > 0) {
-            maps.forEach(m -> {
+            List<T> list = Lists.newArrayList();
+            for (Map<String, V> m : maps) {
                 try {
-                    list.add(mapToBean(m, clazz.newInstance()));
-                } catch (InstantiationException | IllegalAccessException e) {
+                    list.add(mapToBean(m, clazz.getDeclaredConstructor().newInstance()));
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     log.error("Maps to Objects Error. maps: {}, bean name: {}, msg: {}", JsonUtil.toJson(maps), clazz.getName(), e.getMessage());
+                    return Collections.emptyList();
                 }
-            });
+            }
+            return list;
         }
-        return list;
+        return Collections.emptyList();
     }
 
     public static <K, V> boolean isEmpty(Map<K, V> map) {
