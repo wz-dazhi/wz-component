@@ -17,20 +17,14 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public final class Resources {
 
-    private static final Map<String, ResourceBundle> MESSAGES = new ConcurrentHashMap<>(256);
+    private static final Map<String, ResourceBundle> MESSAGES = new ConcurrentHashMap<>();
 
     public static String getMessage(String baseName, String key, Object... params) {
         Locale locale = LocaleContextHolder.getLocale();
         String bundlingKey = baseName + locale.toString();
         ResourceBundle message = MESSAGES.get(bundlingKey);
         if (message == null) {
-            synchronized (MESSAGES) {
-                message = MESSAGES.get(bundlingKey);
-                if (message == null) {
-                    message = ResourceBundle.getBundle(baseName, locale);
-                    MESSAGES.put(bundlingKey, message);
-                }
-            }
+            message = MESSAGES.computeIfAbsent(bundlingKey, k -> ResourceBundle.getBundle(baseName, locale));
         }
         if ((params != null) && (params.length > 0)) {
             return String.format(message.getString(key), params);
