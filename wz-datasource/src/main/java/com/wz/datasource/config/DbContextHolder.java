@@ -82,7 +82,7 @@ public final class DbContextHolder {
             CONTEXT_HOLDER.set(SLAVE_DATA_SOURCE_KEYS.get((int) datasourceKeyIndex).name());
             COUNT.incrementAndGet();
         } catch (Exception e) {
-            log.error("Switch slave datasource failed, err msg is {}, e: {}", e.getMessage(), e);
+            log.error("Switch slave datasource failed, e: ", e);
             COUNT.set(0);
             useMasterDataSource();
         }
