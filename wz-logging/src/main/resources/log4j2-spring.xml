@@ -45,17 +45,12 @@
         </RollingFile>
     </Appenders>
 
-    <!-- 此处使用同步/异步混合模式 -->
+    <!-- 此处使用异步模式 -->
     <Loggers>
-        <!-- 异步 -->
-        <AsyncLogger level="info" name="com.wz" includeLocation="true">
-            <AppenderRef ref="File"/>
-        </AsyncLogger>
-
-        <!-- 同步 -->
-        <Root level="info">
+        <AsyncRoot level="info" additivity="false">
             <AppenderRef ref="Console"/>
-        </Root>
+            <AppenderRef ref="File"/>
+        </AsyncRoot>
     </Loggers>
 
 </Configuration>
