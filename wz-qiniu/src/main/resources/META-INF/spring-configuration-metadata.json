@@ -39,6 +39,13 @@
     },
     {
       "sourceType": "com.wz.qiniu.config.QiniuProperties",
+      "name": "qiniu.config.url-base-path",
+      "type": "java.lang.String",
+      "description": "url base path 地址",
+      "defaultValue": ""
+    },
+    {
+      "sourceType": "com.wz.qiniu.config.QiniuProperties",
       "name": "qiniu.config.region",
       "type": "com.wz.qiniu.enums.RegionEnum",
       "description": "地区,默认华北",

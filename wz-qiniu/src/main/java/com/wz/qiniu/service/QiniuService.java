@@ -2,7 +2,6 @@ package com.wz.qiniu.service;
 
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.StringMap;
-import com.wz.common.model.Result;
 
 import java.io.File;
 import java.io.InputStream;
@@ -18,9 +17,24 @@ import java.io.InputStream;
  */
 public interface QiniuService {
 
-    Result<DefaultPutRet> upload(File file, String key);
+    /**
+     * 上传文件
+     *
+     * @param file 文件File
+     * @param key  文件名
+     * @return
+     */
+    DefaultPutRet upload(File file, String key);
 
-    Result<DefaultPutRet> upload(InputStream is, String key);
+    DefaultPutRet upload(InputStream is, String key);
 
-    Result<DefaultPutRet> upload(InputStream is, String key, StringMap params, String mime);
+    DefaultPutRet upload(InputStream is, String key, StringMap params, String mime);
+
+    /**
+     * 获取上传凭证
+     *
+     * @param key
+     * @return
+     */
+    String getUploadToken(String key);
 }

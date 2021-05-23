@@ -33,6 +33,10 @@ public class QiniuProperties {
      */
     private String url;
     /**
+     * url base path 地址
+     */
+    private String urlBasePath;
+    /**
      * 地区,默认华北
      */
     private RegionEnum region = RegionEnum.HUABEI;
