@@ -59,7 +59,7 @@
         <thymeleaf-extras-java8time.version>3.0.4.RELEASE</thymeleaf-extras-java8time.version>
         <!--        <redisson-spring-boot-starter.version>3.12.1</redisson-spring-boot-starter.version>-->
         <redisson.version>3.13.6</redisson.version>
-        <qiniu-java-sdk.version>7.3.0</qiniu-java-sdk.version>
+        <qiniu-java-sdk.version>7.6.0</qiniu-java-sdk.version>
         <hutool-all.version>5.4.6</hutool-all.version>
         <oshi-core.version>5.3.7</oshi-core.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>

@@ -95,6 +95,19 @@ public final class DateConsts {
      */
     public static final String YYYYMMDDHHMMSS_SSS_PATTERN = "yyyyMMddHHmmssSSS";
 
+    /**
+     * yyyy/MM
+     */
+    public static final String YYYY_MM_PATH_PATTERN = "yyyy/MM";
+    /**
+     * yyyy/MM/dd
+     */
+    public static final String YYYY_MM_DD_PATH_PATTERN = "yyyy/MM/dd";
+    /**
+     * yyyy/MM/dd/HH
+     */
+    public static final String YYYY_MM_DD_HH_PATH_PATTERN = "yyyy/MM/dd/HH";
+
     // DateTimeFormatter-------------------------------
     /**
      * yyyy-MM-dd DateTimeFormatter
@@ -168,4 +181,17 @@ public final class DateConsts {
      * yyyyMMdd DateTimeFormatter
      */
     public static final DateTimeFormatter DATE_YYYYMMDD_FORMATTER = BASIC_ISO_DATE;
+
+    /**
+     * yyyy/MM DateTimeFormatter
+     */
+    public static final DateTimeFormatter YYYY_MM_PATH_FORMATTER = DateTimeFormatter.ofPattern(YYYY_MM_PATH_PATTERN);
+    /**
+     * yyyy/MM/dd DateTimeFormatter
+     */
+    public static final DateTimeFormatter YYYY_MM_DD_PATH_FORMATTER = DateTimeFormatter.ofPattern(YYYY_MM_DD_PATH_PATTERN);
+    /**
+     * yyyy/MM/dd/HH DateTimeFormatter
+     */
+    public static final DateTimeFormatter YYYY_MM_DD_HH_PATH_FORMATTER = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_PATH_PATTERN);
 }

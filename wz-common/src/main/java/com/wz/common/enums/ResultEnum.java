@@ -33,6 +33,11 @@ public enum ResultEnum implements IErrorCode {
      */
     REQUEST_ERROR("-3"),
 
+    /**
+     * 请勿重复提交
+     */
+    REQUEST_LIMIT("-4"),
+
     ;
 
 
