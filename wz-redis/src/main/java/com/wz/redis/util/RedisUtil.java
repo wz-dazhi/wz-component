@@ -207,7 +207,16 @@ public final class RedisUtil {
      * @param key 键
      */
     public static Long incrOne(String key) {
-        return incr(key, 1L);
+        return incr(key, 1L, 0, null, false);
+    }
+
+    /**
+     * 递增 1
+     *
+     * @param key 键
+     */
+    public static Long incrOne(String key, long expire, TimeUnit unit) {
+        return incr(key, 1L, expire, unit, true);
     }
 
     /**
@@ -217,11 +226,18 @@ public final class RedisUtil {
      * @param delta 要增加几(大于0)
      * @return
      */
-    public static Long incr(String key, long delta) {
+    public static Long incr(String key, long delta, long expire, TimeUnit unit, boolean isExpire) {
         if (delta <= 0) {
             throw new IllegalArgumentException("递增因子必须大于0");
         }
-        return valueOperations.increment(key, delta);
+        if (isExpire && expire <= 0 && unit == null) {
+            throw new IllegalArgumentException("过期时间不能为空");
+        }
+        final Long increment = valueOperations.increment(key, delta);
+        if (isExpire) {
+            expire(key, expire, unit);
+        }
+        return increment;
     }
 
     /**
@@ -231,11 +247,18 @@ public final class RedisUtil {
      * @param delta 要增加几(大于0)
      * @return
      */
-    public static Double incr(String key, double delta) {
+    public static Double incr(String key, double delta, long expire, TimeUnit unit, boolean isExpire) {
         if (delta <= 0) {
             throw new IllegalArgumentException("递增因子必须大于0");
         }
-        return valueOperations.increment(key, delta);
+        if (isExpire && expire <= 0 && unit == null) {
+            throw new IllegalArgumentException("过期时间不能为空");
+        }
+        final Double increment = valueOperations.increment(key, delta);
+        if (isExpire) {
+            expire(key, expire, unit);
+        }
+        return increment;
     }
 
     /**
