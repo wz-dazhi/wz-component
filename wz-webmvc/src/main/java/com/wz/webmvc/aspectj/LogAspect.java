@@ -1,10 +1,10 @@
-package com.wz.web.aspectj;
+package com.wz.webmvc.aspectj;
 
 import com.google.common.base.Stopwatch;
 import com.wz.common.util.IpUtil;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.UUIDUtil;
-import com.wz.web.util.WebContextUtil;
+import com.wz.webmvc.util.WebContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @projectName: wz-web
- * @package: com.wz.web.aspectj
+ * @package: com.wz.webmvc.aspectj
  * @className: LogAspect
  * @description: 日志切面
  * @author: Zhi

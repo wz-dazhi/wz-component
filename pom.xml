@@ -37,7 +37,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <spring-cloud.version>2020.0.0</spring-cloud.version>
         <spring-boot.version>2.4.2</spring-boot.version>
-        <spring-cloud-alibaba.version>2020.0.RC1</spring-cloud-alibaba.version>
+        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <kotlin.version>1.4.10</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <!-- 组件统一根据项目版本走 -->
@@ -372,7 +372,6 @@
     </distributionManagement>
 
     <build>
-
         <!-- 默认引用插件 -->
         <plugins>
             <plugin>

@@ -1,4 +1,4 @@
-package com.wz.web.wrapper;
+package com.wz.webmvc.wrapper;
 
 import lombok.Cleanup;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 
 /**
  * @projectName: wz-component
- * @package: com.wz.web.wrapper
+ * @package: com.wz.webmvc.wrapper
  * @className: RequestBodyWrapper
  * @description:
  * @author: zhi

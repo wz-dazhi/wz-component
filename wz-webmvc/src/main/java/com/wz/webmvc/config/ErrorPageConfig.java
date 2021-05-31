@@ -1,4 +1,4 @@
-package com.wz.webmvc.config;//package com.wz.web.config;
+//package com.wz.webmvc.config;
 //
 //import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 //import org.springframework.boot.web.server.ErrorPage;

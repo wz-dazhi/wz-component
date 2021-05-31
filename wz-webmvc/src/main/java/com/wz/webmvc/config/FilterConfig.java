@@ -1,6 +1,6 @@
-package com.wz.web.config;
+package com.wz.webmvc.config;
 
-import com.wz.web.filter.RequestBodyFilter;
+import com.wz.webmvc.filter.RequestBodyFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

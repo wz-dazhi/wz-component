@@ -1,4 +1,4 @@
-//package com.wz.web.handler;
+//package com.wz.webmvc.handler;
 //
 //import com.wz.common.enums.ResultEnum;
 //import com.wz.common.model.Result;
@@ -17,7 +17,7 @@
 //
 ///**
 // * @projectName: wz-web
-// * @package: com.wz.web.handler
+// * @package: com.wz.webmvc.handler
 // * @className: GlobalPageExceptionHandler
 // * @description: 全局页面异常处理
 // * @author: Zhi Wang

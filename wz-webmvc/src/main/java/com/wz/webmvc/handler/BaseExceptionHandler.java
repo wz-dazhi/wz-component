@@ -1,4 +1,4 @@
-package com.wz.web.handler;
+package com.wz.webmvc.handler;
 
 import com.wz.common.enums.ResultEnum;
 import com.wz.common.exception.BusinessException;
@@ -24,7 +24,7 @@ import java.util.Set;
 
 /**
  * @projectName: wz-component
- * @package: com.wz.web.handler
+ * @package: com.wz.webmvc.handler
  * @className: BaseExceptionHandler
  * @description:
  * @author: Zhi

@@ -8,7 +8,7 @@ import com.wz.common.util.StringUtil;
 import com.wz.shiro.annotation.Anon;
 import com.wz.shiro.bean.ShiroProperties;
 import com.wz.shiro.enums.ShiroEnum;
-import com.wz.web.filter.FilterHelper;
+import com.wz.webmvc.filter.FilterHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -31,11 +31,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import static com.wz.shiro.enums.ShiroEnum.METHOD_NOT_ALLOWED;
@@ -51,10 +48,12 @@ import static com.wz.shiro.enums.ShiroEnum.METHOD_NOT_ALLOWED;
  */
 @Slf4j
 public abstract class AbstractLoginFilter extends AuthenticatingFilter implements ApplicationListener<ContextRefreshedEvent> {
+    private volatile boolean initialized = false;
+    private static final Object INIT_LOCK = new Object();
     /**
      * 带有@Anon注解的HandlerMapping
      */
-    public static final List<HandlerMapping> ANON_HANDLER_MAPPINGS = new ArrayList<>(32);
+    public static final Set<HandlerMapping> ANON_HANDLER_MAPPINGS = new HashSet<>(32);
 
     protected final ShiroProperties shiroProperties;
 
@@ -65,9 +64,13 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         final ApplicationContext applicationContext = event.getApplicationContext();
-        // 父容器为空, 当前ApplicationContext最大. 执行初始化操作
-        if (Objects.isNull(applicationContext.getParent())) {
+        // 执行初始化操作
+        synchronized (INIT_LOCK) {
+            if (initialized) {
+                return;
+            }
             this.anonUrlControllerMappings(applicationContext);
+            initialized = true;
         }
     }
 

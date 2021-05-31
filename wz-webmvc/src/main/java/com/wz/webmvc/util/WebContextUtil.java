@@ -1,4 +1,4 @@
-package com.wz.web.util;
+package com.wz.webmvc.util;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @projectName: wz-component
- * @package: com.wz.web.util
+ * @package: com.wz.webmvc.util
  * @className: WebContextUtil
  * @description:
  * @author: Zhi

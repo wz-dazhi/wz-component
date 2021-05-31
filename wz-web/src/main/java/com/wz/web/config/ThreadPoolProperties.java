@@ -18,12 +18,12 @@ public class ThreadPoolProperties {
     /**
      * 核心线程数
      */
-    private int corePoolSize = 4;
+    private int corePoolSize = Runtime.getRuntime().availableProcessors() * 2;
 
     /**
      * 最大线程数
      */
-    private int maxPoolSize = 8;
+    private int maxPoolSize = corePoolSize * 2;
 
     /**
      * 队列最大长度

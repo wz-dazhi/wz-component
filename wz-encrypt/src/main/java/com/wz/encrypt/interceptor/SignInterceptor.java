@@ -10,7 +10,7 @@ import com.wz.encrypt.annotation.Decrypt;
 import com.wz.encrypt.annotation.Sign;
 import com.wz.encrypt.auto.EncryptProperties;
 import com.wz.encrypt.constant.EncryptConsts;
-import com.wz.web.wrapper.RequestBodyWrapper;
+import com.wz.webmvc.wrapper.RequestBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;

@@ -22,11 +22,6 @@
             <artifactId>wz-common</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
-
         <!-- springboot start -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

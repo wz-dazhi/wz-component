@@ -1,4 +1,4 @@
-package com.wz.web.handler;
+package com.wz.webmvc.handler;
 
 import com.wz.common.enums.ResultEnum;
 import com.wz.common.model.Result;
@@ -15,7 +15,7 @@ import javax.validation.ConstraintViolationException;
 
 /**
  * @projectName: wz-web
- * @package: com.wz.web.handler
+ * @package: com.wz.webmvc.handler
  * @className: GlobalApiExceptionHandler
  * @description: 全局API异常处理
  * @author: Zhi Wang

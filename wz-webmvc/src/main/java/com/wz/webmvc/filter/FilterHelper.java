@@ -1,4 +1,4 @@
-package com.wz.web.filter;
+package com.wz.webmvc.filter;
 
 import com.wz.common.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;

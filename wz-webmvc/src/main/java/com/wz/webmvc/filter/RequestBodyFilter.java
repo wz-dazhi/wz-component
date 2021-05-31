@@ -1,6 +1,6 @@
-package com.wz.web.filter;
+package com.wz.webmvc.filter;
 
-import com.wz.web.wrapper.RequestBodyWrapper;
+import com.wz.webmvc.wrapper.RequestBodyWrapper;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.Filter;
