@@ -52,14 +52,18 @@ public final class StringUtil {
     public static List<String> split(CharSequence str, String separator) {
         requireNonNull(str, "string is not null");
         requireNonNull(separator, "separator is not null");
-        Iterable<String> iterable = Splitter.on(separator).omitEmptyStrings().trimResults().split(str);
+        Iterable<String> iterable = Splitter.on(separator)
+                .omitEmptyStrings()
+                .trimResults()
+                .split(str);
         return Lists.newArrayList(iterable);
     }
 
-    public static String join(Iterable<String> strings, String separator) {
+    public static <T> String join(Iterable<T> strings, String separator) {
         Objects.requireNonNull(strings, "strings is not null");
         requireNonNull(separator, "separator is not null");
-        return Joiner.on(separator).join(strings);
+        return Joiner.on(separator)
+                .join(strings);
     }
 
 }
