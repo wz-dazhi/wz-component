@@ -40,8 +40,7 @@ public enum ResultEnum implements IErrorCode {
 
     ;
 
-
-    private String code;
+    private final String code;
 
     ResultEnum(String code) {
         this.code = code;

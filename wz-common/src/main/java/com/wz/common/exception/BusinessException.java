@@ -10,36 +10,22 @@ import com.wz.common.enums.ResultEnum;
  * @author: Zhi Wang
  * @createDate: 2018/9/8 下午6:24
  **/
-public class BusinessException extends RuntimeException {
-
-    private String code;
-
-    private String msg;
+public class BusinessException extends CommonException {
 
     public BusinessException() {
-        this(ResultEnum.REQUEST_ERROR);
+        super(ResultEnum.REQUEST_ERROR);
     }
 
     public BusinessException(IErrorCode iErrorCode) {
-        this(iErrorCode.getCode(), iErrorCode.getMsg());
+        super(iErrorCode.getCode(), iErrorCode.getMsg());
     }
 
     public BusinessException(String msg) {
-        this(ResultEnum.REQUEST_ERROR.getCode(), msg);
+        super(ResultEnum.REQUEST_ERROR.getCode(), msg);
     }
 
     public BusinessException(String code, String msg) {
-        super(msg);
-        this.code = code;
-        this.msg = msg;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
+        super(code, msg);
     }
 
 }
