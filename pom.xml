@@ -50,7 +50,7 @@
         <guava.version>30.0-jre</guava.version>
         <cglib-nodep.version>3.3.0</cglib-nodep.version>
         <fastjson.version>1.2.75</fastjson.version>
-        <json-smart.version>2.3</json-smart.version>
+        <json-smart.version>2.4.1</json-smart.version>
         <weixin-java.version>4.0.4.B</weixin-java.version>
         <knife4j-spring-boot-starter.version>3.0.2</knife4j-spring-boot-starter.version>
         <springfox-core.version>3.0.0</springfox-core.version>
