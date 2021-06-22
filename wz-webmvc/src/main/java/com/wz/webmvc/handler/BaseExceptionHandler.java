@@ -1,8 +1,7 @@
 package com.wz.webmvc.handler;
 
 import com.wz.common.enums.ResultEnum;
-import com.wz.common.exception.BusinessException;
-import com.wz.common.exception.ParameterException;
+import com.wz.common.exception.CommonException;
 import com.wz.common.exception.SystemException;
 import com.wz.common.model.Result;
 import com.wz.common.util.Results;
@@ -63,7 +62,7 @@ abstract class BaseExceptionHandler {
             }
             msg = "[" + paramName + "] " + v.getMessage();
         } else {
-            this.error(req, resp, e);
+            this.error(req, e);
             msg = ResultEnum.PARAM_ERROR.getMsg();
         }
         return msg;
@@ -74,23 +73,23 @@ abstract class BaseExceptionHandler {
         if (e instanceof SystemException) {
             SystemException se = (SystemException) e;
             result = Results.fail(se.getCode(), se.getMsg());
-        } else if (e instanceof BusinessException) {
-            BusinessException se = (BusinessException) e;
-            result = Results.fail(se.getCode(), se.getMsg());
-        } else if (e instanceof ParameterException) {
-            ParameterException se = (ParameterException) e;
+        } else if (CommonException.class.isAssignableFrom(e.getClass())) {
+            CommonException se = (CommonException) e;
             result = Results.fail(se.getCode(), se.getMsg());
         } else {
-            this.error(req, resp, e);
+            this.error(req, e);
             result = Results.fail();
         }
         return result;
     }
 
-    protected void error(HttpServletRequest req, HttpServletResponse resp, Throwable t) {
-        log.error("<<< A run exception has occurred, uri: [{}] msg: [{}], e: ", req.getRequestURI(), t.getMessage(), t);
+    protected void setResponse(HttpServletResponse resp) {
         resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
         resp.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    }
+
+    protected void error(HttpServletRequest req, Throwable t) {
+        log.error("<<< A run exception has occurred, uri: [{}] msg: [{}], e: ", req.getRequestURI(), t.getMessage(), t);
     }
 
 }

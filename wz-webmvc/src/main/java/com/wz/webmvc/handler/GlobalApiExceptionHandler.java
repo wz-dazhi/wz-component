@@ -26,11 +26,13 @@ public class GlobalApiExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class, IllegalStateException.class})
     public Result<Void> paramException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+        this.setResponse(resp);
         return Results.fail(ResultEnum.PARAM_ERROR.getCode(), super.paramHandlerException(req, resp, e));
     }
 
     @ExceptionHandler(Exception.class)
     public Result<Void> otherException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+        this.setResponse(resp);
         return super.otherHandlerException(req, resp, e);
     }
 

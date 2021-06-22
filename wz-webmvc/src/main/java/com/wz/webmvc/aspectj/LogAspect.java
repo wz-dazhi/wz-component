@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,6 +61,11 @@ public class LogAspect {
             MDC.put("serverIp", InetAddress.getLocalHost().getHostAddress());
             MDC.put("api", req.getRequestURL().toString());
             Object r = point.proceed();
+            // r 如果是集合类型, 并且数据超过100个. 则不打印日志
+            if (null != r && Collection.class.isAssignableFrom(r.getClass()) && ((Collection) r).size() > 100) {
+                log.info("Uri: [{}], size: [{}]. Return data more than 100, Not print data log. ", uri, ((Collection) r).size());
+                return r;
+            }
             log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJson(r));
             return r;
         } finally {

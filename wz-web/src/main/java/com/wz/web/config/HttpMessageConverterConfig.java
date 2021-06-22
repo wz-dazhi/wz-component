@@ -36,9 +36,10 @@ public class HttpMessageConverterConfig {
     public StringHttpMessageConverter stringHttpMessageConverter() {
         StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
         List<MediaType> mediaTypes = new ArrayList<>();
-        mediaTypes.add(MediaType.APPLICATION_JSON);
-        mediaTypes.add(MediaType.TEXT_PLAIN);
-        mediaTypes.add(MediaType.TEXT_HTML);
+        mediaTypes.add(MediaType.ALL);
+//        mediaTypes.add(MediaType.APPLICATION_JSON);
+//        mediaTypes.add(MediaType.TEXT_PLAIN);
+//        mediaTypes.add(MediaType.TEXT_HTML);
         stringHttpMessageConverter.setSupportedMediaTypes(mediaTypes);
         return stringHttpMessageConverter;
     }
@@ -61,9 +62,10 @@ public class HttpMessageConverterConfig {
             }
         };
         List<MediaType> mediaTypes = new ArrayList<>();
-        mediaTypes.add(MediaType.APPLICATION_JSON);
-        mediaTypes.add(MediaType.TEXT_PLAIN);
-        mediaTypes.add(MediaType.TEXT_HTML);
+        mediaTypes.add(MediaType.ALL);
+//        mediaTypes.add(MediaType.APPLICATION_JSON);
+//        mediaTypes.add(MediaType.TEXT_PLAIN);
+//        mediaTypes.add(MediaType.TEXT_HTML);
         mappingJackson2HttpMessageConverter.setSupportedMediaTypes(mediaTypes);
         return mappingJackson2HttpMessageConverter;
     }
