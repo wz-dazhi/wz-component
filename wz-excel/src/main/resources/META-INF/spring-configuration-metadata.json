@@ -1,0 +1,12 @@
+{
+  "hints": [],
+  "groups": [],
+  "properties": [
+    {
+      "name": "excel.config.enable",
+      "type": "java.lang.Boolean",
+      "description": "Excel自动装配",
+      "defaultValue": "true"
+    }
+  ]
+}
