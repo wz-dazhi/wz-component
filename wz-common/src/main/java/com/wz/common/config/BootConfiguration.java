@@ -4,8 +4,10 @@ import com.fasterxml.classmate.TypeResolver;
 import com.wz.common.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.WildcardType;
@@ -22,6 +24,7 @@ import javax.annotation.PostConstruct;
  * @date: 2020/11/4 10:06
  * @version: 1.0
  */
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
 @ComponentScan("com.wz")
 public class BootConfiguration {
