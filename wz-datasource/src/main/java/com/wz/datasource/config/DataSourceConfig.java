@@ -12,16 +12,17 @@ import com.wz.datasource.enums.DBEnum;
 import com.wz.datasource.mybatisplus.handler.MybatisPlusMetaObjectHandler;
 import com.wz.datasource.mybatisplus.interceptor.LikeQueryInterceptor;
 import com.wz.datasource.mybatisplus.model.Page;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.Ordered;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.WildcardType;
@@ -43,8 +44,8 @@ import java.util.Map;
  **/
 @Slf4j
 @Configuration
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @ComponentScan("com.wz.datasource")
-@AllArgsConstructor
 public class DataSourceConfig {
 
     @Autowired(required = false)

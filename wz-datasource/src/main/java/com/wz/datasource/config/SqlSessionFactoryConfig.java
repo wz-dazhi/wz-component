@@ -29,7 +29,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -131,7 +133,7 @@ public class SqlSessionFactoryConfig {
         // 注入填充器
         this.getBeanThen(MetaObjectHandler.class, globalConfig::setMetaObjectHandler);
         // 注入主键生成器
-        this.getBeanThen(IKeyGenerator.class, i -> globalConfig.getDbConfig().setKeyGenerator(i));
+        this.getBeansThen(IKeyGenerator.class, i -> globalConfig.getDbConfig().setKeyGenerators(i));
         // 注入sql注入器
         this.getBeanThen(ISqlInjector.class, globalConfig::setSqlInjector);
         // 注入ID生成器
@@ -144,6 +146,15 @@ public class SqlSessionFactoryConfig {
     private <T> void getBeanThen(Class<T> clazz, Consumer<T> consumer) {
         if (this.applicationContext.getBeanNamesForType(clazz, false, false).length > 0) {
             consumer.accept(this.applicationContext.getBean(clazz));
+        }
+    }
+
+    private <T> void getBeansThen(Class<T> clazz, Consumer<List<T>> consumer) {
+        if (this.applicationContext.getBeanNamesForType(clazz, false, false).length > 0) {
+            final Map<String, T> beansOfType = this.applicationContext.getBeansOfType(clazz);
+            List<T> clazzList = new ArrayList<>();
+            beansOfType.forEach((k, v) -> clazzList.add(v));
+            consumer.accept(clazzList);
         }
     }
 

@@ -167,38 +167,6 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
 
     @ApiModelProperty(hidden = true)
     @Override
-    @Deprecated
-    public Page<T> setAscs(List<String> ascs) {
-        super.setAscs(ascs);
-        return this;
-    }
-
-    @ApiModelProperty(hidden = true)
-    @Override
-    @Deprecated
-    public Page<T> setAsc(String... ascs) {
-        super.setAsc(ascs);
-        return this;
-    }
-
-    @ApiModelProperty(hidden = true)
-    @Override
-    @Deprecated
-    public Page<T> setDescs(List<String> descs) {
-        super.setDescs(descs);
-        return this;
-    }
-
-    @ApiModelProperty(hidden = true)
-    @Override
-    @Deprecated
-    public Page<T> setDesc(String... descs) {
-        super.setDesc(descs);
-        return this;
-    }
-
-    @ApiModelProperty(hidden = true)
-    @Override
     public IPage<T> setPages(long pages) {
         super.setPages(pages);
         return this;
