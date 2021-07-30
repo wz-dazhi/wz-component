@@ -64,13 +64,22 @@ public class RedissonLockAspect {
         final RLock lock = redissonClient.getLock(lockKey);
         log.info("RLock>>> 方法[{}]开始自动抢锁, lockKey: [{}], 等待时间: [{}], 过期时间: [{}] - [{}]", m.getName(), lockKey, l.waitTime(), l.expire(), l.unit());
         try {
-            if (lock.tryLock(l.waitTime(), l.expire(), l.unit())) {
-                log.info("RLock>>> 抢锁成功, lockKey: [{}].", lockKey);
+            // 直接lock, 获取不到一直等待
+            if (l.waitTime() == -1) {
+                lock.lock();
+                log.debug("RLock>>> 抢锁成功, lockKey: [{}].", lockKey);
                 return pjp.proceed();
+            } else {
+                if (lock.tryLock(l.waitTime(), l.expire(), l.unit())) {
+                    log.info("RLock>>> 抢锁成功, lockKey: [{}].", lockKey);
+                    return pjp.proceed();
+                }
+                log.warn("RLock>>> 抢锁失败, lockKey: [{}].", lockKey);
             }
-            log.warn("RLock>>> 抢锁失败, lockKey: [{}].", lockKey);
         } finally {
-            lock.unlock();
+            if (lock.isLocked()) {
+                lock.unlock();
+            }
             log.info("RLock>>> 本次抢锁消耗时间: [{}]ms. key: [{}].", sw.stop().elapsed(TimeUnit.MILLISECONDS), lockKey);
         }
         return Results.fail(REQUEST_ERROR);

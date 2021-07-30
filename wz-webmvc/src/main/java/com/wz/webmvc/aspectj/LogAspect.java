@@ -1,9 +1,9 @@
 package com.wz.webmvc.aspectj;
 
 import com.google.common.base.Stopwatch;
-import com.wz.common.util.IpUtil;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.UUIDUtil;
+import com.wz.webmvc.util.IpUtil;
 import com.wz.webmvc.util.WebContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,18 +32,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class LogAspect {
 
-//    private static final String LOG_EXECUTION = "execution( * com..controller..*.*(..) ) " +
-//            "|| execution( * com..*.controller..*.*(..) ) " +
-//            "|| execution( * com..*.*.controller..*.*(..) ) " +
-//            "|| execution( * com..*.*.*.controller..*.*(..) ) " +
-//            "|| execution( * com..*.*.*.*.controller..*.*(..) ) " +
-//            "|| execution( * cn..controller..*.*(..) ) " +
-//            "|| execution( * cn..*.controller..*.*(..) ) " +
-//            "|| execution( * cn..*.*.controller..*.*(..) ) " +
-//            "|| execution( * cn..*.*.*.controller..*.*(..) ) " +
-//            "|| execution( * cn..*.*.*.*.controller..*.*(..) )";
-
-    //@Pointcut(LOG_EXECUTION)
     @Pointcut("execution( * com..controller..*.*(..) ) || execution( * cn..controller..*.*(..) ) ")
     private void log() {
     }
@@ -53,11 +41,11 @@ public class LogAspect {
         HttpServletRequest req = WebContextUtil.getRequest();
         String uri = req.getRequestURI();
         Stopwatch sw = Stopwatch.createStarted();
-        MDC.put("linkId", UUIDUtil.getUUIDLowerCase());
+        MDC.put("linkId", UUIDUtil.getLowerCase());
         Object[] args = point.getArgs();
         log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJson(args), point.getSignature().toShortString());
         try {
-            MDC.put("clientIp", IpUtil.getIp(req));
+            MDC.put("clientIp", IpUtil.getIp());
             MDC.put("serverIp", InetAddress.getLocalHost().getHostAddress());
             MDC.put("api", req.getRequestURL().toString());
             Object r = point.proceed();

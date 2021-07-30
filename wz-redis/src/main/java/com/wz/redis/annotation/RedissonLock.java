@@ -38,7 +38,7 @@ public @interface RedissonLock {
     TimeUnit unit() default TimeUnit.SECONDS;
 
     /**
-     * 等待时间, 单位为秒. 默认不等待
+     * 等待时间, 单位为秒. -1表示一直等待, 直到获取锁
      */
-    long waitTime() default 0;
+    long waitTime() default -1;;
 }
