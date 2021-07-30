@@ -12,10 +12,8 @@ import com.wz.common.enums.ResultEnum;
  * @version: 1.0
  */
 public class CommonException extends RuntimeException {
-
-    private String code;
-
-    private String msg;
+    private final String code;
+    private final String msg;
 
     public CommonException() {
         this(ResultEnum.SYSTEM_ERROR);

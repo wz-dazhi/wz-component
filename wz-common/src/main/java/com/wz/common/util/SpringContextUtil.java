@@ -2,11 +2,13 @@ package com.wz.common.util;
 
 import cn.hutool.core.lang.TypeReference;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ResolvableType;
-import org.springframework.stereotype.Component;
+import org.springframework.core.env.Environment;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -21,13 +23,18 @@ import java.util.Map;
  * @date: 2019/1/17 下午2:46
  * @version: 1.0
  **/
-@Component
-public final class SpringContextUtil implements ApplicationContextAware {
+public final class SpringContextUtil implements BeanFactoryAware, ApplicationContextAware {
 
     /**
      * Spring应用上下文环境
      */
     private static ApplicationContext applicationContext;
+    private static BeanFactory beanFactory;
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        SpringContextUtil.beanFactory = beanFactory;
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {
@@ -39,6 +46,10 @@ public final class SpringContextUtil implements ApplicationContextAware {
      */
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    public static BeanFactory getBeanFactory() {
+        return beanFactory;
     }
 
     /**
@@ -109,6 +120,10 @@ public final class SpringContextUtil implements ApplicationContextAware {
     public static <T> void registerBean(String beanName, T bean) {
         ConfigurableApplicationContext context = (ConfigurableApplicationContext) applicationContext;
         context.getBeanFactory().registerSingleton(beanName, bean);
+    }
+
+    public static Environment getEnvironment() {
+        return applicationContext.getEnvironment();
     }
 
     /**

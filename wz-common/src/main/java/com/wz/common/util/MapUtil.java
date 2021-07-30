@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.wz.common.constant.DateConsts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.beans.BeanMap;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -63,9 +64,7 @@ public final class MapUtil {
     }
 
     private static <V> void setMap(Field f, Map<String, V> map) {
-        if (!f.isAccessible()) {
-            f.setAccessible(true);
-        }
+        ReflectionUtils.makeAccessible(f);
         // Bean field
         String fieldName = f.getName();
         Class<?> fieldType = f.getType();

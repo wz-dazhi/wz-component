@@ -11,10 +11,8 @@ import com.wz.common.enums.ResultEnum;
  * @createDate: 2018/9/8 下午6:24
  **/
 public class SystemException extends Exception {
-
-    private String code;
-
-    private String msg;
+    private final String code;
+    private final String msg;
 
     public SystemException() {
         this(ResultEnum.SYSTEM_ERROR);

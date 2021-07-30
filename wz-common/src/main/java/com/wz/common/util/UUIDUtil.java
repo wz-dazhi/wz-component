@@ -24,8 +24,8 @@ public final class UUIDUtil {
      *
      * @return 例: 19EB68EE5ABE42CE9ADB57AAD8EA59DD
      */
-    public static String getUUIDUpperCase() {
-        return getUUIDUpper().replace(TARGET, REPLACEMENT_BLANK);
+    public static String getUpperCase() {
+        return getUpper().replace(TARGET, REPLACEMENT_BLANK);
     }
 
     /**
@@ -33,8 +33,8 @@ public final class UUIDUtil {
      *
      * @return 例: 19eb68ee5abe42ce9adb57aad8ea59dd
      */
-    public static String getUUIDLowerCase() {
-        return getUUIDLower().replace(TARGET, REPLACEMENT_BLANK);
+    public static String getLowerCase() {
+        return getLower().replace(TARGET, REPLACEMENT_BLANK);
     }
 
     /**
@@ -42,8 +42,8 @@ public final class UUIDUtil {
      *
      * @return 例: 19EB68EE-5ABE-42CE-9ADB-57AAD8EA59DD
      */
-    public static String getUUIDUpper() {
-        return UUID.randomUUID().toString().toUpperCase();
+    public static String getUpper() {
+        return get().toUpperCase();
     }
 
     /**
@@ -51,8 +51,11 @@ public final class UUIDUtil {
      *
      * @return 例: 19eb68ee-5abe-42ce-9adb-57aad8ea59dd
      */
-    public static String getUUIDLower() {
-        return UUID.randomUUID().toString().toLowerCase();
+    public static String getLower() {
+        return get().toLowerCase();
     }
 
+    public static String get() {
+        return UUID.randomUUID().toString();
+    }
 }

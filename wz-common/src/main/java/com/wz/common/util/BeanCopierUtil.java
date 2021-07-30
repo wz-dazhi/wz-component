@@ -1,6 +1,7 @@
 package com.wz.common.util;
 
 import com.wz.common.constant.DateConsts;
+import com.wz.common.exception.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.beans.BeanCopier;
 import net.sf.cglib.core.Converter;
@@ -30,9 +31,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public final class BeanCopierUtil {
-
     private static final boolean USE_CACHE = true;
-    private static final Map<String, BeanCopier> BEAN_COPIER_MAP = new ConcurrentHashMap<>(64);
+    private static final Map<String, BeanCopier> BEAN_COPIER_MAP = new ConcurrentHashMap<>();
 
     private BeanCopierUtil() {
     }
@@ -90,8 +90,7 @@ public final class BeanCopierUtil {
         try {
             instance = targetClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            log.error("Copy bean failed. e: ", e);
-            throw new RuntimeException(e);
+            throw ExceptionUtil.wrap(e);
         }
         beanCopier.copy(source, instance, converter);
         return instance;
@@ -173,7 +172,7 @@ public final class BeanCopierUtil {
      * 不推荐使用, 两个bean尽量属性名相同, 属性类型相同, set get相同.
      * 获取默认转换器, 此转换器有性能问题.
      * 如数据量不大, 可以使用.
-     * 如数据量很大, 推荐使用mapstruct框架. 可以继承通用接口: {@link com.wz.common.mapstruct.BaseMapping}
+     * 如数据量很大, 推荐使用mapstruct框架. 可以继承通用接口: {@link com.wz.common.mapstruct.BaseMapper}
      * </P>
      *
      * @return Converter instance

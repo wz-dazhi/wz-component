@@ -19,14 +19,17 @@ public final class Resources {
 
     private static final Map<String, ResourceBundle> MESSAGES = new ConcurrentHashMap<>();
 
+    private Resources() {
+    }
+
     public static String getMessage(String baseName, String key, Object... params) {
         Locale locale = LocaleContextHolder.getLocale();
-        String bundlingKey = baseName + locale.toString();
+        String bundlingKey = baseName + locale;
         ResourceBundle message = MESSAGES.get(bundlingKey);
         if (message == null) {
             message = MESSAGES.computeIfAbsent(bundlingKey, k -> ResourceBundle.getBundle(baseName, locale));
         }
-        if ((params != null) && (params.length > 0)) {
+        if (params != null && params.length > 0) {
             return String.format(message.getString(key), params);
         }
         return message.getString(key);

@@ -1,1 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.wz.common.config.BootConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.wz.common.config.BootConfiguration,\
+  com.wz.common.util.SpringContextUtil
