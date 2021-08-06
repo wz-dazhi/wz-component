@@ -43,7 +43,10 @@ public class LogAspect {
         Stopwatch sw = Stopwatch.createStarted();
         MDC.put("linkId", UUIDUtil.getLowerCase());
         Object[] args = point.getArgs();
-        log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJson(args), point.getSignature().toShortString());
+        final boolean infoEnabled = log.isInfoEnabled();
+        if (infoEnabled) {
+            log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJson(args), point.getSignature().toShortString());
+        }
         try {
             MDC.put("clientIp", IpUtil.getIp());
             MDC.put("serverIp", InetAddress.getLocalHost().getHostAddress());
@@ -51,13 +54,19 @@ public class LogAspect {
             Object r = point.proceed();
             // r 如果是集合类型, 并且数据超过100个. 则不打印日志
             if (null != r && Collection.class.isAssignableFrom(r.getClass()) && ((Collection) r).size() > 100) {
-                log.info("Uri: [{}], size: [{}]. Return data more than 100, Not print data log. ", uri, ((Collection) r).size());
+                if (infoEnabled) {
+                    log.info("Uri: [{}], size: [{}]. Return data more than 100, Not print data log. ", uri, ((Collection) r).size());
+                }
                 return r;
             }
-            log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJson(r));
+            if (infoEnabled) {
+                log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJson(r));
+            }
             return r;
         } finally {
-            log.info("Uri: [{}], Time consuming: [{}]ms", uri, sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            if (infoEnabled) {
+                log.info("Uri: [{}], Time consuming: [{}]ms", uri, sw.stop().elapsed(TimeUnit.MILLISECONDS));
+            }
             MDC.clear();
         }
     }
