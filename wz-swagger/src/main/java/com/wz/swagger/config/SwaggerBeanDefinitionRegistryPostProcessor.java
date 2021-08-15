@@ -1,13 +1,20 @@
-package com.wz.swagger;
+package com.wz.swagger.config;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.RequestParameterBuilder;
@@ -27,69 +34,102 @@ import springfox.documentation.swagger.web.ApiKeyVehicle;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-
-import static com.google.common.collect.Lists.newArrayList;
+import java.util.stream.Collectors;
 
 /**
- * @author wangzhi
+ * @projectName: wz-component
+ * @package: com.wz.swagger
+ * @className: SwaggerBeanDefinitionRegistryPostProcessor
+ * @description:
+ * @author: zhi
+ * @date: 2021/8/12
+ * @version: 1.0
  */
-@Configuration
-@Import(SwaggerConfiguration.class)
-@EnableConfigurationProperties(SwaggerProperties.class)
-public class SwaggerAutoConfiguration {
+public class SwaggerBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
+    private boolean swaggerEnabled;
+    private SwaggerProperties swaggerProperties;
 
-    @Bean("defaultApi")
-    public Docket defaultApi(SwaggerProperties swaggerProperties) {
-        if (Objects.isNull(swaggerProperties) || !swaggerProperties.getEnabled()) {
-            return new Docket(DocumentationType.OAS_30).enable(false);
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        if (!swaggerEnabled) {
+            return;
         }
+
+        if (swaggerProperties != null) {
+            if (swaggerProperties.getDocket().isEmpty()) {
+                doRegistrySingleDocket(registry);
+            } else {
+                doRegistryMultiDocket(registry, swaggerProperties.getDocket());
+            }
+        }
+    }
+
+    private void doRegistryMultiDocket(BeanDefinitionRegistry registry, Map<String, SwaggerProperties.DocketInfo> docketInfoMap) {
+        final String host = swaggerProperties.getHost();
+        docketInfoMap.forEach((groupName, d) -> {
+            final SwaggerProperties.Contact c = d.getContact();
+            ApiInfo apiInfo = new ApiInfoBuilder()
+                    .title(d.getTitle())
+                    .description(d.getDescription())
+                    .version(d.getVersion())
+                    .license(d.getLicense())
+                    .licenseUrl(d.getLicenseUrl())
+                    .contact(new Contact(c.getName(), c.getUrl(), c.getEmail()))
+                    .termsOfServiceUrl(d.getTermsOfServiceUrl())
+                    .build();
+
+            List<Predicate<String>> basePath = basePaths(d.getBasePath());
+            List<Predicate<String>> excludePath = excludePaths(d.getExcludePath());
+            Docket docketForBuilder = new Docket(DocumentationType.OAS_30)
+                    .groupName(groupName)
+                    .host(host)
+                    .apiInfo(apiInfo)
+                    .securityContexts(Collections.singletonList(securityContext(swaggerProperties)))
+                    .globalRequestParameters(buildGlobalRequestParameters(d.getGlobalRequestParameters()));
+            globalSettings(docketForBuilder);
+            Docket docket = docketForBuilder.select()
+                    .apis(RequestHandlerSelectors.basePackage(d.getBasePackage()))
+                    .paths(
+                            Predicates.and(
+                                    Predicates.not(Predicates.or(excludePath)),
+                                    Predicates.or(basePath)
+                            )
+                    ).build();
+
+            final List<Class<?>> ignoredParameterTypeList = d.getIgnoredParameterTypes();
+            Class<?>[] array = new Class[ignoredParameterTypeList.size()];
+            Class<?>[] ignoredParameterTypes = ignoredParameterTypeList.toArray(array);
+            docket.ignoredParameterTypes(ignoredParameterTypes);
+            final RootBeanDefinition beanDefinition = new RootBeanDefinition(Docket.class, () -> docket);
+            registry.registerBeanDefinition(groupName, beanDefinition);
+        });
+    }
+
+    private void doRegistrySingleDocket(BeanDefinitionRegistry registry) {
+        final SwaggerProperties.Contact c = swaggerProperties.getContact();
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title(swaggerProperties.getTitle())
                 .description(swaggerProperties.getDescription())
                 .version(swaggerProperties.getVersion())
                 .license(swaggerProperties.getLicense())
                 .licenseUrl(swaggerProperties.getLicenseUrl())
-                .contact(new Contact(swaggerProperties.getContact().getName(),
-                        swaggerProperties.getContact().getUrl(),
-                        swaggerProperties.getContact().getEmail()))
+                .contact(new Contact(c.getName(), c.getUrl(), c.getEmail()))
                 .termsOfServiceUrl(swaggerProperties.getTermsOfServiceUrl())
                 .build();
 
-        if (swaggerProperties.getBasePath().isEmpty()) {
-            swaggerProperties.getBasePath().add("/**");
-        }
-        List<Predicate<String>> basePath = new ArrayList<>();
-        for (String path : swaggerProperties.getBasePath()) {
-            basePath.add(input -> new AntPathMatcher().match(path, input));
-        }
-
-        // exclude-path处理
-        List<Predicate<String>> excludePath = new ArrayList<>();
-        excludePath.add(input -> new AntPathMatcher().match("/error", input));
-        for (String path : swaggerProperties.getExcludePath()) {
-            excludePath.add(input -> new AntPathMatcher().match(path, input));
-        }
-
+        List<Predicate<String>> basePath = basePaths(swaggerProperties.getBasePath());
+        List<Predicate<String>> excludePath = excludePaths(swaggerProperties.getExcludePath());
         Docket docketForBuilder = new Docket(DocumentationType.OAS_30)
                 .groupName(swaggerProperties.getGroupName())
-                .enable(swaggerProperties.getEnabled())
                 .host(swaggerProperties.getHost())
                 .apiInfo(apiInfo)
                 .securityContexts(Collections.singletonList(securityContext(swaggerProperties)))
-                .globalRequestParameters(buildGlobalRequestParameters(swaggerProperties));
-
-        if ("BasicAuth".equalsIgnoreCase(swaggerProperties.getAuthorization().getType())) {
-            docketForBuilder.securitySchemes(Collections.singletonList(basicAuth(swaggerProperties)));
-        } else if (!"None".equalsIgnoreCase(swaggerProperties.getAuthorization().getType())) {
-            docketForBuilder.securitySchemes(Collections.singletonList(apiKey(swaggerProperties)));
-        }
-
-        // 默认全局响应消息
-        defaultGlobalResponseMessage(swaggerProperties.getUseDefaultResponseMessages(), docketForBuilder);
-        // 自定义全局响应消息
-        buildGlobalResponseMessage(swaggerProperties, docketForBuilder);
+                .globalRequestParameters(buildGlobalRequestParameters(swaggerProperties.getGlobalRequestParameters()));
+        globalSettings(docketForBuilder);
 
         Docket docket = docketForBuilder.select()
                 .apis(RequestHandlerSelectors.basePackage(swaggerProperties.getBasePackage()))
@@ -100,13 +140,40 @@ public class SwaggerAutoConfiguration {
                         )
                 ).build();
 
-
-        /* ignoredParameterTypes **/
         Class<?>[] array = new Class[swaggerProperties.getIgnoredParameterTypes().size()];
         Class<?>[] ignoredParameterTypes = swaggerProperties.getIgnoredParameterTypes().toArray(array);
         docket.ignoredParameterTypes(ignoredParameterTypes);
+        final RootBeanDefinition beanDefinition = new RootBeanDefinition(Docket.class, () -> docket);
+        registry.registerBeanDefinition(swaggerProperties.getGroupName(), beanDefinition);
+    }
 
-        return docket;
+    private void globalSettings(Docket docketForBuilder) {
+        if ("BasicAuth".equalsIgnoreCase(swaggerProperties.getAuthorization().getType())) {
+            docketForBuilder.securitySchemes(Collections.singletonList(basicAuth(swaggerProperties)));
+        } else if (!"None".equalsIgnoreCase(swaggerProperties.getAuthorization().getType())) {
+            docketForBuilder.securitySchemes(Collections.singletonList(apiKey(swaggerProperties)));
+        }
+        // 默认全局响应消息
+        defaultGlobalResponseMessage(swaggerProperties.getUseDefaultResponseMessages(), docketForBuilder);
+        // 自定义全局响应消息
+        buildGlobalResponseMessage(swaggerProperties, docketForBuilder);
+    }
+
+    private List<Predicate<String>> basePaths(List<String> basePaths) {
+        if (basePaths.isEmpty()) {
+            basePaths.add("/**");
+        }
+        return basePaths.stream()
+                .map(path -> (Predicate<String>) input -> new AntPathMatcher().match(path, input))
+                .collect(Collectors.toList());
+    }
+
+    private List<Predicate<String>> excludePaths(List<String> excludePaths) {
+        final List<Predicate<String>> excludePath = excludePaths.stream()
+                .map(path -> (Predicate<String>) input -> new AntPathMatcher().match(path, input))
+                .collect(Collectors.toList());
+        excludePath.add(0, input -> new AntPathMatcher().match("/error", input));
+        return excludePath;
     }
 
     /**
@@ -150,14 +217,11 @@ public class SwaggerAutoConfiguration {
                 .scopes(authorizationScopes).build());
     }
 
-    private List<RequestParameter> buildGlobalRequestParameters(SwaggerProperties swaggerProperties) {
-        List<SwaggerProperties.GlobalRequestParameter> requestParameters = swaggerProperties.getGlobalRequestParameters();
-        List<RequestParameter> parameters = newArrayList();
-
+    private List<RequestParameter> buildGlobalRequestParameters(List<SwaggerProperties.GlobalRequestParameter> requestParameters) {
+        List<RequestParameter> parameters = new ArrayList<>();
         if (Objects.isNull(requestParameters)) {
             return parameters;
         }
-
         requestParameters.forEach(globalRequestParameter -> parameters.add(new RequestParameterBuilder()
                 .name(globalRequestParameter.getName())
                 .description(globalRequestParameter.getDescription())
@@ -241,6 +305,23 @@ public class SwaggerAutoConfiguration {
                 .globalResponses(HttpMethod.HEAD, responses)
                 .globalResponses(HttpMethod.OPTIONS, responses)
                 .globalResponses(HttpMethod.TRACE, responses);
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        final String swaggerEnable = environment.getProperty("knife4j.enable");
+        this.swaggerEnabled = StringUtils.hasLength(swaggerEnable) && Boolean.parseBoolean(swaggerEnable);
+        final ConfigurationProperties p = SwaggerProperties.class.getAnnotation(ConfigurationProperties.class);
+        if (null != p) {
+            final String prefix = p.prefix();
+            final Binder binder = Binder.get(environment);
+            this.swaggerProperties = binder.bind(prefix, SwaggerProperties.class).orElse(new SwaggerProperties());
+            this.swaggerProperties.setDocket(binder.bind(prefix + ".docket", Bindable.mapOf(String.class, SwaggerProperties.DocketInfo.class)).orElse(new HashMap<>()));
+        }
     }
 
 }
