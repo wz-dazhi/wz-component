@@ -18,6 +18,7 @@
         <module>wz-shiro</module>
         <module>wz-logging</module>
         <module>wz-excel</module>
+        <module>wz-push</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -137,6 +138,11 @@
             <dependency>
                 <groupId>com.wz</groupId>
                 <artifactId>wz-excel</artifactId>
+                <version>${wz-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wz</groupId>
+                <artifactId>wz-push</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
             <!-- wz-component end -->
