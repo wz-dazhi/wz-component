@@ -1,11 +1,13 @@
 package com.wz.push.builder;
 
 import com.wz.push.bean.dingtalk.AbstractDingTalkReq;
+import com.wz.push.bean.dingtalk.DingTalkActionCardReq;
 import com.wz.push.bean.dingtalk.DingTalkAtReq;
+import com.wz.push.bean.dingtalk.DingTalkFeedCardReq;
+import com.wz.push.bean.dingtalk.DingTalkLinkReq;
+import com.wz.push.bean.dingtalk.DingTalkMarkdownReq;
 import com.wz.push.bean.dingtalk.DingTalkTextReq;
 import com.wz.push.bean.dingtalk.DingTalkTextReq.Text;
-import com.wz.push.enums.DingTalkMsgType;
-import com.wz.push.enums.PushType;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,6 +28,22 @@ public class DingTalkBuilder {
         return new TextBuilder();
     }
 
+    public static LinkBuilder linkBuilder() {
+        return new LinkBuilder();
+    }
+
+    public static MarkdownBuilder markdownBuilder() {
+        return new MarkdownBuilder();
+    }
+
+    public static ActionCardBuilder actionCardBuilder() {
+        return new ActionCardBuilder();
+    }
+
+    public static FeedCardBuilder feedCardBuilder() {
+        return new FeedCardBuilder();
+    }
+
     @ToString(callSuper = true)
     @EqualsAndHashCode(callSuper = true)
     @Setter
@@ -42,9 +60,96 @@ public class DingTalkBuilder {
             req.setSecret(secret);
             req.setText(new Text(content));
             req.setAt(new DingTalkAtReq(atMobiles, atUserIds, isAtAll));
-            req.setMsgType(DingTalkMsgType.text);
             req.setToken(token);
-            req.setType(PushType.DING_TALK);
+
+            return req;
+        }
+
+    }
+
+    @ToString(callSuper = true)
+    @EqualsAndHashCode(callSuper = true)
+    @Setter
+    @Accessors(chain = true, fluent = true)
+    public static class LinkBuilder extends SecretBuilder<DingTalkLinkReq, LinkBuilder> {
+        private String title;
+        private String text;
+        private String messageUrl;
+        private String picUrl;
+
+        @Override
+        public DingTalkLinkReq build() {
+            final DingTalkLinkReq req = new DingTalkLinkReq();
+            req.setSecret(secret);
+            req.setToken(token);
+            req.setLink(new DingTalkLinkReq.Link(title, text, messageUrl, picUrl));
+
+            return req;
+        }
+
+    }
+
+    @ToString(callSuper = true)
+    @EqualsAndHashCode(callSuper = true)
+    @Setter
+    @Accessors(chain = true, fluent = true)
+    public static class MarkdownBuilder extends SecretBuilder<DingTalkMarkdownReq, MarkdownBuilder> {
+        private String title;
+        private String text;
+        private String[] atMobiles;
+        private String[] atUserIds;
+        private boolean isAtAll;
+
+        @Override
+        public DingTalkMarkdownReq build() {
+            final DingTalkMarkdownReq req = new DingTalkMarkdownReq();
+            req.setSecret(secret);
+            req.setToken(token);
+            req.setMarkdown(new DingTalkMarkdownReq.Markdown(title, text));
+            req.setAt(new DingTalkAtReq(atMobiles, atUserIds, isAtAll));
+
+            return req;
+        }
+
+    }
+
+    @ToString(callSuper = true)
+    @EqualsAndHashCode(callSuper = true)
+    @Setter
+    @Accessors(chain = true, fluent = true)
+    public static class ActionCardBuilder extends SecretBuilder<DingTalkActionCardReq, ActionCardBuilder> {
+        private String title;
+        private String text;
+        private String btnOrientation;
+        private String singleTitle;
+        private String singleUrl;
+        private DingTalkActionCardReq.Btn[] btns;
+
+        @Override
+        public DingTalkActionCardReq build() {
+            final DingTalkActionCardReq req = new DingTalkActionCardReq();
+            req.setSecret(secret);
+            req.setToken(token);
+            req.setActionCard(new DingTalkActionCardReq.ActionCard(title, text, btnOrientation, singleTitle, singleUrl, btns));
+
+            return req;
+        }
+
+    }
+
+    @ToString(callSuper = true)
+    @EqualsAndHashCode(callSuper = true)
+    @Setter
+    @Accessors(chain = true, fluent = true)
+    public static class FeedCardBuilder extends SecretBuilder<DingTalkFeedCardReq, FeedCardBuilder> {
+        private DingTalkFeedCardReq.Link[] links;
+
+        @Override
+        public DingTalkFeedCardReq build() {
+            final DingTalkFeedCardReq req = new DingTalkFeedCardReq();
+            req.setSecret(secret);
+            req.setToken(token);
+            req.setFeedCard(new DingTalkFeedCardReq.FeedCard(links));
 
             return req;
         }

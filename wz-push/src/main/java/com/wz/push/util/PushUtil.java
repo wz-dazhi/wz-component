@@ -1,4 +1,5 @@
 package com.wz.push.util;
+
 import com.wz.common.util.StringUtil;
 import com.wz.push.bean.AbstractPushReq;
 import com.wz.push.bean.AbstractPushResp;
@@ -37,7 +38,10 @@ public final class PushUtil {
                 }
                 return (Resp) PushPlusUtil.doGet((PushPlusReq) s);
             case DING_TALK:
-                return (Resp) PushDingTalkUtil.pushSign((AbstractDingTalkReq) s);
+                if (!(s instanceof AbstractDingTalkReq)) {
+                    throw CLASS_ARGUMENT_EXCEPTION;
+                }
+                return (Resp) PushDingTalkUtil.push((AbstractDingTalkReq) s);
             default:
                 throw new IllegalArgumentException("pushType错误.");
         }

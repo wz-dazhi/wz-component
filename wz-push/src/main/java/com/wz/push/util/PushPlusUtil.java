@@ -38,8 +38,7 @@ public final class PushPlusUtil {
     }
 
     private static PushPlusReq pushPlusMsg(String token, String title, String content, PushPlusTemplate template) {
-        final PushPlusReq msg = new PushPlusReq();
-        msg.setToken(token);
+        final PushPlusReq msg = new PushPlusReq(token);
         msg.setTitle(title);
         msg.setContent(content);
         if (template != null) {

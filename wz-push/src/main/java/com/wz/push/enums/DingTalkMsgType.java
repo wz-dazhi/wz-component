@@ -15,5 +15,24 @@ public enum DingTalkMsgType {
      */
     text,
 
-    ;
+    /**
+     * 链接
+     */
+    link,
+
+    /**
+     * markdown
+     */
+    markdown,
+
+    /**
+     * actionCard
+     */
+    actionCard,
+
+    /**
+     * feedCard
+     */
+    feedCard;
+
 }

@@ -6,7 +6,7 @@ public class PushPlusUtilTest {
 
     @Test
     public void get() {
-        String token = "e319cfc4b6a7497795618303a57b854e";
+        String token = "ccccccccc4b6a7497795xxxxxxxxxxxxxx";
         String title = "测试";
         //String content = "{\"test\":\"vaaa1\", \"key\",\"value\", \"method\",\"post\"}";
         String content = "<h1>异常</h1>" +

@@ -12,29 +12,30 @@ import java.io.Serializable;
 /**
  * @projectName: wz-component
  * @package: com.wz.push.bean.dingtalk
- * @className: DingTalkTextReq
+ * @className: DingTalkMarkdownReq
  * @description:
  * @author: zhi
- * @date: 2021/8/19
+ * @date: 2021/8/20
  * @version: 1.0
  */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Setter
 @Getter
-public class DingTalkTextReq extends AbstractDingTalkReq {
-    private Text text;
+public class DingTalkMarkdownReq extends AbstractDingTalkReq {
+    private Markdown markdown;
     private DingTalkAtReq at;
 
-    public DingTalkTextReq() {
+    public DingTalkMarkdownReq() {
         super();
-        setMsgType(DingTalkMsgType.text);
+        setMsgType(DingTalkMsgType.markdown);
     }
 
     @Setter
     @Getter
     @AllArgsConstructor
-    public static class Text implements Serializable {
-        private String content;
+    public static class Markdown implements Serializable {
+        private String title;
+        private String text;
     }
 }

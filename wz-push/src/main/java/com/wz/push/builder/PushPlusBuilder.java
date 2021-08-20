@@ -2,7 +2,6 @@ package com.wz.push.builder;
 
 import com.wz.push.bean.pushplus.PushPlusReq;
 import com.wz.push.enums.PushPlusTemplate;
-import com.wz.push.enums.PushType;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.ToString;
@@ -53,15 +52,13 @@ public class PushPlusBuilder extends AbstractBuilder<PushPlusReq, PushPlusBuilde
 
     @Override
     public PushPlusReq build() {
-        final PushPlusReq msg = new PushPlusReq();
+        final PushPlusReq msg = new PushPlusReq(token);
         msg.setTitle(title);
         msg.setContent(content);
         msg.setTemplate(template);
         msg.setChannel(channel);
         msg.setWebhook(webhook);
         msg.setCallbackUrl(callbackUrl);
-        msg.setToken(token);
-        msg.setType(PushType.PUSH_PLUS);
 
         return msg;
     }

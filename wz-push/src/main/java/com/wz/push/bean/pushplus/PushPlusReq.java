@@ -2,6 +2,7 @@ package com.wz.push.bean.pushplus;
 
 import com.wz.push.bean.AbstractPushTokenReq;
 import com.wz.push.enums.PushPlusTemplate;
+import com.wz.push.enums.PushType;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,4 +46,10 @@ public class PushPlusReq extends AbstractPushTokenReq {
      * 否	query	无	回调地址，异步回调发送结果
      */
     private String callbackUrl;
+
+    public PushPlusReq(String token) {
+        setType(PushType.PUSH_PLUS);
+        setToken(token);
+    }
+
 }
