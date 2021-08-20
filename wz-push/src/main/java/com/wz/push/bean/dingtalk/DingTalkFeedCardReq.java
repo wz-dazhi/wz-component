@@ -23,7 +23,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @Setter
 @Getter
-public class DingTalkFeedCardReq extends AbstractDingTalkReq {
+public class DingTalkFeedCardReq extends BaseDingTalkReq {
     private FeedCard feedCard;
 
     public DingTalkFeedCardReq() {

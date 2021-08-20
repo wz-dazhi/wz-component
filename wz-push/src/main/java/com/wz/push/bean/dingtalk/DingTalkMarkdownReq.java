@@ -22,7 +22,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @Setter
 @Getter
-public class DingTalkMarkdownReq extends AbstractDingTalkReq {
+public class DingTalkMarkdownReq extends BaseDingTalkReq {
     private Markdown markdown;
     private DingTalkAtReq at;
 

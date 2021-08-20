@@ -1,14 +1,14 @@
 package com.wz.push.util;
 
 import com.wz.push.bean.AbstractPushResp;
-import com.wz.push.bean.dingtalk.AbstractDingTalkReq;
+import com.wz.push.bean.dingtalk.BaseDingTalkReq;
 import com.wz.push.builder.DingTalkBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class PushDingTalkUtilTest {
-    private AbstractDingTalkReq req;
+    private BaseDingTalkReq req;
     private AbstractPushResp resp;
 
     @Before

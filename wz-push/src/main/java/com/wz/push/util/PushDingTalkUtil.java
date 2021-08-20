@@ -3,7 +3,7 @@ package com.wz.push.util;
 import com.wz.common.exception.ExceptionUtil;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.StringUtil;
-import com.wz.push.bean.dingtalk.AbstractDingTalkReq;
+import com.wz.push.bean.dingtalk.BaseDingTalkReq;
 import com.wz.push.bean.dingtalk.DingTalkResp;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -39,7 +39,7 @@ public final class PushDingTalkUtil {
     private static final String SEND_URI = BASE_URL + "/robot/send?access_token=%s";
     private static final String SEND_SIGN_URI = SEND_URI + "&timestamp=%s&sign=%s";
 
-    public static <Req extends AbstractDingTalkReq> DingTalkResp pushSign(Req req) {
+    public static <Req extends BaseDingTalkReq> DingTalkResp pushSign(Req req) {
         final String token = req.getToken();
         final String secret = req.getSecret();
         StringUtil.requireNonNull(secret, "密钥不能为空");
@@ -48,7 +48,7 @@ public final class PushDingTalkUtil {
         return doPush(url, req);
     }
 
-    public static <Req extends AbstractDingTalkReq> DingTalkResp push(Req req) {
+    public static <Req extends BaseDingTalkReq> DingTalkResp push(Req req) {
         // 不加签
         if (StringUtil.isBlank(req.getSecret())) {
             final String token = req.getToken();
@@ -59,7 +59,7 @@ public final class PushDingTalkUtil {
         return pushSign(req);
     }
 
-    public static <Req extends AbstractDingTalkReq> DingTalkResp doPush(String url, Req req) {
+    public static <Req extends BaseDingTalkReq> DingTalkResp doPush(String url, Req req) {
         try {
             //verifyInstance(req);
             final String res = REST.post(url, req, String.class);

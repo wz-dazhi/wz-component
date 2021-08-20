@@ -4,6 +4,7 @@ import com.wz.push.bean.pushplus.PushPlusReq;
 import com.wz.push.bean.pushplus.PushPlusResp;
 import com.wz.push.enums.PushPlusTemplate;
 
+import static com.wz.push.constant.PushConst.PUSH_SUCCESS_CODE;
 import static com.wz.push.constant.PushConst.REST;
 
 /**
@@ -21,7 +22,7 @@ public final class PushPlusUtil {
     private static final String SEND_URI = BASE_URL + "/send";
     private static final String SEND_JSON_URI = "?token=%s&title=%s&content=%s&template=json&channel=%s&webhook=%s&callbackUrl=%s";
 
-    public static final String SUCCESS_CODE = "200";
+    public static final String PUSH_PLUS_SUCCESS_CODE = "200";
 
     public static <T> T get(String token, String title, String content) {
         final PushPlusResp<Object> res = doGet(token, title, content, null);
@@ -48,16 +49,19 @@ public final class PushPlusUtil {
     }
 
     public static <T> PushPlusResp<T> doGet(final PushPlusReq req) {
-        PushPlusResp<T> PushPlusResp;
+        PushPlusResp<T> pushPlusResp;
         if (PushPlusTemplate.json != req.getTemplate()) {
-            PushPlusResp = REST.get(SEND_URI, req, PushPlusResp.class);
+            pushPlusResp = REST.get(SEND_URI, req, PushPlusResp.class);
         } else {
             final String params = String.format(SEND_JSON_URI, req.getToken(), req.getTitle(), "{json}", req.getChannel(), req.getWebhook(), req.getCallbackUrl());
             final String url = SEND_URI + params;
-            PushPlusResp = REST.getVariables(url, PushPlusResp.class, req.getContent());
+            pushPlusResp = REST.getVariables(url, PushPlusResp.class, req.getContent());
+        }
+        if (pushPlusResp != null && PUSH_PLUS_SUCCESS_CODE.equals(pushPlusResp.getCode())) {
+            pushPlusResp.setCode(PUSH_SUCCESS_CODE);
         }
 
-        return PushPlusResp;
+        return pushPlusResp;
     }
 
     public static <T> T post(String token, String title, String content) {
@@ -75,7 +79,11 @@ public final class PushPlusUtil {
     }
 
     public static <T> PushPlusResp<T> doPost(final PushPlusReq req) {
-        return REST.post(SEND_URI, req, PushPlusResp.class);
+        final PushPlusResp resp = REST.post(SEND_URI, req, PushPlusResp.class);
+        if (resp != null && PUSH_PLUS_SUCCESS_CODE.equals(resp.getCode())) {
+            resp.setCode(PUSH_SUCCESS_CODE);
+        }
+        return resp;
     }
 
 }

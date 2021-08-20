@@ -22,12 +22,12 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @Setter
 @Getter
-public class AbstractDingTalkReq extends AbstractPushTokenReq {
+public class BaseDingTalkReq extends AbstractPushTokenReq {
     @JsonProperty("msgtype")
     private DingTalkMsgType msgType;
     private String secret;
 
-    public AbstractDingTalkReq() {
+    public BaseDingTalkReq() {
         setType(PushType.DING_TALK);
     }
 

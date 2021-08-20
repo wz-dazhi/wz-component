@@ -1,11 +1,16 @@
 package com.wz.push.util;
 
 import com.wz.common.util.StringUtil;
+import com.wz.mail.util.EmailUtil;
 import com.wz.push.bean.AbstractPushReq;
 import com.wz.push.bean.AbstractPushResp;
 import com.wz.push.bean.AbstractPushTokenReq;
-import com.wz.push.bean.dingtalk.AbstractDingTalkReq;
+import com.wz.push.bean.PushSuccessResp;
+import com.wz.push.bean.dingtalk.BaseDingTalkReq;
+import com.wz.push.bean.dingtalk.DingTalkResp;
+import com.wz.push.bean.email.EmailReq;
 import com.wz.push.bean.pushplus.PushPlusReq;
+import com.wz.push.bean.pushplus.PushPlusResp;
 import com.wz.push.enums.PushType;
 
 import java.util.Objects;
@@ -33,18 +38,37 @@ public final class PushUtil {
         final PushType type = s.getType();
         switch (type) {
             case PUSH_PLUS:
-                if (!(s instanceof PushPlusReq)) {
-                    throw CLASS_ARGUMENT_EXCEPTION;
-                }
-                return (Resp) PushPlusUtil.doGet((PushPlusReq) s);
+                return (Resp) doPushPlus(s);
             case DING_TALK:
-                if (!(s instanceof AbstractDingTalkReq)) {
-                    throw CLASS_ARGUMENT_EXCEPTION;
-                }
-                return (Resp) PushDingTalkUtil.push((AbstractDingTalkReq) s);
+                return (Resp) doDingTalk(s);
+            case EMAIL:
+                return (Resp) doEmail(s);
             default:
                 throw new IllegalArgumentException("pushType错误.");
         }
+    }
+
+    private static <Req extends AbstractPushReq, T> PushPlusResp<T> doPushPlus(Req s) {
+        if (!(s instanceof PushPlusReq)) {
+            throw CLASS_ARGUMENT_EXCEPTION;
+        }
+        return PushPlusUtil.doGet((PushPlusReq) s);
+    }
+
+    private static <Req extends AbstractPushReq> DingTalkResp doDingTalk(Req s) {
+        if (!(s instanceof BaseDingTalkReq)) {
+            throw CLASS_ARGUMENT_EXCEPTION;
+        }
+        return PushDingTalkUtil.push((BaseDingTalkReq) s);
+    }
+
+    private static <Req extends AbstractPushReq> PushSuccessResp doEmail(Req s) {
+        if (!(s instanceof EmailReq)) {
+            throw CLASS_ARGUMENT_EXCEPTION;
+        }
+        EmailReq r = (EmailReq) s;
+        EmailUtil.send(r.getMsg(), r.isHtml());
+        return PushSuccessResp.SUCCESS;
     }
 
     private static void verifyToken(AbstractPushTokenReq msg) {

@@ -2,7 +2,6 @@ package com.wz.push.bean.dingtalk;
 
 import com.wz.push.bean.AbstractPushResp;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * @projectName: wz-component
@@ -14,6 +13,11 @@ import lombok.ToString;
  * @version: 1.0
  */
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 public class DingTalkResp extends AbstractPushResp {
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
 }

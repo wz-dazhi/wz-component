@@ -21,5 +21,10 @@ public enum PushType {
      */
     DING_TALK,
 
+    /**
+     * 邮箱
+     */
+    EMAIL,
+
     ;
 }

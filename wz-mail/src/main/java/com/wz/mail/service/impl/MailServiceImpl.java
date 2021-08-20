@@ -46,10 +46,10 @@ public class MailServiceImpl implements MailService {
         log.debug(">>> 开始发送邮件: {}, isHtml: {}", msg, isHtml);
         StringUtil.requireNonNull(msg.getFrom(), "发送人[from]不能为空");
         Objects.requireNonNull(msg.getTo(), "接收人[to]不能为空");
-        return this.start(msg, isHtml);
+        return this.doSend(msg, isHtml);
     }
 
-    private <S extends MailMsg> Result<Boolean> start(S s, boolean isHtml) {
+    private <S extends MailMsg> Result<Boolean> doSend(S s, boolean isHtml) {
         try {
             MimeMessage message = sender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);

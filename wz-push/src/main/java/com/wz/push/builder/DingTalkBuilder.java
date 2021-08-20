@@ -1,6 +1,6 @@
 package com.wz.push.builder;
 
-import com.wz.push.bean.dingtalk.AbstractDingTalkReq;
+import com.wz.push.bean.dingtalk.BaseDingTalkReq;
 import com.wz.push.bean.dingtalk.DingTalkActionCardReq;
 import com.wz.push.bean.dingtalk.DingTalkAtReq;
 import com.wz.push.bean.dingtalk.DingTalkFeedCardReq;
@@ -158,7 +158,7 @@ public class DingTalkBuilder {
 
     @ToString(callSuper = true)
     @EqualsAndHashCode(callSuper = true)
-    private abstract static class SecretBuilder<Req extends AbstractDingTalkReq, Builder extends SecretBuilder> extends AbstractBuilder<Req, Builder> {
+    private abstract static class SecretBuilder<Req extends BaseDingTalkReq, Builder extends SecretBuilder> extends AbstractBuilder<Req, Builder> {
         protected String secret;
 
         public Builder secret(String secret) {

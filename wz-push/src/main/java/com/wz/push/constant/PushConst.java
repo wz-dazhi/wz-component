@@ -15,5 +15,6 @@ public final class PushConst {
     private PushConst() {
     }
 
+    public static final String PUSH_SUCCESS_CODE = "0";
     public static final RestUtil REST = new RestUtil();
 }
