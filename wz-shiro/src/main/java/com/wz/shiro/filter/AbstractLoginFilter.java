@@ -1,8 +1,9 @@
 package com.wz.shiro.filter;
 
-import com.wz.common.exception.BusinessException;
-import com.wz.common.exception.ParameterException;
+import com.wz.common.exception.CommonException;
 import com.wz.common.exception.SystemException;
+import com.wz.common.util.CollectionUtil;
+import com.wz.common.util.MapUtil;
 import com.wz.common.util.Results;
 import com.wz.common.util.StringUtil;
 import com.wz.shiro.annotation.Anon;
@@ -15,23 +16,24 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,31 +49,15 @@ import static com.wz.shiro.enums.ShiroEnum.METHOD_NOT_ALLOWED;
  * @version: 1.0
  */
 @Slf4j
-public abstract class AbstractLoginFilter extends AuthenticatingFilter implements ApplicationListener<ContextRefreshedEvent> {
-    private volatile boolean initialized = false;
-    private static final Object INIT_LOCK = new Object();
-    /**
-     * 带有@Anon注解的HandlerMapping
-     */
-    public static final Set<HandlerMapping> ANON_HANDLER_MAPPINGS = new HashSet<>(32);
-
-    protected final ShiroProperties shiroProperties;
-
-    protected AbstractLoginFilter(ShiroProperties shiroProperties) {
-        this.shiroProperties = shiroProperties;
-    }
+public abstract class AbstractLoginFilter extends AuthenticatingFilter implements EnvironmentAware, ApplicationListener<ContextRefreshedEvent> {
+    protected ShiroProperties shiroProperties;
+    private ApplicationContext applicationContext;
+    private List<HandlerMapping> handlerMappings;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        final ApplicationContext applicationContext = event.getApplicationContext();
-        // 执行初始化操作
-        synchronized (INIT_LOCK) {
-            if (initialized) {
-                return;
-            }
-            this.anonUrlControllerMappings(applicationContext);
-            initialized = true;
-        }
+        this.applicationContext = event.getApplicationContext();
+        this.initHandlerMappings(applicationContext);
     }
 
     /**
@@ -132,18 +118,14 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
             } catch (Exception e) {
                 String code = null;
                 String msg = null;
-                if (e instanceof SystemException) {
+                if (e instanceof CommonException) {
+                    CommonException ce = (CommonException) e;
+                    code = ce.getCode();
+                    msg = ce.getMsg();
+                } else if (e instanceof SystemException) {
                     SystemException se = (SystemException) e;
                     code = se.getCode();
                     msg = se.getMsg();
-                } else if (e instanceof ParameterException) {
-                    ParameterException pe = (ParameterException) e;
-                    code = pe.getCode();
-                    msg = pe.getMsg();
-                } else if (e instanceof BusinessException) {
-                    BusinessException be = (BusinessException) e;
-                    code = be.getCode();
-                    msg = be.getMsg();
                 }
                 if (StringUtil.isNotBlank(code) && StringUtil.isNotBlank(msg)) {
                     FilterHelper.writeResponse(response, Results.fail(code, msg));
@@ -196,26 +178,22 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
      * 判断是否属于@Anon的URI
      */
     protected boolean isAnonUri(HttpServletRequest req) {
-        for (HandlerMapping mapping : ANON_HANDLER_MAPPINGS) {
-            HandlerExecutionChain handler;
-            try {
-                handler = mapping.getHandler(req);
-            } catch (Exception e) {
-                log.error(">>> HandlerMapping.getHandler(req) e: ", e);
-                return false;
+        if (this.handlerMappings != null) {
+            HandlerExecutionChain handler = null;
+            for (HandlerMapping mapping : handlerMappings) {
+                try {
+                    handler = mapping.getHandler(req);
+                    if (handler != null) {
+                        break;
+                    }
+                } catch (Exception e) {
+                    log.error(">>> HandlerMapping.getHandler(req) e: ", e);
+                }
             }
-            if (handler != null && handler.getHandler() instanceof HandlerMethod) {
+            if (null != handler && handler.getHandler() instanceof HandlerMethod) {
                 final HandlerMethod m = (HandlerMethod) handler.getHandler();
-                // @Anon写在类上
-                final boolean isClassAnon = m.getBeanType().isAnnotationPresent(Anon.class);
-                if (isClassAnon) {
-                    return true;
-                }
-                // @Anon写在方法上
-                final boolean isMethodAnon = m.getMethod().isAnnotationPresent(Anon.class);
-                if (isMethodAnon) {
-                    return true;
-                }
+                // @Anon写在类上 || @Anon写在方法上
+                return m.getBeanType().isAnnotationPresent(Anon.class) || m.hasMethodAnnotation(Anon.class);
             }
         }
         return false;
@@ -237,36 +215,19 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
         return false;
     }
 
-    /**
-     * 加载url对应的controller信息
-     */
-    private void anonUrlControllerMappings(ApplicationContext applicationContext) {
-        log.debug(">>> Starting init anon mapping.");
-        final Set<String> anonUrlSets = new HashSet<>();
-        // 获取所有的RequestMapping
+    private void initHandlerMappings(ApplicationContext applicationContext) {
         Map<String, HandlerMapping> allRequestHandlerMappings = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, HandlerMapping.class, true, false);
-        for (HandlerMapping handlerMapping : allRequestHandlerMappings.values()) {
-            // 这里只需要RequestMappingHandlerMapping中的URL映射
-            if (handlerMapping instanceof RequestMappingHandlerMapping) {
-                RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping) handlerMapping;
-                Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
-                handlerMethods.forEach((mappingInfo, hm) -> {
-                    Class<?> controllerClass = hm.getBeanType();
-                    Method controllerMethod = hm.getMethod();
-                    final boolean classIsAnon = controllerClass.isAnnotationPresent(Anon.class);
-                    final boolean methodIsAnon = controllerMethod.isAnnotationPresent(Anon.class);
-                    final boolean isAnon = classIsAnon || methodIsAnon;
-                    if (isAnon) {
-                        ANON_HANDLER_MAPPINGS.add(handlerMapping);
-                        // 可以访问的url
-                        PatternsRequestCondition patternsCondition = mappingInfo.getPatternsCondition();
-                        Set<String> urlPatterns = patternsCondition.getPatterns();
-                        anonUrlSets.addAll(urlPatterns);
-                    }
-                });
-            }
+        if (MapUtil.isNotEmpty(allRequestHandlerMappings) && CollectionUtil.isNotEmpty(allRequestHandlerMappings.values())) {
+            this.handlerMappings = new ArrayList<>(allRequestHandlerMappings.values());
         }
-        log.debug(">>> End init anon mapping. \n " +
-                "Anon mapping: {} \n Anon uri: {}", ANON_HANDLER_MAPPINGS, anonUrlSets);
+    }
+
+    @Override
+    public final void setEnvironment(Environment environment) {
+        final ConfigurationProperties p = ShiroProperties.class.getAnnotation(ConfigurationProperties.class);
+        if (null != p) {
+            final Binder binder = Binder.get(environment);
+            this.shiroProperties = binder.bind(p.prefix(), ShiroProperties.class).orElse(new ShiroProperties());
+        }
     }
 }

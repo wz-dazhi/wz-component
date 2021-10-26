@@ -62,12 +62,15 @@ public class AbstractShiroConfig {
         chainDefinition.addPathDefinition("/webjars/**", "anon");
         chainDefinition.addPathDefinition("/img/icons/**", "anon");
         chainDefinition.addPathDefinition("/static/**", "anon");
+        chainDefinition.addPathDefinition("/static/error/**", "anon");
         chainDefinition.addPathDefinition("/img/**", "anon");
         chainDefinition.addPathDefinition("/images/**", "anon");
         chainDefinition.addPathDefinition("/css/**", "anon");
         chainDefinition.addPathDefinition("/js/**", "anon");
         chainDefinition.addPathDefinition("/fonts/**", "anon");
         chainDefinition.addPathDefinition("/ui/**", "anon");
+        chainDefinition.addPathDefinition("/templates/error/**", "anon");
+        chainDefinition.addPathDefinition("/error/**", "anon");
         shiroProperties.getPathDefinition().forEach(d -> chainDefinition.addPathDefinition(d.getPath(), d.getDefinition()));
         return chainDefinition;
     }
