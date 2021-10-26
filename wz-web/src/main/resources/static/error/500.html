@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Server Error</title>
@@ -86,6 +86,9 @@
             msg = decodeURI(pair[1]).replace("%2C", ",").replace("+", " ");
         }
     }
+
+    code = code === undefined ? '-3' : code;
+    msg = msg === undefined ? 'The request failed, Please try again later' : msg;
     document.getElementById("msg").innerHTML = "code: " + code + ", msg: " + msg;
 </script>
 </body>
