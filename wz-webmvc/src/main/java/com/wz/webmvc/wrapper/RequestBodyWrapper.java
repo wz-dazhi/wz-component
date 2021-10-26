@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 public class RequestBodyWrapper extends HttpServletRequestWrapper {
 
     @Getter
-    private String body;
+    private final String body;
 
     public RequestBodyWrapper(HttpServletRequest req) throws IOException {
         super(req);

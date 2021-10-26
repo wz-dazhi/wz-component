@@ -18,7 +18,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ElementKind;
 import javax.validation.Path;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -89,7 +91,16 @@ abstract class BaseExceptionHandler {
     }
 
     protected void error(HttpServletRequest req, Throwable t) {
-        log.error("<<< A run exception has occurred, uri: [{}] msg: [{}], e: ", req.getRequestURI(), t.getMessage(), t);
+        log.error("<<< A run exception has occurred, uri: [{}], e: ", req.getRequestURI(), t);
+    }
+
+    protected Map<String, Object> model(String code, String msg) {
+        Map<String, Object> model = new HashMap<>(4);
+        model.put("code", code);
+        model.put("msg", msg);
+        model.put("data", null);
+        model.put("isSuccess", false);
+        return model;
     }
 
 }

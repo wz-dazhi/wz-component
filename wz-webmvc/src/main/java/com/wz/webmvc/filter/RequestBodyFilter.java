@@ -28,7 +28,7 @@ public class RequestBodyFilter implements Filter {
         // 替换成包装request, 不处理GET
         if (request instanceof HttpServletRequest) {
             final HttpServletRequest req = (HttpServletRequest) request;
-            if (!HttpMethod.GET.name().equals(req.getMethod())) {
+            if (!HttpMethod.GET.matches(req.getMethod())) {
                 requestWrapper = new RequestBodyWrapper(req);
             }
         }

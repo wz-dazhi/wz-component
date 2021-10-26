@@ -22,7 +22,6 @@ import java.util.List;
  * @date: 2019/3/9 11:16 PM
  * @version: 1.0
  **/
-//@EnableWebMvc
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Value("${server.servlet.context-path:}")

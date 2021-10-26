@@ -3,6 +3,7 @@ package com.wz.webmvc.aspectj;
 import com.google.common.base.Stopwatch;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.UUIDUtil;
+import com.wz.swagger.util.LocalIpUtil;
 import com.wz.webmvc.util.IpUtil;
 import com.wz.webmvc.util.WebContextUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -38,29 +39,29 @@ public class LogAspect {
 
     @Around("log()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        HttpServletRequest req = WebContextUtil.getRequest();
-        String uri = req.getRequestURI();
         Stopwatch sw = Stopwatch.createStarted();
+        HttpServletRequest req = WebContextUtil.getRequest();
         MDC.put("linkId", UUIDUtil.getLowerCase());
+        MDC.put("clientIp", IpUtil.getIp());
+        MDC.put("serverIp", LocalIpUtil.localIpv4Address(InetAddress.getLocalHost().getHostAddress()));
+        MDC.put("api", req.getRequestURL().toString());
+        String uri = req.getRequestURI();
         Object[] args = point.getArgs();
         final boolean infoEnabled = log.isInfoEnabled();
         if (infoEnabled) {
             log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJson(args), point.getSignature().toShortString());
         }
         try {
-            MDC.put("clientIp", IpUtil.getIp());
-            MDC.put("serverIp", InetAddress.getLocalHost().getHostAddress());
-            MDC.put("api", req.getRequestURL().toString());
             Object r = point.proceed();
-            // r 如果是集合类型, 并且数据超过100个. 则不打印日志
-            if (null != r && Collection.class.isAssignableFrom(r.getClass()) && ((Collection) r).size() > 100) {
-                if (infoEnabled) {
+            if (null != r && infoEnabled) {
+                // r 如果是集合类型, 并且数据超过100个. 则不打印日志
+                boolean isCollection = Collection.class.isAssignableFrom(r.getClass()) && ((Collection) r).size() > 100;
+                if (isCollection) {
                     log.info("Uri: [{}], size: [{}]. Return data more than 100, Not print data log. ", uri, ((Collection) r).size());
+                } else {
+                    log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJson(r));
                 }
                 return r;
-            }
-            if (infoEnabled) {
-                log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJson(r));
             }
             return r;
         } finally {
