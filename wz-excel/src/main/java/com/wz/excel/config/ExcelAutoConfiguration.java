@@ -3,11 +3,12 @@ package com.wz.excel.config;
 import com.wz.excel.export.aspect.ExcelExportReturnValueHandler;
 import com.wz.excel.export.handler.DefaultExportHandler;
 import com.wz.excel.export.handler.ExportHandler;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -27,9 +28,7 @@ import java.util.List;
  */
 @Configuration
 @ConditionalOnProperty(prefix = "excel.config", name = "enable", havingValue = "true", matchIfMissing = true)
-public class ExcelAutoConfiguration implements InitializingBean {
-
-    @Autowired
+public class ExcelAutoConfiguration implements ApplicationContextAware, InitializingBean {
     private ApplicationContext applicationContext;
 
     @ConditionalOnMissingBean
@@ -45,6 +44,11 @@ public class ExcelAutoConfiguration implements InitializingBean {
     }
 
     @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
     public void afterPropertiesSet() {
         RequestMappingHandlerAdapter handlerAdapter = applicationContext.getBean(RequestMappingHandlerAdapter.class);
         List<HandlerMethodReturnValueHandler> returnValueHandlers = handlerAdapter.getReturnValueHandlers();
@@ -54,5 +58,4 @@ public class ExcelAutoConfiguration implements InitializingBean {
         handlers.addAll(returnValueHandlers);
         handlerAdapter.setReturnValueHandlers(handlers);
     }
-
 }

@@ -12,14 +12,13 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 /**
  * @author zhi
  */
-@Slf4j
 @RequiredArgsConstructor
 public class ExcelExportReturnValueHandler implements HandlerMethodReturnValueHandler {
     private final ExportHandler exportHandler;
 
     @Override
     public boolean supportsReturnType(MethodParameter parameter) {
-        return parameter.getMethodAnnotation(Export.class) != null;
+        return parameter.hasMethodAnnotation(Export.class);
     }
 
     @Override
