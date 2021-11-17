@@ -69,7 +69,7 @@
         <shiro-spring-boot-web-starter.version>1.8.0</shiro-spring-boot-web-starter.version>
         <shiro-redis.version>3.3.1</shiro-redis.version>
         <disruptor.version>3.4.4</disruptor.version>
-        <easyexcel.version>3.0.1</easyexcel.version>
+        <easyexcel.version>3.0.5</easyexcel.version>
     </properties>
 
     <dependencyManagement>

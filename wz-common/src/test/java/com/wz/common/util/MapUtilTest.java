@@ -5,12 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class MapUtilTest {
@@ -96,13 +100,13 @@ public class MapUtilTest {
 
     @Test
     public void isEmpty() {
-        Assert.assertTrue(MapUtil.isEmpty(null));
-        Assert.assertTrue(MapUtil.isEmpty(new HashMap<>()));
+        Assertions.assertTrue(MapUtil.isEmpty(null));
+        Assertions.assertTrue(MapUtil.isEmpty(new HashMap<>()));
     }
 
     @Test
     public void isNotEmpty() {
-        Assert.assertTrue(MapUtil.isNotEmpty(new HashMap() {{
+        Assertions.assertTrue(MapUtil.isNotEmpty(new HashMap() {{
             put("k", "v");
         }}));
     }
