@@ -33,7 +33,7 @@ import java.util.List;
 public class DefaultExportHandler extends AbstractExportHandler implements ExportHandler {
 
     @Override
-    protected void doExport(List list, MethodParameter parameter, Export export) {
+    protected void doExport(List<?> list, MethodParameter parameter, Export export) {
         final HttpServletResponse resp = WebContextUtil.getResponse();
         final String fileName = getFileName(export.fileName());
         final ExcelTypeEnum excelType = export.suffix();
@@ -73,7 +73,7 @@ public class DefaultExportHandler extends AbstractExportHandler implements Expor
         }
     }
 
-    protected void simpleWrite(List list, MethodParameter parameter, ExcelWriter writer, final Export export) {
+    protected void simpleWrite(List<?> list, MethodParameter parameter, ExcelWriter writer, final Export export) {
         final Export.Sheet s = export.sheet()[0];
         final int sheetNo = 0;
         final String sheetName = this.getSheetName(s.sheetName(), sheetNo + 1);
@@ -90,7 +90,7 @@ public class DefaultExportHandler extends AbstractExportHandler implements Expor
         }
     }
 
-    protected void multiWrite(List list, MethodParameter parameter, ExcelWriter writer, final Export export) {
+    protected void multiWrite(List<?> list, MethodParameter parameter, ExcelWriter writer, final Export export) {
         final boolean isNoneTemplate = TemplateTypeEnum.NONE == export.templateType();
         final int size = list.size();
         final Export.Sheet[] sheets = export.sheet();
@@ -102,7 +102,7 @@ public class DefaultExportHandler extends AbstractExportHandler implements Expor
                 if (null == data || !List.class.isAssignableFrom(data.getClass())) {
                     throw new ExcelException("数据类型错误, 请检查");
                 }
-                final List sheetData = (List) data;
+                final List<?> sheetData = (List<?>) data;
                 // 1. list不为空, 取list的泛型, 负责取手动设置的head
                 Class<?> head = CollectionUtil.isNotEmpty(sheetData) ? sheetData.get(0).getClass() : Object.class;
                 String sheetName = "";

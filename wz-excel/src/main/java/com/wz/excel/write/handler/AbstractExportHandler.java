@@ -34,7 +34,7 @@ public abstract class AbstractExportHandler implements ExportHandler {
         if (null == export.sheet() || export.sheet().length == 0) {
             throw new ExcelException("导出sheet页不能为空.");
         }
-        this.doExport((List) data, parameter, export);
+        this.doExport((List<?>) data, parameter, export);
     }
 
     /**
@@ -44,5 +44,5 @@ public abstract class AbstractExportHandler implements ExportHandler {
      * @param parameter MethodParameter
      * @param export    自定义注解
      */
-    protected abstract void doExport(List data, MethodParameter parameter, Export export);
+    protected abstract void doExport(List<?> data, MethodParameter parameter, Export export);
 }
