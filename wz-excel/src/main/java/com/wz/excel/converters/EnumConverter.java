@@ -7,6 +7,7 @@ import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.wz.common.enums.IEnum;
+import com.wz.excel.annotation.ExcelEnum;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,7 +36,7 @@ public class EnumConverter implements Converter<Object> {
 
     @Override
     public Object convertToJavaData(ReadCellData cellData, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        String excelValue = cellData.toString();
+        String excelValue = cellData.getStringValue();
         return this.process(excelContentProperty, (codeMethod, descMethod, enumConsts) -> {
             if (descMethod.invoke(enumConsts).equals(excelValue)) {
                 return codeMethod.invoke(enumConsts);
@@ -57,9 +58,9 @@ public class EnumConverter implements Converter<Object> {
 
     private <T> T process(ExcelContentProperty excelContentProperty, ProcessFunction<Method, Method, Object, T> pf) throws Exception {
         Field field = excelContentProperty.getField();
-        com.wz.excel.annotation.EnumConverter converter = field.getDeclaredAnnotation(com.wz.excel.annotation.EnumConverter.class);
-        Objects.requireNonNull(converter, "Current field " + field.getName() + " cannot find @EnumConverter");
-        Class<? extends IEnum<?, ?>> clazz = converter.enumClass();
+        ExcelEnum excelEnum = field.getDeclaredAnnotation(ExcelEnum.class);
+        Objects.requireNonNull(excelEnum, "Current field " + field.getName() + " cannot find @ExcelEnum");
+        Class<? extends IEnum<?, ?>> clazz = excelEnum.enumClass();
         Object[] enumConstants = clazz.getEnumConstants();
         Method codeMethod = clazz.getMethod("code");
         Method descMethod = clazz.getMethod("desc");

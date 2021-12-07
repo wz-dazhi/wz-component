@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 /**
  * @projectName: wz-component
  * @package: com.wz.excel.annotation
- * @className: EnumConverter
+ * @className: ExcelEnum
  * @description:
  * @author: zhi
  * @date: 2021/12/6
@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface EnumConverter {
+public @interface ExcelEnum {
 
     /**
      * 需要转换的枚举类

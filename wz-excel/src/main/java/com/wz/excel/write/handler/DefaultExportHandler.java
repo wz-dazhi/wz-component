@@ -81,9 +81,9 @@ public class DefaultExportHandler extends AbstractExportHandler implements Expor
         final Class<?> head = s.head() != Object.class ? s.head() : this.getDataClass(parameter);
         try {
             if (TemplateTypeEnum.NONE == export.templateType()) {
-                ExcelUtil.doSimpleWrite(writer, sheetNo, sheetName, head, list);
+                ExcelUtil.doWrite(writer, sheetNo, sheetName, head, list);
             } else {
-                ExcelUtil.doSimpleFill(writer, sheetNo, sheetName, head, list);
+                ExcelUtil.doFill(writer, sheetNo, sheetName, head, list);
             }
         } finally {
             ExcelUtil.finish(writer);
@@ -121,9 +121,9 @@ public class DefaultExportHandler extends AbstractExportHandler implements Expor
                 }
 
                 if (isNoneTemplate) {
-                    ExcelUtil.doSimpleWrite(writer, i, this.getSheetName(sheetName, i + 1), head, sheetData);
+                    ExcelUtil.doWrite(writer, i, this.getSheetName(sheetName, i + 1), head, sheetData);
                 } else {
-                    ExcelUtil.doSimpleFill(writer, i, this.getSheetName(sheetName, i + 1), head, sheetData);
+                    ExcelUtil.doFill(writer, i, this.getSheetName(sheetName, i + 1), head, sheetData);
                 }
             }
         } finally {

@@ -16,6 +16,7 @@ import com.wz.excel.read.handler.ReadHandler;
 import com.wz.excel.read.handler.ValidatorReadHandler;
 import com.wz.excel.read.service.ReadService;
 import com.wz.excel.read.service.ValidatorReadService;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 
@@ -38,10 +39,8 @@ import java.util.List;
  * @version: 1.0
  */
 @Slf4j
-public final class ExcelUtil {
-
-    private ExcelUtil() {
-    }
+@UtilityClass
+public class ExcelUtil {
 
     public static ExcelWriter writer(OutputStream os, ExcelTypeEnum excelType, InputStream templateInputStream) {
         return EasyExcel.write(os)
@@ -51,14 +50,22 @@ public final class ExcelUtil {
                 .build();
     }
 
-    public static void doSimpleWrite(ExcelWriter writer, Integer sheetNo, String sheetName, Class<?> head, List data) {
+    public static <T> void doWrite(String fileName, String sheetName, Class<T> clazz, List<T> list) {
+        EasyExcel.write(fileName, clazz).sheet(sheetName).doWrite(list);
+    }
+
+    public static <T> void doWrite(String fileName, Integer sheetNo, Class<T> clazz, List<T> list) {
+        EasyExcel.write(fileName, clazz).sheet(sheetNo).doWrite(list);
+    }
+
+    public static void doWrite(ExcelWriter writer, Integer sheetNo, String sheetName, Class<?> head, List<?> data) {
         final WriteSheet sheet = EasyExcel.writerSheet(sheetNo, sheetName)
                 .head(head)
                 .build();
         writer.write(data, sheet);
     }
 
-    public static void doSimpleFill(ExcelWriter writer, Integer sheetNo, String sheetName, Class<?> head, List data) {
+    public static void doFill(ExcelWriter writer, Integer sheetNo, String sheetName, Class<?> head, List<?> data) {
         final WriteSheet sheet = EasyExcel.writerSheet(sheetNo, sheetName)
                 .head(head)
                 .build();

@@ -112,4 +112,18 @@ public class SimpleReadTest {
         ExcelUtil.doReadMultiSheetNo(is, sheetWrappers);
         readHandler.getValidateResults().forEach(System.out::println);
     }
+
+    @Test
+    public void testEnumRead() {
+        InputStream is = SimpleReadTest.class.getClassLoader().getResourceAsStream("template/simple3Enum.xls");
+        ValidatorReadHandler<Simple3Enum> readListener = new ValidatorReadHandler<>(System.out::println);
+        ExcelUtil.doReadSheetNo(is, 3, Simple3Enum.class, readListener);
+        System.err.println(readListener.getValidateResults());
+
+        System.out.println("---------------------------------------------------------------------------------------");
+        is = SimpleReadTest.class.getClassLoader().getResourceAsStream("template/simple3Enum-test-write.xls");
+        ValidatorReadHandler<Simple3Enum> readListener2 = new ValidatorReadHandler<>(System.out::println);
+        ExcelUtil.doReadSheetNo(is, 0, Simple3Enum.class, readListener2);
+        System.err.println(readListener2);
+    }
 }
