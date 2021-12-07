@@ -223,9 +223,12 @@ public class ExcelUtil {
 
     public static <T> void doReadSingleSheetNo(InputStream is, Integer sheetNo, Class<T> head, ReadListener<T> readListener) {
         ExcelReader reader = reader(is);
-        ReadSheet sheet = readSheetNo(sheetNo, head, readListener);
-        reader.read(sheet);
-        finish(reader);
+        try {
+            ReadSheet sheet = readSheetNo(sheetNo, head, readListener);
+            reader.read(sheet);
+        } finally {
+            finish(reader);
+        }
     }
 
     public static void doReadMultiSheetNo(InputStream is, ReadSheetWrapper<?>... wrapper) {
@@ -233,17 +236,20 @@ public class ExcelUtil {
             throw new IllegalArgumentException("sheet cannot is null.");
         }
         ExcelReader reader = reader(is);
-        ReadSheet[] readSheets = new ReadSheet[wrapper.length];
-        for (int i = 0; i < wrapper.length; i++) {
-            ReadSheetWrapper<?> w = wrapper[i];
-            ReadSheet sheet = readSheetNo(w.getSheetNo(), w.getHead(), w.getReadListener());
-            readSheets[i] = sheet;
+        try {
+            ReadSheet[] readSheets = new ReadSheet[wrapper.length];
+            for (int i = 0; i < wrapper.length; i++) {
+                ReadSheetWrapper<?> w = wrapper[i];
+                ReadSheet sheet = readSheetNo(w.getSheetNo(), w.getHead(), w.getReadListener());
+                readSheets[i] = sheet;
+            }
+            reader.read(readSheets);
+        } finally {
+            finish(reader);
         }
-        reader.read(readSheets);
-        finish(reader);
     }
 
-    public static <T> ExcelReader reader(InputStream is) {
+    public static ExcelReader reader(InputStream is) {
         return EasyExcel.read(is).build();
     }
 
@@ -251,7 +257,7 @@ public class ExcelUtil {
         return EasyExcel.read(is, head, readListener).build();
     }
 
-    public static <T> ReadSheet readSheetNo(Integer sheetNo, Class<?> head, ReadListener<?> readListener) {
+    public static ReadSheet readSheetNo(Integer sheetNo, Class<?> head, ReadListener<?> readListener) {
         return EasyExcel.readSheet(sheetNo).head(head).registerReadListener(readListener).build();
     }
 
