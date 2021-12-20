@@ -5,6 +5,7 @@ import com.wz.common.enums.ResultEnum;
 import com.wz.common.model.Result;
 import com.wz.common.util.Results;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +26,7 @@ import javax.validation.ConstraintViolationException;
  * @author: Zhi Wang
  * @createDate: 2018/9/9 下午12:42
  **/
+@Order(1)
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalApiExceptionHandler extends BaseExceptionHandler {
     @Autowired

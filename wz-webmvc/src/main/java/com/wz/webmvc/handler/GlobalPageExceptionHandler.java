@@ -2,6 +2,7 @@ package com.wz.webmvc.handler;
 
 import com.wz.common.enums.ResultEnum;
 import com.wz.common.model.Result;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @author: Zhi Wang
  * @createDate: 2018/9/9 下午12:42
  **/
+@Order(2)
 @ControllerAdvice(annotations = Controller.class)
 public class GlobalPageExceptionHandler extends BaseExceptionHandler {
 
