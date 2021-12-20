@@ -50,22 +50,18 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
 
     @ApiModelProperty(value = "当前页", required = true)
     @Getter
-    @Setter
     private long current = 1;
 
     @ApiModelProperty(value = "每页显示条数，默认 10", required = true)
     @Getter
-    @Setter
     private long size = 10;
 
     @Getter
-    @Setter
     @ApiModelProperty(value = "响应返回的列表")
     protected List<T> records = Collections.emptyList();
 
     @Getter
-    @Setter
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty("总数量")
     protected long total = 0;
 
     @Getter
@@ -73,11 +69,9 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
     @ApiModelProperty(hidden = true)
     protected List<OrderItem> orders = new ArrayList<>();
 
-    @Setter
     @ApiModelProperty(hidden = true)
     protected boolean optimizeCountSql = true;
 
-    @Setter
     @ApiModelProperty(hidden = true)
     protected boolean isSearchCount = true;
 
@@ -96,6 +90,8 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
     @ApiModelProperty(hidden = true)
     protected Long maxLimit;
 
+    @ApiModelProperty(hidden = true)
+    protected boolean optimizeJoinOfCountSql = true;
 
     public Page() {
     }
@@ -165,6 +161,12 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
         return this;
     }
 
+    @ApiModelProperty("总页数")
+    @Override
+    public long getPages() {
+        return super.getPages();
+    }
+
     @ApiModelProperty(hidden = true)
     @Override
     public IPage<T> setPages(long pages) {
@@ -172,9 +174,27 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
         return this;
     }
 
+    @ApiModelProperty(hidden = true)
+    @Override
+    public boolean optimizeJoinOfCountSql() {
+        return optimizeJoinOfCountSql;
+    }
+
+    @ApiModelProperty(hidden = true)
+    @Override
+    public void setOptimizeJoinOfCountSql(boolean optimizeJoinOfCountSql) {
+        this.optimizeJoinOfCountSql = optimizeJoinOfCountSql;
+    }
+
     @Override
     public String toString() {
-        return JsonUtil.toJson(this);
+        // 打印全部
+        if (this.total <= 100) {
+            return JsonUtil.toJson(this);
+        }
+
+        // 数量太大, 只打印相关参数
+        return "{\"current\":" + current + ",\"pages\":" + getPages() + ",\"size\":" + size + ",\"total\":" + total + "}";
     }
 
 }

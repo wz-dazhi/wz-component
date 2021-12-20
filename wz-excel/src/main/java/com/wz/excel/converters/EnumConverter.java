@@ -7,6 +7,7 @@ import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.wz.common.enums.IEnum;
+import com.wz.common.util.StringUtil;
 import com.wz.excel.annotation.ExcelEnum;
 
 import java.lang.reflect.Field;
@@ -36,9 +37,9 @@ public class EnumConverter implements Converter<Object> {
 
     @Override
     public Object convertToJavaData(ReadCellData cellData, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        String excelValue = cellData.getStringValue();
+        final String excelValue = cellData.getStringValue();
         return this.process(excelContentProperty, (codeMethod, descMethod, enumConsts) -> {
-            if (descMethod.invoke(enumConsts).equals(excelValue)) {
+            if (StringUtil.isNotBlank(excelValue) && excelValue.equals(descMethod.invoke(enumConsts))) {
                 return codeMethod.invoke(enumConsts);
             }
             return null;
@@ -47,13 +48,13 @@ public class EnumConverter implements Converter<Object> {
 
     @Override
     public WriteCellData<String> convertToExcelData(Object data, ExcelContentProperty excelContentProperty, GlobalConfiguration globalConfiguration) throws Exception {
-        String value = this.process(excelContentProperty, (codeMethod, descMethod, enumConsts) -> {
-            if (codeMethod.invoke(enumConsts).equals(data)) {
-                return String.valueOf(descMethod.invoke(enumConsts));
+        Object value = this.process(excelContentProperty, (codeMethod, descMethod, enumConsts) -> {
+            if (data != null && data.equals(codeMethod.invoke(enumConsts))) {
+                return descMethod.invoke(enumConsts);
             }
             return null;
         });
-        return new WriteCellData<>(value != null ? value : "");
+        return new WriteCellData<>(value != null ? String.valueOf(value) : "");
     }
 
     private <T> T process(ExcelContentProperty excelContentProperty, ProcessFunction<Method, Method, Object, T> pf) throws Exception {

@@ -10,20 +10,20 @@ import springfox.documentation.oas.configuration.OpenApiDocumentationConfigurati
 
 /**
  * @package: com.wz.swagger
- * @className: SwaggerConfiguration
+ * @className: SwaggerComponent
  * @description:
  * @author: zhi
  * @date: 2020/12/31 下午6:27
  * @version: 1.0
  */
 @Component
-@ConditionalOnProperty(name = "knife4j.enable", matchIfMissing = true)
+@ConditionalOnProperty(name = "knife4j.enable", havingValue = "true")
 @Import({
         OpenApiDocumentationConfiguration.class,
         Knife4jAutoConfiguration.class
 })
 @EnableConfigurationProperties(SwaggerProperties.class)
-public class SwaggerConfiguration {
+public class SwaggerComponent {
 
     @Bean
     public SwaggerBeanDefinitionRegistryPostProcessor swaggerBeanDefinitionRegistryPostProcessor() {
