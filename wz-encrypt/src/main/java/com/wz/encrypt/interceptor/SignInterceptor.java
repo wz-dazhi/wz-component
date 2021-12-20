@@ -8,13 +8,12 @@ import com.wz.encrypt.algorithm.EncryptAlgorithm;
 import com.wz.encrypt.algorithm.SignAlgorithm;
 import com.wz.encrypt.annotation.Decrypt;
 import com.wz.encrypt.annotation.Sign;
-import com.wz.encrypt.auto.EncryptProperties;
+import com.wz.encrypt.config.EncryptProperties;
 import com.wz.encrypt.constant.EncryptConsts;
 import com.wz.webmvc.wrapper.RequestBodyWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -38,7 +37,6 @@ import static com.wz.encrypt.enums.EncryptEnum.REQUEST_EXPIRED;
  * @version: 1.0
  **/
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class SignInterceptor implements HandlerInterceptor {
     private final SignAlgorithm signAlgorithm;

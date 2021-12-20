@@ -1,4 +1,4 @@
-package com.wz.encrypt.auto;
+package com.wz.encrypt.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,6 +15,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "api.encrypt")
 public class EncryptProperties {
+
+    /**
+     * 是否启用加解密组件
+     */
+    private boolean enable = false;
 
     /**
      * 加密, 是否开启调试模式

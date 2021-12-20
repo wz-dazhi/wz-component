@@ -5,9 +5,10 @@ import com.wz.common.util.JsonUtil;
 import com.wz.common.util.StringUtil;
 import com.wz.encrypt.algorithm.EncryptAlgorithm;
 import com.wz.encrypt.annotation.Encrypt;
-import com.wz.encrypt.auto.EncryptProperties;
+import com.wz.encrypt.config.EncryptProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
  * @version: 1.0
  **/
 @Slf4j
+@ConditionalOnBean({EncryptProperties.class, EncryptAlgorithm.class})
 @RestControllerAdvice(annotations = RestController.class)
 @AllArgsConstructor
 public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {

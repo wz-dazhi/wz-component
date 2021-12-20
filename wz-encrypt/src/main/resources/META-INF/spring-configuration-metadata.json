@@ -2,48 +2,55 @@
   "hints": [],
   "groups": [
     {
-      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "sourceType": "com.wz.encrypt.config.EncryptProperties",
       "name": "api.encrypt",
-      "type": "com.wz.encrypt.auto.EncryptProperties",
+      "type": "com.wz.encrypt.config.EncryptProperties",
       "description": "加解密配置"
     }
   ],
   "properties": [
     {
-      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "sourceType": "com.wz.encrypt.config.EncryptProperties",
       "name": "api.encrypt.key",
       "type": "java.lang.String",
       "description": "加解密key"
     },
     {
-      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "sourceType": "com.wz.encrypt.config.EncryptProperties",
       "name": "api.encrypt.sign-key",
       "type": "java.lang.String",
       "description": "签名key, 可以跟加密key一致"
     },
     {
-      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "sourceType": "com.wz.encrypt.config.EncryptProperties",
       "name": "api.encrypt.debug",
       "type": "java.lang.Boolean",
       "description": "加密, 是否开启调试模式",
       "defaultValue": "false"
     },
     {
-      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "sourceType": "com.wz.encrypt.config.EncryptProperties",
+      "name": "api.encrypt.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否启用加解密组件",
+      "defaultValue": "false"
+    },
+    {
+      "sourceType": "com.wz.encrypt.config.EncryptProperties",
       "name": "api.encrypt.sign-expire-time",
       "type": "java.lang.Long",
       "description": "签名过期时间（分钟)",
       "defaultValue": "10L"
     },
     {
-      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "sourceType": "com.wz.encrypt.config.EncryptProperties",
       "name": "api.encrypt.sign-enable",
       "type": "java.lang.Boolean",
       "description": "签名开关",
       "defaultValue": "true"
     },
     {
-      "sourceType": "com.wz.encrypt.auto.EncryptProperties",
+      "sourceType": "com.wz.encrypt.config.EncryptProperties",
       "name": "api.encrypt.sign-path",
       "type": "java.lang.String[]",
       "description": "校验签名的controller"

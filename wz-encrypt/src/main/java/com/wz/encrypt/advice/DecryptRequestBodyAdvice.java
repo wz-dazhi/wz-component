@@ -3,11 +3,12 @@ package com.wz.encrypt.advice;
 import com.google.common.base.Stopwatch;
 import com.wz.encrypt.algorithm.EncryptAlgorithm;
 import com.wz.encrypt.annotation.Decrypt;
-import com.wz.encrypt.auto.EncryptProperties;
+import com.wz.encrypt.config.EncryptProperties;
 import com.wz.encrypt.constant.EncryptConsts;
 import lombok.AllArgsConstructor;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
@@ -37,6 +38,7 @@ import java.util.concurrent.TimeUnit;
  * @version: 1.0
  **/
 @Slf4j
+@ConditionalOnBean({EncryptProperties.class, EncryptAlgorithm.class})
 @RestControllerAdvice(annotations = RestController.class)
 @AllArgsConstructor
 public class DecryptRequestBodyAdvice implements RequestBodyAdvice {

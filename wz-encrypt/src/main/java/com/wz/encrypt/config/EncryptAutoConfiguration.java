@@ -1,11 +1,12 @@
-package com.wz.encrypt.auto;
+package com.wz.encrypt.config;
 
 import com.wz.encrypt.algorithm.DefaultEncryptAlgorithm;
 import com.wz.encrypt.algorithm.DefaultSignAlgorithm;
 import com.wz.encrypt.algorithm.EncryptAlgorithm;
 import com.wz.encrypt.algorithm.SignAlgorithm;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import com.wz.encrypt.interceptor.SignInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
  * @version: 1.0
  **/
 @Configuration
-@EnableAutoConfiguration
+@ConditionalOnProperty(value = "api.encrypt.enable", havingValue = "true")
 @EnableConfigurationProperties({EncryptProperties.class})
 public class EncryptAutoConfiguration {
 
@@ -34,6 +35,16 @@ public class EncryptAutoConfiguration {
     @ConditionalOnMissingBean
     public SignAlgorithm signAlgorithm() {
         return new DefaultSignAlgorithm();
+    }
+
+    @Bean
+    public SignInterceptor signInterceptor(EncryptProperties encryptProperties, EncryptAlgorithm encryptAlgorithm, SignAlgorithm signAlgorithm) {
+        return new SignInterceptor(signAlgorithm, encryptAlgorithm, encryptProperties);
+    }
+
+    @Bean
+    public EncryptWebMvcConfig encryptWebMvcConfig(EncryptProperties encryptProperties, SignInterceptor signInterceptor) {
+        return new EncryptWebMvcConfig(encryptProperties, signInterceptor);
     }
 
 }
