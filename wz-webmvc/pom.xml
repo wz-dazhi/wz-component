@@ -12,15 +12,6 @@
     <artifactId>wz-webmvc</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-logging</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-common</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.wz</groupId>
@@ -42,6 +33,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- springboot end -->
     </dependencies>

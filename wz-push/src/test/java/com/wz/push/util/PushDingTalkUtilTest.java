@@ -3,16 +3,17 @@ package com.wz.push.util;
 import com.wz.push.bean.AbstractPushResp;
 import com.wz.push.bean.dingtalk.BaseDingTalkReq;
 import com.wz.push.builder.DingTalkBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class PushDingTalkUtilTest {
     private BaseDingTalkReq req;
     private AbstractPushResp resp;
 
-    @Before
+    @BeforeEach
     public void before() {
+        System.out.println("@BeforeEach");
         String token = "xxxxxxxxxxx565e436dd584bdbf7c0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
         //String secret = "Sxxxxxxxxxxx0258c267e3d0abbe1878494c61faxxxxxxxxxxxxxxxxxxxxxxxxx";
         String content = "内容测试";
@@ -85,8 +86,9 @@ public class PushDingTalkUtilTest {
         resp = PushDingTalkUtil.push(req);
     }
 
-    @After
+    @AfterEach
     public void after() {
+        System.out.println("@AfterEach");
         System.out.println(resp);
     }
 }

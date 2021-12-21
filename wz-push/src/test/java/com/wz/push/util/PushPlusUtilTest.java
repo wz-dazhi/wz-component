@@ -1,6 +1,7 @@
 package com.wz.push.util;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 public class PushPlusUtilTest {
 

@@ -12,15 +12,6 @@
     <artifactId>wz-shiro</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-logging</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-common</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.wz</groupId>

@@ -12,17 +12,12 @@
     <artifactId>wz-web</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-logging</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.wz</groupId>
             <artifactId>wz-common</artifactId>
         </dependency>
 
-        <!-- springboot start -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
@@ -33,6 +28,5 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- springboot end -->
     </dependencies>
 </project>

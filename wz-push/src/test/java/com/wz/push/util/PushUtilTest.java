@@ -4,15 +4,15 @@ import com.wz.push.bean.AbstractPushResp;
 import com.wz.push.bean.AbstractPushTokenReq;
 import com.wz.push.bean.dingtalk.DingTalkResp;
 import com.wz.push.builder.DingTalkBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class PushUtilTest {
     private AbstractPushTokenReq msg;
     private AbstractPushResp resp;
 
-    @Before
+    @BeforeEach
     public void before() {
 //        String token = "ccccccccb6a74977xxxxxxxxxxxxxxxxxxx";
 //        String title = "测试";
@@ -43,7 +43,7 @@ public class PushUtilTest {
         resp = PushUtil.push(msg);
     }
 
-    @After
+    @AfterEach
     public void after() {
 //        PushPlusResp<String> r = (PushPlusResp) resp;
 //        System.out.println(r);

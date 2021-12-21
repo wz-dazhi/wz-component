@@ -3,7 +3,7 @@ package com.wz.push.util;
 import com.wz.mail.bean.MailMsg;
 import com.wz.push.bean.AbstractPushResp;
 import com.wz.push.bean.email.EmailReq;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @projectName: wz-component

@@ -12,10 +12,6 @@
     <artifactId>wz-rabbitmq</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-logging</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.wz</groupId>

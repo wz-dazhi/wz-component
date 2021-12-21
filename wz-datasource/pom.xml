@@ -12,19 +12,10 @@
     <artifactId>wz-datasource</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-logging</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.wz</groupId>
             <artifactId>wz-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.wz</groupId>
-            <artifactId>wz-swagger</artifactId>
         </dependency>
 
         <dependency>
