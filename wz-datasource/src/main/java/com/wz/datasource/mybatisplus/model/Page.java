@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author wangzhi
@@ -195,6 +196,15 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
 
         // 数量太大, 只打印相关参数
         return "{\"current\":" + current + ",\"pages\":" + getPages() + ",\"size\":" + size + ",\"total\":" + total + "}";
+    }
+
+    /**
+     * IPage 的数据操作
+     *
+     * @param consumer 消费函数
+     */
+    public void consumer(Consumer<? super T> consumer) {
+        this.getRecords().forEach(consumer);
     }
 
 }
