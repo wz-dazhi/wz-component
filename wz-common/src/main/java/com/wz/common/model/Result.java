@@ -45,7 +45,7 @@ public class Result<T> implements Serializable {
 
     @ApiModelProperty("是否成功")
     public boolean isSuccess() {
-        return ResultEnum.OK.getCode().equals(code);
+        return ResultEnum.OK.code().equals(code);
     }
 
     @Override

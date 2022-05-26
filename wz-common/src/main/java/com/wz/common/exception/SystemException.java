@@ -19,11 +19,11 @@ public class SystemException extends Exception {
     }
 
     public SystemException(IErrorCode iErrorCode) {
-        this(iErrorCode.getCode(), iErrorCode.getMsg());
+        this(iErrorCode.code(), iErrorCode.desc());
     }
 
     public SystemException(String msg) {
-        this(ResultEnum.SYSTEM_ERROR.getCode(), msg);
+        this(ResultEnum.SYSTEM_ERROR.code(), msg);
     }
 
     private SystemException(String code, String msg) {

@@ -17,11 +17,11 @@ public class ParameterException extends CommonException {
     }
 
     public ParameterException(IErrorCode iErrorCode) {
-        super(iErrorCode.getCode(), iErrorCode.getMsg());
+        super(iErrorCode.code(), iErrorCode.desc());
     }
 
     public ParameterException(String msg) {
-        super(ResultEnum.PARAM_ERROR.getCode(), msg);
+        super(ResultEnum.PARAM_ERROR.code(), msg);
     }
 
     public ParameterException(String code, String msg) {

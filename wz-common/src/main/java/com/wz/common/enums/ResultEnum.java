@@ -47,12 +47,12 @@ public enum ResultEnum implements IErrorCode {
     }
 
     @Override
-    public String getCode() {
+    public String code() {
         return this.code;
     }
 
     @Override
-    public String getMsg() {
+    public String desc() {
         return Resources.getMessage(this.code);
     }
 }

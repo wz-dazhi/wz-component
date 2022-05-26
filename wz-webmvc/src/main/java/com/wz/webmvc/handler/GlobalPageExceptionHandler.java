@@ -1,6 +1,5 @@
 package com.wz.webmvc.handler;
 
-import com.wz.common.enums.ResultEnum;
 import com.wz.common.model.Result;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
@@ -29,7 +28,7 @@ public class GlobalPageExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class})
     public ModelAndView paramException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
-        return modelAndView(ResultEnum.PARAM_ERROR.getCode(), super.paramHandlerException(req, resp, e));
+        return modelAndView(paramErrorCode, super.paramHandlerException(req, resp, e));
     }
 
     @ExceptionHandler(Exception.class)

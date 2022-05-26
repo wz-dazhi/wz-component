@@ -20,7 +20,7 @@ public class ExcelException extends CommonException {
     }
 
     public ExcelException(IErrorCode iErrorCode) {
-        super(iErrorCode.getCode(), iErrorCode.getMsg());
+        super(iErrorCode.code(), iErrorCode.desc());
     }
 
     public ExcelException(String code, String msg) {
@@ -28,7 +28,7 @@ public class ExcelException extends CommonException {
     }
 
     public ExcelException(String msg) {
-        super(ExcelEnum.EXPORT_ERROR.getCode(), msg);
+        super(ExcelEnum.EXPORT_ERROR.code(), msg);
     }
 
 }

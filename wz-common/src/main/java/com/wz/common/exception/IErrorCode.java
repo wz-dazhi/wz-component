@@ -1,5 +1,7 @@
 package com.wz.common.exception;
 
+import com.wz.common.enums.IEnum;
+
 /**
  * @projectName: wz
  * @package: com.common.exception
@@ -8,19 +10,21 @@ package com.wz.common.exception;
  * @author: Zhi Wang
  * @createDate: 2018/9/9 下午1:50
  **/
-public interface IErrorCode {
+public interface IErrorCode extends IEnum<String, String> {
 
     /**
-     * 错误码
+     * code码
      *
-     * @return
+     * @return 错误码
      */
-    String getCode();
+    @Override
+    String code();
 
     /**
-     * 错误信息
+     * code对应的msg
      *
-     * @return
+     * @return 错误描述信息
      */
-    String getMsg();
+    @Override
+    String desc();
 }

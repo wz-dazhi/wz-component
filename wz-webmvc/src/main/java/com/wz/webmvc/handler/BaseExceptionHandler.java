@@ -35,6 +35,8 @@ import java.util.Set;
 @Slf4j
 abstract class BaseExceptionHandler {
 
+    protected final String paramErrorCode = ResultEnum.PARAM_ERROR.code();
+
     protected String paramHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         String msg;
         if (e instanceof BindException) {
@@ -65,7 +67,7 @@ abstract class BaseExceptionHandler {
             msg = "[" + paramName + "] " + v.getMessage();
         } else {
             this.error(req, e);
-            msg = ResultEnum.PARAM_ERROR.getMsg();
+            msg = ResultEnum.PARAM_ERROR.desc();
         }
         return msg;
     }
@@ -95,6 +97,7 @@ abstract class BaseExceptionHandler {
     }
 
     protected Map<String, Object> model(String code, String msg) {
+        // see Result
         Map<String, Object> model = new HashMap<>(4);
         model.put("code", code);
         model.put("msg", msg);

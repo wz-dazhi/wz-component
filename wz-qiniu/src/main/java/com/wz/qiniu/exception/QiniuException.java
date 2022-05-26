@@ -20,11 +20,11 @@ public class QiniuException extends CommonException {
     }
 
     public QiniuException(IErrorCode iErrorCode) {
-        super(iErrorCode.getCode(), iErrorCode.getMsg());
+        super(iErrorCode.code(), iErrorCode.desc());
     }
 
     public QiniuException(String msg) {
-        super(QiniuEnum.UPLOAD_FAIL.getCode(), msg);
+        super(QiniuEnum.UPLOAD_FAIL.code(), msg);
     }
 
     public QiniuException(String code, String msg) {

@@ -28,14 +28,14 @@ public final class Results {
      * 成功返回对象
      */
     public static <T> Result<T> ok(T t) {
-        return ok(t, ResultEnum.OK.getMsg());
+        return ok(t, ResultEnum.OK.desc());
     }
 
     /**
      * 成功, 并携带自定义msg
      */
     public static <T> Result<T> ok(T t, String msg) {
-        return new Result<>(ResultEnum.OK.getCode(), msg, t);
+        return new Result<>(ResultEnum.OK.code(), msg, t);
     }
 
     /**
@@ -45,7 +45,7 @@ public final class Results {
      */
     public static <T> Result<T> fail() {
         ResultEnum se = ResultEnum.REQUEST_ERROR;
-        return fail(se.getCode(), se.getMsg());
+        return fail(se.code(), se.desc());
     }
 
     /**
@@ -66,14 +66,14 @@ public final class Results {
      * @return
      */
     public static <T> Result<T> fail(IErrorCode ec) {
-        return fail(ec.getCode(), ec.getMsg());
+        return fail(ec.code(), ec.desc());
     }
 
     /**
      * 失败
      */
     public static <T> Result<T> fail(String msg) {
-        return fail(ResultEnum.REQUEST_ERROR.getCode(), msg);
+        return fail(ResultEnum.REQUEST_ERROR.code(), msg);
     }
 
 }

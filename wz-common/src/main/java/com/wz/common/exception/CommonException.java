@@ -20,11 +20,11 @@ public class CommonException extends RuntimeException {
     }
 
     public CommonException(IErrorCode iErrorCode) {
-        this(iErrorCode.getCode(), iErrorCode.getMsg());
+        this(iErrorCode.code(), iErrorCode.desc());
     }
 
     public CommonException(String msg) {
-        this(ResultEnum.SYSTEM_ERROR.getCode(), msg);
+        this(ResultEnum.SYSTEM_ERROR.code(), msg);
     }
 
     public CommonException(String code, String msg) {

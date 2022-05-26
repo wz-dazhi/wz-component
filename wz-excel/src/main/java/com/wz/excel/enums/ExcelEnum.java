@@ -31,12 +31,12 @@ public enum ExcelEnum implements IErrorCode {
     private final String code;
 
     @Override
-    public String getCode() {
+    public String code() {
         return this.code;
     }
 
     @Override
-    public String getMsg() {
+    public String desc() {
         return Resources.getMessage("i18n/excel/excel", this.code);
     }
 }

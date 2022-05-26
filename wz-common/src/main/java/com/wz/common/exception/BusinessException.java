@@ -17,11 +17,11 @@ public class BusinessException extends CommonException {
     }
 
     public BusinessException(IErrorCode iErrorCode) {
-        super(iErrorCode.getCode(), iErrorCode.getMsg());
+        super(iErrorCode.code(), iErrorCode.desc());
     }
 
     public BusinessException(String msg) {
-        super(ResultEnum.REQUEST_ERROR.getCode(), msg);
+        super(ResultEnum.REQUEST_ERROR.code(), msg);
     }
 
     public BusinessException(String code, String msg) {
