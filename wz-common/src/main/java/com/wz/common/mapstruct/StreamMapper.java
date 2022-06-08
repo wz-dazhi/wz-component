@@ -1,6 +1,7 @@
 package com.wz.common.mapstruct;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -16,10 +17,20 @@ public interface StreamMapper<S, T> extends BaseMapper<S, T> {
     /**
      * 映射同名属性，集合流形式
      */
-    List<T> sourceToTarget(Stream<S> stream);
+    List<T> sourceToTargetList(Stream<S> stream);
 
     /**
      * 反向，映射同名属性，集合流形式
      */
-    List<S> targetToSource(Stream<T> stream);
+    List<S> targetToSourceList(Stream<T> stream);
+
+    /**
+     * 映射同名属性，集合流形式
+     */
+    Set<T> sourceToTargetSet(Stream<S> stream);
+
+    /**
+     * 反向，映射同名属性，集合流形式
+     */
+    Set<S> targetToSourceSet(Stream<T> stream);
 }
