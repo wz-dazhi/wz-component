@@ -48,7 +48,6 @@
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
         <druid.version>1.2.9</druid.version>
-        <velocity.version>1.7</velocity.version>
         <guava.version>31.1-jre</guava.version>
         <cglib-nodep.version>3.3.0</cglib-nodep.version>
         <fastjson.version>2.0.6</fastjson.version>
@@ -196,12 +195,6 @@
                 <version>${fastjson.version}</version>
             </dependency>
 
-            <!-- velocity -->
-            <dependency>
-                <groupId>org.apache.velocity</groupId>
-                <artifactId>velocity</artifactId>
-                <version>${velocity.version}</version>
-            </dependency>
             <!-- Druid -->
             <dependency>
                 <groupId>com.alibaba</groupId>
