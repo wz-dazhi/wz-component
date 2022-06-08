@@ -34,11 +34,20 @@ public final class MapUtil {
     /**
      * 将对象装换为map
      */
-    public static <T, V> Map<String, V> beanToMap(T bean) {
-        Map<String, V> map = Maps.newHashMap();
+    public static <T> Map<String, Object> beanToMap(T bean) {
+        Map<String, Object> map = Maps.newHashMap();
         if (bean != null) {
             BeanMap beanMap = BeanMap.create(bean);
-            beanMap.forEach((k, v) -> map.put(String.valueOf(k), (V) v));
+            beanMap.forEach((k, v) -> map.put(String.valueOf(k), v));
+        }
+        return map;
+    }
+
+    public static <T> Map<String, String> beanToMapStr(T bean) {
+        Map<String, String> map = Maps.newHashMap();
+        if (bean != null) {
+            BeanMap beanMap = BeanMap.create(bean);
+            beanMap.forEach((k, v) -> map.put(String.valueOf(k), String.valueOf(v)));
         }
         return map;
     }
@@ -131,8 +140,8 @@ public final class MapUtil {
     /**
      * 将List<T>转换为List<Map<String, Object>>
      */
-    public static <T, V> List<Map<String, V>> objectsToMaps(List<T> objList) {
-        List<Map<String, V>> list = Lists.newArrayList();
+    public static <T> List<Map<String, Object>> objectsToMaps(List<T> objList) {
+        List<Map<String, Object>> list = Lists.newArrayList();
         if (objList != null && objList.size() > 0) {
             objList.forEach(t -> list.add(beanToMap(t)));
         }
