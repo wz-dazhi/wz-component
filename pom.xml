@@ -45,32 +45,33 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <!-- 组件统一根据项目版本走 -->
         <wz-component.version>${project.version}</wz-component.version>
-        <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
-        <druid.version>1.2.8</druid.version>
+        <druid.version>1.2.9</druid.version>
         <velocity.version>1.7</velocity.version>
-        <guava.version>31.0.1-jre</guava.version>
+        <guava.version>31.1-jre</guava.version>
         <cglib-nodep.version>3.3.0</cglib-nodep.version>
-        <fastjson.version>1.2.78</fastjson.version>
-        <json-smart.version>2.4.7</json-smart.version>
-        <weixin-java.version>4.2.0</weixin-java.version>
+        <fastjson.version>2.0.6</fastjson.version>
+        <json-smart.version>2.4.8</json-smart.version>
+        <weixin-java.version>4.3.0</weixin-java.version>
         <knife4j-spring-boot-starter.version>3.0.3</knife4j-spring-boot-starter.version>
         <springfox-core.version>3.0.0</springfox-core.version>
         <io.swagger.version>1.6.2</io.swagger.version>
-        <java-jwt.version>3.18.2</java-jwt.version>
-        <nimbus-jose-jwt.version>9.15.2</nimbus-jose-jwt.version>
+        <java-jwt.version>3.19.2</java-jwt.version>
+        <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
         <thymeleaf-extras-java8time.version>3.0.4.RELEASE</thymeleaf-extras-java8time.version>
         <!--        <redisson-spring-boot-starter.version>3.12.1</redisson-spring-boot-starter.version>-->
-        <redisson.version>3.16.6</redisson.version>
-        <qiniu-java-sdk.version>7.9.0</qiniu-java-sdk.version>
-        <hutool-all.version>5.7.17</hutool-all.version>
-        <oshi-core.version>5.8.6</oshi-core.version>
-        <mapstruct.version>1.4.2.Final</mapstruct.version>
-        <shiro-spring-boot-web-starter.version>1.8.0</shiro-spring-boot-web-starter.version>
+        <redisson.version>3.17.3</redisson.version>
+        <qiniu-java-sdk.version>7.10.4</qiniu-java-sdk.version>
+        <hutool-all.version>5.8.2</hutool-all.version>
+        <oshi-core.version>6.1.6</oshi-core.version>
+        <mapstruct.version>1.5.1.Final</mapstruct.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <shiro-spring-boot-web-starter.version>1.9.0</shiro-spring-boot-web-starter.version>
         <shiro-redis.version>3.3.1</shiro-redis.version>
         <disruptor.version>3.4.4</disruptor.version>
-        <easyexcel.version>3.0.5</easyexcel.version>
-        <log4j2.version>2.17.1</log4j2.version>
+        <easyexcel.version>3.1.0</easyexcel.version>
+        <log4j2.version>2.17.2</log4j2.version>
     </properties>
 
     <dependencyManagement>
@@ -350,11 +351,7 @@
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
             </dependency>
-            <!--            <dependency>-->
-            <!--                <groupId>org.mapstruct</groupId>-->
-            <!--                <artifactId>mapstruct-jdk8</artifactId>-->
-            <!--                <version>${mapstruct.version}</version>-->
-            <!--            </dependency>-->
+            <!-- IntelliJ pre 2018.1.1 requires the mapstruct processor to be present as provided dependency -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
@@ -431,27 +428,18 @@
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
                         </path>
-<!--                        <path>-->
-<!--                            <groupId>org.mapstruct</groupId>-->
-<!--                            <artifactId>mapstruct-processor</artifactId>-->
-<!--                            <version>${mapstruct.version}</version>-->
-<!--                        </path>-->
+                        <!-- additional annotation processor required as of Lombok 1.18.16 -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok-mapstruct-binding.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
                     </annotationProcessorPaths>
-<!--                    <showWarnings>true</showWarnings>-->
-<!--                    <compilerArgs>-->
-<!--                        <arg>-->
-<!--                            -Amapstruct.suppressGeneratorTimestamp=true-->
-<!--                        </arg>-->
-<!--                        <arg>-->
-<!--                            -Amapstruct.suppressGeneratorVersionInfoComment=true-->
-<!--                        </arg>-->
-<!--                        <arg>-->
-<!--                            -Amapstruct.verbose=true-->
-<!--                        </arg>-->
-<!--                        <arg>-->
-<!--                            -Amapstruct.defaultComponentModel=spring-->
-<!--                        </arg>-->
-<!--                    </compilerArgs>-->
                 </configuration>
             </plugin>
             <!-- 打包源码 -->
