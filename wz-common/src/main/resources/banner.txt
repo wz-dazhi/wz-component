@@ -6,5 +6,5 @@
    '  | |_) |  \___/   \___/  | |    / / / /
   ====|____/================== \__|/_/_/_/
 
-  ${AnsiColor.GREEN}:: Boot ::${AnsiColor.DEFAULT}          (v1.0.0.RELEASE)
+  ${AnsiColor.GREEN}:: Boot ::${AnsiColor.DEFAULT}          (v1.0.1.RELEASE)
   ${AnsiColor.GREEN}:: Spring Boot ::${AnsiColor.DEFAULT}  ${spring-boot.formatted-version}
