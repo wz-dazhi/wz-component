@@ -12,7 +12,7 @@
             <dependency>
                 <groupId>com.wz</groupId>
                 <artifactId>wz-component</artifactId>
-                <version>1.0.0.RELEASE</version>
+                <version>1.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -67,7 +67,7 @@
            <dependency>
                <groupId>com.github.wz-dazhi.wz-component</groupId>
                <artifactId>wz-component</artifactId>
-               <version>1.0.0.RELEASE</version>
+               <version>1.0.0</version>
                <type>pom</type>
                <scope>import</scope>
            </dependency>
