@@ -1,9 +1,9 @@
 package com.wz.redis.aspectj;
 
 import com.google.common.base.Stopwatch;
-import com.wz.common.util.Results;
 import com.wz.redis.annotation.RedissonLimit;
 import com.wz.redis.util.ElUtil;
+import com.wz.swagger.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -83,7 +83,7 @@ public class RedissonLimitAspect {
             }
             log.info("RLock-防刷>>> 本次抢锁消耗时间: [{}]ms. key: [{}].", sw.stop().elapsed(TimeUnit.MILLISECONDS), lockKey);
         }
-        return Results.fail(REQUEST_LIMIT);
+        return R.fail(REQUEST_LIMIT);
     }
 
 }

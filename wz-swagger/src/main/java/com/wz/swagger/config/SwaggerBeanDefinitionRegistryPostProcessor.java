@@ -2,6 +2,7 @@ package com.wz.swagger.config;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.wz.common.enums.ResultEnum;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -287,15 +288,11 @@ public class SwaggerBeanDefinitionRegistryPostProcessor implements BeanDefinitio
         if (!useDefaultResponseMessages) {
             return;
         }
-        final Response ok = new ResponseBuilder().code("0").description("成功").build();
-        final Response paramsError = new ResponseBuilder().code("-1").description("参数错误").build();
-        final Response serverError = new ResponseBuilder().code("-2").description("服务器开小差, 请稍后再试").build();
-        final Response requestError = new ResponseBuilder().code("-3").description("请求失败, 请稍后再试").build();
         List<Response> responses = new ArrayList<>();
-        responses.add(ok);
-        responses.add(paramsError);
-        responses.add(serverError);
-        responses.add(requestError);
+        responses.add(response(ResultEnum.OK));
+        responses.add(response(ResultEnum.PARAM_ERROR));
+        responses.add(response(ResultEnum.SYSTEM_ERROR));
+        responses.add(response(ResultEnum.REQUEST_ERROR));
         docket.useDefaultResponseMessages(false)
                 .globalResponses(HttpMethod.POST, responses)
                 .globalResponses(HttpMethod.GET, responses)
@@ -305,6 +302,13 @@ public class SwaggerBeanDefinitionRegistryPostProcessor implements BeanDefinitio
                 .globalResponses(HttpMethod.HEAD, responses)
                 .globalResponses(HttpMethod.OPTIONS, responses)
                 .globalResponses(HttpMethod.TRACE, responses);
+    }
+
+    private static Response response(ResultEnum r) {
+        return new ResponseBuilder()
+                .code(r.code())
+                .description(r.desc())
+                .build();
     }
 
     @Override

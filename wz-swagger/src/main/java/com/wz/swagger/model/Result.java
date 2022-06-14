@@ -1,4 +1,4 @@
-package com.wz.common.model;
+package com.wz.swagger.model;
 
 import com.wz.common.enums.ResultEnum;
 import com.wz.common.util.JsonUtil;

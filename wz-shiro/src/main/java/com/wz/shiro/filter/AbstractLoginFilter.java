@@ -4,11 +4,11 @@ import com.wz.common.exception.CommonException;
 import com.wz.common.exception.SystemException;
 import com.wz.common.util.CollectionUtil;
 import com.wz.common.util.MapUtil;
-import com.wz.common.util.Results;
 import com.wz.common.util.StringUtil;
 import com.wz.shiro.annotation.Anon;
 import com.wz.shiro.bean.ShiroProperties;
 import com.wz.shiro.enums.ShiroEnum;
+import com.wz.swagger.util.R;
 import com.wz.webmvc.filter.FilterHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
@@ -109,7 +109,7 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
             // 限制只能POST登录
             if (!req.getMethod().equalsIgnoreCase(POST_METHOD)) {
                 log.warn("Method is not Allowed. request uri: {}, method: {}", req.getRequestURI(), req.getMethod());
-                FilterHelper.writeResponse(response, Results.fail(METHOD_NOT_ALLOWED));
+                FilterHelper.writeResponse(response, R.fail(METHOD_NOT_ALLOWED));
                 return false;
             }
             // 执行登录逻辑，需要实现createToken方法
@@ -128,14 +128,14 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
                     msg = se.getMsg();
                 }
                 if (StringUtil.isNotBlank(code) && StringUtil.isNotBlank(msg)) {
-                    FilterHelper.writeResponse(response, Results.fail(code, msg));
+                    FilterHelper.writeResponse(response, R.fail(code, msg));
                     return false;
                 } else {
                     throw e;
                 }
             }
         }
-        FilterHelper.writeResponse(response, Results.fail(ShiroEnum.UNAUTHORIZED));
+        FilterHelper.writeResponse(response, R.fail(ShiroEnum.UNAUTHORIZED));
         return false;
     }
 
@@ -144,14 +144,14 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
         log.debug("Shiro 登录成功: {}", t);
         // 生成 token 令牌
         final String token = this.onGenerateToken(t, subject, (HttpServletRequest) request, (HttpServletResponse) response);
-        FilterHelper.writeResponse(response, Results.ok(token));
+        FilterHelper.writeResponse(response, R.ok(token));
         return false;
     }
 
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
         log.error("Shiro 登录失败. AuthenticationToken: {}, e: ", token, e);
-        FilterHelper.writeResponse(response, Results.fail(ShiroEnum.AUTHENTICATION_FAILED));
+        FilterHelper.writeResponse(response, R.fail(ShiroEnum.AUTHENTICATION_FAILED));
         return false;
     }
 

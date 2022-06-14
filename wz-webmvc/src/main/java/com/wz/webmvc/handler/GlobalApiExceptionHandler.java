@@ -1,8 +1,8 @@
 package com.wz.webmvc.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wz.common.model.Result;
-import com.wz.common.util.Results;
+import com.wz.swagger.model.Result;
+import com.wz.swagger.util.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
@@ -41,7 +41,7 @@ public class GlobalApiExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class, IllegalStateException.class})
     public ModelAndView paramException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         this.setResponse(resp);
-        Result<Void> result = Results.fail(paramErrorCode, super.paramHandlerException(req, resp, e));
+        Result<Void> result = R.fail(paramErrorCode, super.paramHandlerException(req, resp, e));
         return this.modelAndView(result);
     }
 

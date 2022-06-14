@@ -1,7 +1,7 @@
 package com.wz.mail.service;
 
-import com.wz.common.model.Result;
 import com.wz.mail.bean.MailMsg;
+import com.wz.swagger.model.Result;
 
 import java.util.concurrent.Future;
 

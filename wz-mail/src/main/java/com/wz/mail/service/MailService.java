@@ -1,8 +1,8 @@
 package com.wz.mail.service;
 
-import com.wz.common.model.Result;
 import com.wz.mail.bean.AttachmentMailMsg;
 import com.wz.mail.bean.MailMsg;
+import com.wz.swagger.model.Result;
 
 /**
  * @projectName: wz-component

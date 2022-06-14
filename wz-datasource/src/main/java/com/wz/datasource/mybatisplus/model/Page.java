@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author wangzhi
@@ -47,7 +46,7 @@ import java.util.function.Consumer;
         "countId",
         "maxLimit"},
         allowSetters = true)
-public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> implements Serializable {
+public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> implements com.wz.datasource.mybatisplus.model.IPage<T>, Serializable {
 
     @ApiModelProperty(value = "当前页", required = true)
     @Getter
@@ -74,7 +73,7 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
     protected boolean optimizeCountSql = true;
 
     @ApiModelProperty(hidden = true)
-    protected boolean isSearchCount = true;
+    protected boolean searchCount = true;
 
     @Getter
     @Setter
@@ -111,17 +110,17 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
         this(current, size, total, true);
     }
 
-    public Page(long current, long size, boolean isSearchCount) {
-        this(current, size, 0, isSearchCount);
+    public Page(long current, long size, boolean searchCount) {
+        this(current, size, 0, searchCount);
     }
 
-    public Page(long current, long size, long total, boolean isSearchCount) {
+    public Page(long current, long size, long total, boolean searchCount) {
         if (current > 1) {
             this.current = current;
         }
         this.size = size;
         this.total = total;
-        this.isSearchCount = isSearchCount;
+        this.searchCount = searchCount;
     }
 
     @Override
@@ -151,7 +150,7 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
     @ApiModelProperty(hidden = true)
     @Override
     public Page<T> setSearchCount(boolean isSearchCount) {
-        this.isSearchCount = isSearchCount;
+        this.searchCount = isSearchCount;
         return this;
     }
 
@@ -187,6 +186,22 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
         this.optimizeJoinOfCountSql = optimizeJoinOfCountSql;
     }
 
+    public static <T> Page<T> of(long current, long size) {
+        return of(current, size, 0);
+    }
+
+    public static <T> Page<T> of(long current, long size, long total) {
+        return of(current, size, total, true);
+    }
+
+    public static <T> Page<T> of(long current, long size, boolean searchCount) {
+        return of(current, size, 0, searchCount);
+    }
+
+    public static <T> Page<T> of(long current, long size, long total, boolean searchCount) {
+        return new Page<>(current, size, total, searchCount);
+    }
+
     @Override
     public String toString() {
         // 打印全部
@@ -196,15 +211,6 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
 
         // 数量太大, 只打印相关参数
         return "{\"current\":" + current + ",\"pages\":" + getPages() + ",\"size\":" + size + ",\"total\":" + total + "}";
-    }
-
-    /**
-     * IPage 的数据操作
-     *
-     * @param consumer 消费函数
-     */
-    public void consumer(Consumer<? super T> consumer) {
-        this.getRecords().forEach(consumer);
     }
 
 }

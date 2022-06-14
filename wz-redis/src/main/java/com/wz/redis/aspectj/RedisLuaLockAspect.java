@@ -1,10 +1,10 @@
 package com.wz.redis.aspectj;
 
 import com.google.common.base.Stopwatch;
-import com.wz.common.util.Results;
 import com.wz.redis.annotation.LuaLock;
 import com.wz.redis.util.ElUtil;
 import com.wz.redis.util.RedisLuaLock;
+import com.wz.swagger.util.R;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -74,7 +74,7 @@ public class RedisLuaLockAspect {
             lock.unLock();
             log.info("RedisLuaLock>>> 本次抢锁消耗时间: [{}]ms. key: [{}]. value: [{}]", sw.stop().elapsed(TimeUnit.MILLISECONDS), lockKey, lockValue);
         }
-        return Results.fail(REQUEST_ERROR);
+        return R.fail(REQUEST_ERROR);
     }
 
 }

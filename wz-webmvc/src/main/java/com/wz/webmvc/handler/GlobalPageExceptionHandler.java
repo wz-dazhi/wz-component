@@ -1,6 +1,6 @@
 package com.wz.webmvc.handler;
 
-import com.wz.common.model.Result;
+import com.wz.swagger.model.Result;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;

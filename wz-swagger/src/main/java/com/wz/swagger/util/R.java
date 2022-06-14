@@ -1,21 +1,20 @@
-package com.wz.common.util;
+package com.wz.swagger.util;
 
 import com.wz.common.enums.ResultEnum;
 import com.wz.common.exception.IErrorCode;
-import com.wz.common.model.Result;
+import com.wz.swagger.model.Result;
+import lombok.experimental.UtilityClass;
 
 /**
  * @projectName: wz
- * @package: com.common.util
- * @className: Results
+ * @package: com.wz.swagger.util
+ * @className: R
  * @description: 返回工具类
  * @author: Zhi Wang
- * @createDate: 2018/9/9 上午11:52
+ * @createDate: 2022/6/14 上午11:52
  **/
-public final class Results {
-
-    private Results() {
-    }
+@UtilityClass
+public class R {
 
     /**
      * 默认成功

@@ -3,8 +3,8 @@ package com.wz.webmvc.handler;
 import com.wz.common.enums.ResultEnum;
 import com.wz.common.exception.CommonException;
 import com.wz.common.exception.SystemException;
-import com.wz.common.model.Result;
-import com.wz.common.util.Results;
+import com.wz.swagger.model.Result;
+import com.wz.swagger.util.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -73,18 +73,15 @@ abstract class BaseExceptionHandler {
     }
 
     protected Result<Void> otherHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
-        Result<Void> result;
         if (e instanceof SystemException) {
             SystemException se = (SystemException) e;
-            result = Results.fail(se.getCode(), se.getMsg());
+            return R.fail(se.getCode(), se.getMsg());
         } else if (CommonException.class.isAssignableFrom(e.getClass())) {
             CommonException se = (CommonException) e;
-            result = Results.fail(se.getCode(), se.getMsg());
-        } else {
-            this.error(req, e);
-            result = Results.fail();
+            return R.fail(se.getCode(), se.getMsg());
         }
-        return result;
+        this.error(req, e);
+        return R.fail();
     }
 
     protected void setResponse(HttpServletResponse resp) {

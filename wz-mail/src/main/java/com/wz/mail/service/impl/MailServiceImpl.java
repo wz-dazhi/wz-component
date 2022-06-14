@@ -1,13 +1,13 @@
 package com.wz.mail.service.impl;
 
-import com.wz.common.model.Result;
-import com.wz.common.util.Results;
 import com.wz.common.util.StringUtil;
 import com.wz.mail.bean.AttachmentInlineMailMsg;
 import com.wz.mail.bean.AttachmentMailMsg;
 import com.wz.mail.bean.InlineMailMsg;
 import com.wz.mail.bean.MailMsg;
 import com.wz.mail.service.MailService;
+import com.wz.swagger.model.Result;
+import com.wz.swagger.util.R;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -70,11 +70,11 @@ public class MailServiceImpl implements MailService {
             }
 
             sender.send(message);
-            return Results.ok(true);
+            return R.ok(true);
         } catch (Exception e) {
             String msg = e.getMessage();
             log.error(">>> 发送邮件发生异常. msg: {}, e: ", msg, e);
-            return Results.fail(msg);
+            return R.fail(msg);
         }
     }
 

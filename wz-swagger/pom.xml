@@ -5,13 +5,17 @@
     <parent>
         <artifactId>wz-component</artifactId>
         <groupId>com.wz</groupId>
-        <version>1.0.1.RELEASE</version>
+        <version>1.0.0.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>wz-swagger</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.wz</groupId>
+            <artifactId>wz-common</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.wz</groupId>
             <artifactId>wz-logging</artifactId>
@@ -46,6 +50,12 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>

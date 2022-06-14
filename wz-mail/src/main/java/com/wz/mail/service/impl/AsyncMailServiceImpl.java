@@ -1,9 +1,9 @@
 package com.wz.mail.service.impl;
 
-import com.wz.common.model.Result;
 import com.wz.mail.bean.MailMsg;
 import com.wz.mail.service.AsyncMailService;
 import com.wz.mail.service.MailService;
+import com.wz.swagger.model.Result;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
