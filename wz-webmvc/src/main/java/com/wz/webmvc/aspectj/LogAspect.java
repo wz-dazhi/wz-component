@@ -13,7 +13,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.util.Collection;
@@ -46,7 +49,7 @@ public class LogAspect {
         MDC.put("serverIp", LocalIpUtil.localIpv4Address(InetAddress.getLocalHost().getHostAddress()));
         MDC.put("api", req.getRequestURL().toString());
         String uri = req.getRequestURI();
-        Object[] args = point.getArgs();
+        Object[] args = this.args(point.getArgs());
         final boolean infoEnabled = log.isInfoEnabled();
         if (infoEnabled) {
             log.info("Request method: [{}], Uri: [{}], Args: {}, Signature: {} ", req.getMethod(), uri, JsonUtil.toJson(args), point.getSignature().toShortString());
@@ -70,6 +73,18 @@ public class LogAspect {
             }
             MDC.clear();
         }
+    }
+
+    private Object[] args(Object[] args) {
+        Object[] returnArgs = new Object[args.length];
+        int index = -1;
+        for (Object a : args) {
+            if (a instanceof ServletRequest || a instanceof ServletResponse || a instanceof MultipartFile) {
+                continue;
+            }
+            returnArgs[++index] = a;
+        }
+        return returnArgs;
     }
 
 }
