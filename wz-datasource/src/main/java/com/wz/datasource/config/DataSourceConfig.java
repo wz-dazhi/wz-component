@@ -2,13 +2,7 @@ package com.wz.datasource.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.wz.datasource.enums.DBEnum;
-import com.wz.datasource.mybatisplus.handler.MybatisPlusMetaObjectHandler;
-import com.wz.datasource.mybatisplus.interceptor.LikeQueryInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -74,24 +68,6 @@ public class DataSourceConfig {
         // 设置从数据源
         DbContextHolder.addSlaveDataSource(slave);
         return dataSource;
-    }
-
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        // 添加插件需要注意插入顺序
-        final MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        // like sql过滤
-        interceptor.addInnerInterceptor(new LikeQueryInterceptor());
-        // mybatis-plus分页插件
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-        // 乐观锁插件
-        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
-        return interceptor;
-    }
-
-    @Bean
-    public MybatisPlusMetaObjectHandler mybatisPlusMetaObjectHandler() {
-        return new MybatisPlusMetaObjectHandler();
     }
 
 }

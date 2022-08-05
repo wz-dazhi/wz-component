@@ -1,4 +1,4 @@
-package com.wz.datasource.mybatisplus.model;
+package com.wz.datasource.common.mybatisplus.model;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
@@ -46,7 +46,7 @@ import java.util.List;
         "countId",
         "maxLimit"},
         allowSetters = true)
-public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> implements com.wz.datasource.mybatisplus.model.IPage<T>, Serializable {
+public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> implements IPage<T>, Serializable {
 
     @ApiModelProperty(value = "当前页", required = true)
     @Getter
@@ -205,7 +205,7 @@ public class Page<T> extends com.baomidou.mybatisplus.extension.plugins.paginati
     @Override
     public String toString() {
         // 打印全部
-        if (this.total <= 100) {
+        if (this.total <= 20) {
             return JsonUtil.toJson(this);
         }
 

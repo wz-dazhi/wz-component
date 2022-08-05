@@ -1,0 +1,12 @@
+{
+  "hints": [],
+  "groups": [],
+  "properties": [
+    {
+      "name": "mybatis-plus.default.config",
+      "type": "java.lang.Boolean",
+      "description": "Mybatis Plus默认配置(mysql)",
+      "defaultValue": "true"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
-package com.wz.datasource.mybatisplus.handler;
+package com.wz.datasource.common.mybatisplus.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.wz.datasource.mybatisplus.model.BaseBean;
+import com.wz.datasource.common.model.BaseBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 

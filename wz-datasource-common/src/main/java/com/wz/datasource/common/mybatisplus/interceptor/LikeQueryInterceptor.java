@@ -1,4 +1,4 @@
-package com.wz.datasource.mybatisplus.interceptor;
+package com.wz.datasource.common.mybatisplus.interceptor;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +45,6 @@ public class LikeQueryInterceptor implements InnerInterceptor {
     }
 
     private void modifyLikeSql(String sql, Object parameterObject, BoundSql boundSql) {
-        HashMap<String, Object> parameter = (HashMap) parameterObject;
         // 获取关键字的个数（去重）
         String[] strList = sql.split("\\?");
         Set<String> keyNames = new HashSet<>();
@@ -56,7 +55,7 @@ public class LikeQueryInterceptor implements InnerInterceptor {
             }
         }
         // 对关键字进行特殊字符“清洗”，如果有特殊字符的，在特殊字符前添加转义字符（\）
-        keyNames.forEach(keyName -> this.setParam(parameter, keyName, sql));
+        keyNames.forEach(keyName -> this.setParam(parameterObject, keyName, sql));
     }
 
     private String escapeChar(String before) {
@@ -79,7 +78,8 @@ public class LikeQueryInterceptor implements InnerInterceptor {
     /**
      * 重新设置SQL参数
      */
-    private void setParam(HashMap<String, Object> parameter, String name, String sql) {
+    private void setParam(Object parameter, String name, String sql) {
+        // parameter is HashMap
         final MetaObject metaObject = SystemMetaObject.forObject(parameter);
         final Object value = metaObject.getValue(name);
         final boolean isConstructor = name.contains("ew.paramNameValuePairs.");

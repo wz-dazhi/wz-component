@@ -1,4 +1,4 @@
-package com.wz.datasource.mybatisplus.model;
+package com.wz.datasource.common.mybatisplus.model;
 
 import java.util.function.Consumer;
 

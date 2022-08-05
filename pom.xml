@@ -19,6 +19,7 @@
         <module>wz-logging</module>
         <module>wz-excel</module>
         <module>wz-push</module>
+        <module>wz-datasource-common</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -28,7 +29,7 @@
     </parent>
     <groupId>com.wz</groupId>
     <artifactId>wz-component</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>wz-component</name>
     <description>Component project for Spring Boot</description>
 
@@ -90,6 +91,11 @@
             <dependency>
                 <groupId>com.wz</groupId>
                 <artifactId>wz-datasource</artifactId>
+                <version>${wz-component.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wz</groupId>
+                <artifactId>wz-datasource-common</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>
             <dependency>
@@ -215,7 +221,17 @@
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-annotation</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-extension</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
             <dependency>
