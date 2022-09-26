@@ -3,7 +3,6 @@ package com.wz.webmvc.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wz.swagger.model.Result;
 import com.wz.swagger.util.R;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
@@ -28,32 +26,29 @@ import javax.validation.ConstraintViolationException;
  **/
 @Order(1)
 @RestControllerAdvice(annotations = RestController.class)
-public class GlobalApiExceptionHandler extends BaseExceptionHandler {
-    @Autowired
-    private ObjectMapper objectMapper;
-    private MappingJackson2JsonView view;
+public class GlobalApiExceptionHandler extends AbstractExceptionHandler {
+    private final MappingJackson2JsonView view;
 
-    @PostConstruct
-    public void init() {
+    public GlobalApiExceptionHandler(ObjectMapper objectMapper) {
         this.view = new MappingJackson2JsonView(objectMapper);
     }
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class, IllegalStateException.class})
     public ModelAndView paramException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         this.setResponse(resp);
-        Result<Void> result = R.fail(paramErrorCode, super.paramHandlerException(req, resp, e));
-        return this.modelAndView(result);
+        Result<Void> r = R.fail(PARAM_ERROR_CODE, super.paramHandlerException(req, resp, e));
+        return modelAndView(r.getCode(), r.getMsg());
     }
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView otherException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+    public ModelAndView exception(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         this.setResponse(resp);
-        Result<Void> result = super.otherHandlerException(req, resp, e);
-        return this.modelAndView(result);
+        return super.exception(req, resp, e);
     }
 
-    protected ModelAndView modelAndView(Result<Void> r) {
-        return new ModelAndView(view, this.model(r.getCode(), r.getMsg()));
+    @Override
+    protected void modelAndViewAfter(ModelAndView mv) {
+        mv.setView(this.view);
     }
 
 }
