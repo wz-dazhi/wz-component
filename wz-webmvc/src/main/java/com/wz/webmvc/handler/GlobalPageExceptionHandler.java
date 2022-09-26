@@ -1,6 +1,5 @@
 package com.wz.webmvc.handler;
 
-import com.wz.swagger.model.Result;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
-import java.util.Map;
 
 /**
  * @projectName: wz-web
@@ -24,23 +22,21 @@ import java.util.Map;
  **/
 @Order(2)
 @ControllerAdvice(annotations = Controller.class)
-public class GlobalPageExceptionHandler extends BaseExceptionHandler {
+public class GlobalPageExceptionHandler extends AbstractExceptionHandler {
 
     @ExceptionHandler({BindException.class, MethodArgumentNotValidException.class, ConstraintViolationException.class})
     public ModelAndView paramException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
-        return modelAndView(paramErrorCode, super.paramHandlerException(req, resp, e));
+        return modelAndView(PARAM_ERROR_CODE, super.paramHandlerException(req, resp, e));
     }
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView otherException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
-        Result<Void> r = super.otherHandlerException(req, resp, e);
-        return modelAndView(r.getCode(), r.getMsg());
+    public ModelAndView exception(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+        return super.exception(req, resp, e);
     }
 
-    protected ModelAndView modelAndView(String code, String msg) {
-        Map<String, Object> map = this.model(code, msg);
+    @Override
+    protected void modelAndViewAfter(ModelAndView mv) {
         // templates/error/500.html 需要加入spring-boot-starter-thymeleaf依赖
-        return new ModelAndView("/error/500", map);
+        mv.setViewName("/error/500");
     }
-
 }
