@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,6 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @version: 1.0
  **/
 @Slf4j
+@Order(1)
 @ConditionalOnBean({EncryptProperties.class, EncryptAlgorithm.class})
 @RestControllerAdvice(annotations = RestController.class)
 @AllArgsConstructor
@@ -43,7 +45,8 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return !properties.isDebug() && Objects.requireNonNull(returnType.getMethod()).isAnnotationPresent(Encrypt.class);
+        if (properties.isDebug()) return false;
+        return AnnotatedElementUtils.hasAnnotation(returnType.getContainingClass(), Encrypt.class) || returnType.hasMethodAnnotation(Encrypt.class);
     }
 
     @Override
@@ -61,11 +64,15 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     private Object encryptData(Object body) throws Exception {
         Stopwatch sw = Stopwatch.createStarted();
         String content = JsonUtil.toJson(body);
-        log.debug("Starting encrypt date: {}", content);
+        if (log.isDebugEnabled()) {
+            log.debug("Starting encrypt date: {}", content);
+        }
         String key = properties.getKey();
         StringUtil.requireNonNull(key, "请配置spring.encrypt.key");
         String result = algorithm.encrypt(content, key);
-        log.debug("Encrypt Time: {} ms", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        if (log.isDebugEnabled()) {
+            log.debug("Encrypt Time: {} ms", sw.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
         return result;
     }
 
