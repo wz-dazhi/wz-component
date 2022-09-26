@@ -43,24 +43,31 @@ public class HttpMessageConverterConfig {
 
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter(objectMapper) {
-            /**
-             * 用于加解密去除双引号
-             */
-            @Override
-            protected void writeInternal(Object o, Type t, HttpOutputMessage m) throws IOException, HttpMessageNotWritableException {
-                if (o instanceof String) {
-                    Charset charset = this.getDefaultCharset() == null ? StandardCharsets.UTF_8 : this.getDefaultCharset();
-                    StreamUtils.copy((String) o, charset, m.getBody());
-                } else {
-                    m.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-                    super.writeInternal(o, t, m);
-                }
-            }
-        };
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new CustomMappingJackson2HttpMessageConverter(objectMapper);
         List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.ALL);
         mappingJackson2HttpMessageConverter.setSupportedMediaTypes(mediaTypes);
         return mappingJackson2HttpMessageConverter;
+    }
+
+    private static class CustomMappingJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
+
+        public CustomMappingJackson2HttpMessageConverter(ObjectMapper objectMapper) {
+            super(objectMapper);
+        }
+
+        /**
+         * 用于加解密去除双引号
+         */
+        @Override
+        protected void writeInternal(Object o, Type t, HttpOutputMessage m) throws IOException, HttpMessageNotWritableException {
+            if (o instanceof String) {
+                Charset charset = this.getDefaultCharset() == null ? StandardCharsets.UTF_8 : this.getDefaultCharset();
+                StreamUtils.copy((String) o, charset, m.getBody());
+            } else {
+                m.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+                super.writeInternal(o, t, m);
+            }
+        }
     }
 }
