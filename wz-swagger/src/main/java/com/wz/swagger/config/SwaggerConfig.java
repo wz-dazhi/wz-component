@@ -10,8 +10,8 @@ import springfox.documentation.oas.configuration.OpenApiDocumentationConfigurati
 
 /**
  * @package: com.wz.swagger
- * @className: SwaggerComponent
- * @description:
+ * @className: SwaggerConfig
+ * @description: swagger与JRebel冲突, 使用JRebel会出现泛型不显示的问题
  * @author: zhi
  * @date: 2020/12/31 下午6:27
  * @version: 1.0
@@ -23,7 +23,7 @@ import springfox.documentation.oas.configuration.OpenApiDocumentationConfigurati
         Knife4jAutoConfiguration.class
 })
 @EnableConfigurationProperties(SwaggerProperties.class)
-public class SwaggerComponent {
+public class SwaggerConfig {
 
     @Bean
     public SwaggerBeanDefinitionRegistryPostProcessor swaggerBeanDefinitionRegistryPostProcessor() {
