@@ -10,19 +10,20 @@ import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,16 +39,18 @@ import java.util.concurrent.TimeUnit;
  * @version: 1.0
  **/
 @Slf4j
+@Order(1)
 @ConditionalOnBean({EncryptProperties.class, EncryptAlgorithm.class})
 @RestControllerAdvice(annotations = RestController.class)
 @AllArgsConstructor
-public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
+public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
     private final EncryptProperties properties;
     private final EncryptAlgorithm algorithm;
 
     @Override
     public boolean supports(MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return Objects.nonNull(parameter.getMethodAnnotation(Decrypt.class)) && !properties.isDebug();
+        if (properties.isDebug()) return false;
+        return AnnotatedElementUtils.hasAnnotation(parameter.getContainingClass(), Decrypt.class) || parameter.hasMethodAnnotation(Decrypt.class);
     }
 
     @Override
@@ -60,19 +63,9 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         }
     }
 
-    @Override
-    public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return body;
-    }
-
-    @Override
-    public Object handleEmptyBody(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return body;
-    }
-
     private static class ApiHttpInputMessage implements HttpInputMessage {
         private InputStream body;
-        private HttpHeaders headers;
+        private final HttpHeaders headers;
 
         ApiHttpInputMessage(HttpInputMessage message, EncryptAlgorithm algorithm, String key, String charset) throws Exception {
             this.headers = message.getHeaders();
