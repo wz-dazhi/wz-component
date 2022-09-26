@@ -5,12 +5,14 @@ import com.wz.common.exception.CommonException;
 import com.wz.common.exception.SystemException;
 import com.wz.swagger.model.Result;
 import com.wz.swagger.util.R;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,16 +28,17 @@ import java.util.Set;
 /**
  * @projectName: wz-component
  * @package: com.wz.webmvc.handler
- * @className: BaseExceptionHandler
+ * @className: AbstractExceptionHandler
  * @description:
  * @author: Zhi
  * @date: 2019-09-20 16:55
  * @version: 1.0
  */
-@Slf4j
-abstract class BaseExceptionHandler {
+public abstract class AbstractExceptionHandler {
 
-    protected final String paramErrorCode = ResultEnum.PARAM_ERROR.code();
+    public static final String PARAM_ERROR_CODE = ResultEnum.PARAM_ERROR.code();
+
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
     protected String paramHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         String msg;
@@ -72,7 +75,12 @@ abstract class BaseExceptionHandler {
         return msg;
     }
 
-    protected Result<Void> otherHandlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+    public ModelAndView exception(HttpServletRequest req, HttpServletResponse resp, Exception e) {
+        Result<Void> r = handlerException(req, resp, e);
+        return modelAndView(r.getCode(), r.getMsg());
+    }
+
+    protected Result<Void> handlerException(HttpServletRequest req, HttpServletResponse resp, Exception e) {
         if (e instanceof SystemException) {
             SystemException se = (SystemException) e;
             return R.fail(se.getCode(), se.getMsg());
@@ -93,13 +101,24 @@ abstract class BaseExceptionHandler {
         log.error("<<< A run exception has occurred, uri: [{}], e: ", req.getRequestURI(), t);
     }
 
+    protected ModelAndView modelAndView(String code, String msg) {
+        ModelAndView mv = new ModelAndView();
+        Map<String, Object> map = this.model(code, msg);
+        mv.addAllObjects(map);
+        modelAndViewAfter(mv);
+        return mv;
+    }
+
+    protected void modelAndViewAfter(ModelAndView mv) {
+    }
+
     protected Map<String, Object> model(String code, String msg) {
         // see Result
         Map<String, Object> model = new HashMap<>(4);
         model.put("code", code);
         model.put("msg", msg);
         model.put("data", null);
-        model.put("isSuccess", false);
+        model.put("success", false);
         return model;
     }
 
