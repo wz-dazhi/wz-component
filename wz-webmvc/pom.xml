@@ -41,6 +41,12 @@
             </exclusions>
         </dependency>
         <!-- springboot end -->
+
+        <dependency>
+            <groupId>com.wz</groupId>
+            <artifactId>wz-datasource-common</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>
