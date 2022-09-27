@@ -58,13 +58,12 @@ public class LogAspect {
             Object r = point.proceed();
             if (null != r && infoEnabled) {
                 // r 如果是集合类型, 并且数据超过100个. 则不打印日志
-                boolean isCollection = Collection.class.isAssignableFrom(r.getClass()) && ((Collection) r).size() > 100;
+                boolean isCollection = Collection.class.isAssignableFrom(r.getClass()) && ((Collection<?>) r).size() > 100;
                 if (isCollection) {
-                    log.info("Uri: [{}], size: [{}]. Return data more than 100, Not print data log. ", uri, ((Collection) r).size());
+                    log.info("Uri: [{}], size: [{}]. Return data more than 100, Not print data log. ", uri, ((Collection<?>) r).size());
                 } else {
                     log.info("Uri: [{}], Return: {} ", uri, JsonUtil.toJson(r));
                 }
-                return r;
             }
             return r;
         } finally {
