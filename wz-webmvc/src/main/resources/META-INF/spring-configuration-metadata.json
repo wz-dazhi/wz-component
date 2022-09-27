@@ -1,0 +1,18 @@
+{
+  "properties": [
+    {
+      "name": "api.result.advice",
+      "type": "java.lang.Boolean",
+      "description": "对Controller返回结果包装成Result, 默认true. 注意: 不包装String",
+      "sourceType": "com.wz.webmvc.aspectj.ResultResponseBodyAdvice",
+      "defaultValue": true
+    },{
+      "name": "api.result.advice-filter-classes",
+      "type": "java.lang.String",
+      "description": "结果包装过滤Class. 默认过滤: org.springframework.http.ResponseEntity",
+      "sourceType": "com.wz.webmvc.aspectj.ResultResponseBodyAdvice",
+      "defaultValue": "org.springframework.http.ResponseEntity"
+    }
+  ],
+  "hints": []
+}
