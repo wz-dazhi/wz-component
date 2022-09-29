@@ -1,10 +1,10 @@
 package com.wz.webmvc.config;
 
+import com.wz.swagger.config.SwaggerProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
@@ -22,6 +22,8 @@ import javax.annotation.Resource;
 public class WebMvcConfig implements WebMvcConfigurer {
     @Value("${server.servlet.context-path:}")
     private String contextPath;
+    @Value("${" + SwaggerProperties.KNIFE4J_ENABLE_NAME + ":false}")
+    private boolean knife4jEnable;
     @Resource
     private Validator springValidator;
 
@@ -32,17 +34,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/public/**").addResourceLocations("classpath:/public/");
-        registry.addResourceHandler("favicon.ico").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler(contextPath + "/swagger-ui/**").addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
-        registry.addResourceHandler(contextPath + "/doc.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController(contextPath + "/swagger-ui/").setViewName("forward:" + contextPath + "/swagger-ui/index.html");
+        if (knife4jEnable) {
+            registry.addResourceHandler(contextPath + "/swagger-ui/**").addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
+        }
     }
 
 }
