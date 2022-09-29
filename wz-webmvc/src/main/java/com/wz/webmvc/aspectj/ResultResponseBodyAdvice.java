@@ -14,6 +14,7 @@ import org.springframework.http.converter.GenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -66,12 +67,12 @@ public class ResultResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                     boolean exist = false;
                     for (String clazz : classes) {
                         try {
-                            Class<?> aClass = Class.forName(clazz);
+                            Class<?> aClass = ClassUtils.forName(clazz, null);
                             adviceFilterClassesSet.add(aClass);
                             if (!exist) {
                                 exist = aClass == returnClass;
                             }
-                        } catch (ClassNotFoundException ignored) {
+                        } catch (Exception ignored) {
                         }
                     }
                     return exist;
