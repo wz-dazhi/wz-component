@@ -20,12 +20,10 @@
     </dependencyManagement>
 
     <dependencies>
-
         <dependency>
             <groupId>com.wz</groupId>
             <artifactId>wz-common</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -73,6 +71,13 @@
            </dependency>
        </dependencies>
    </dependencyManagement>
+  
+    <dependencies>
+        <dependency>
+            <groupId>com.wz</groupId>
+            <artifactId>wz-common</artifactId>
+        </dependency>
+    </dependencies> 
    
    <!-- 加入jitpack仓库 -->
    <repositories>
