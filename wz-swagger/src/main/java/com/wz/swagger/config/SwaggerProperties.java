@@ -15,6 +15,8 @@ import java.util.Map;
 @Data
 @ConfigurationProperties(prefix = "api.swagger")
 public class SwaggerProperties {
+    public static final String KNIFE4J_ENABLE_NAME = "knife4j.enable";
+
     /**
      * 分组
      */
