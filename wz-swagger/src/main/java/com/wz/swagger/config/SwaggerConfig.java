@@ -17,7 +17,7 @@ import springfox.documentation.oas.configuration.OpenApiDocumentationConfigurati
  * @version: 1.0
  */
 @Configuration
-@ConditionalOnProperty(name = "knife4j.enable", havingValue = "true")
+@ConditionalOnProperty(name = SwaggerProperties.KNIFE4J_ENABLE_NAME, havingValue = "true")
 @Import({
         OpenApiDocumentationConfiguration.class,
         Knife4jAutoConfiguration.class
