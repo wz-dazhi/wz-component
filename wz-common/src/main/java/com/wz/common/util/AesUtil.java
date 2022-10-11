@@ -1,6 +1,6 @@
 package com.wz.common.util;
 
-import com.wz.common.exception.ExceptionUtil;
+import com.wz.common.exception.Assert;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.BadPaddingException;
@@ -45,7 +45,7 @@ public final class AesUtil {
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey.getBytes(), "AES"));
             return cipher.doFinal(content.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-            throw ExceptionUtil.wrap(e);
+            throw Assert.wrap(e);
         }
     }
 
@@ -62,7 +62,7 @@ public final class AesUtil {
             byte[] decryptBytes = cipher.doFinal(encryptBytes);
             return new String(decryptBytes);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-            throw ExceptionUtil.wrap(e);
+            throw Assert.wrap(e);
         }
     }
 
