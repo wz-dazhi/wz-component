@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 /**
  * @projectName: wz-component
@@ -31,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public final class BeanCopierUtil {
-    private static final boolean USE_CACHE = true;
+    public static final boolean USE_CACHE = true;
     private static final Map<String, BeanCopier> BEAN_COPIER_MAP = new ConcurrentHashMap<>();
 
     private BeanCopierUtil() {
@@ -59,7 +60,7 @@ public final class BeanCopierUtil {
 
         String key = getKey(source, targetClass);
 
-        BeanCopier beanCopier = getBeanCopier(useCache, key, createBeanCopier(source, targetClass, useConverter));
+        BeanCopier beanCopier = getBeanCopier(useCache, key, () -> createBeanCopier(source, targetClass, useConverter));
         beanCopier.copy(source, target, converter);
         return target;
     }
@@ -84,13 +85,13 @@ public final class BeanCopierUtil {
 
         String key = getKey(source, targetClass);
 
-        BeanCopier beanCopier = getBeanCopier(useCache, key, createBeanCopier(source, targetClass, useConverter));
+        BeanCopier beanCopier = getBeanCopier(useCache, key, () -> createBeanCopier(source, targetClass, useConverter));
 
         T instance;
         try {
             instance = targetClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
         beanCopier.copy(source, instance, converter);
         return instance;
@@ -144,12 +145,12 @@ public final class BeanCopierUtil {
         return targets;
     }
 
-    private static BeanCopier getBeanCopier(boolean useCache, String key, BeanCopier beanCopier2) {
+    private static BeanCopier getBeanCopier(boolean useCache, String key, Supplier<BeanCopier> supplier) {
         BeanCopier beanCopier;
         if (useCache) {
-            beanCopier = BEAN_COPIER_MAP.computeIfAbsent(key, k -> beanCopier2);
+            beanCopier = BEAN_COPIER_MAP.computeIfAbsent(key, k -> supplier.get());
         } else {
-            beanCopier = beanCopier2;
+            beanCopier = supplier.get();
         }
         return beanCopier;
     }
