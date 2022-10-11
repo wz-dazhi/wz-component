@@ -116,7 +116,7 @@ public final class JsonUtil {
             return MAPPER.writeValueAsString(t);
         } catch (JsonProcessingException e) {
             log.error("Bean 转json字符串发生异常. t: {}, msg: {}", t, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -136,7 +136,7 @@ public final class JsonUtil {
             }
         } catch (JsonProcessingException e) {
             log.error("Bean 转json字符串发生异常. isPretty: {}, t: {}, msg: {}", isPretty, t, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -146,7 +146,7 @@ public final class JsonUtil {
             return MAPPER.readValue(json, clazz);
         } catch (IOException e) {
             log.error("json 字符串转Bean发生异常. json: {}, clazz: {}, msg: {}", json, clazz, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -156,7 +156,7 @@ public final class JsonUtil {
             return MAPPER.readValue(file, clazz);
         } catch (IOException e) {
             log.error("读取json 字符串文件[{}]转Bean发生异常. msg: {}", file, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -166,7 +166,7 @@ public final class JsonUtil {
             return MAPPER.readValue(is, clazz);
         } catch (IOException e) {
             log.error("读取json 字符串输入流[{}]转Bean发生异常. msg: {}", is, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -176,7 +176,7 @@ public final class JsonUtil {
             return MAPPER.readValue(url, clazz);
         } catch (IOException e) {
             log.error("读取json 字符串输入流[{}]转Bean发生异常. msg: {}", url, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -186,7 +186,7 @@ public final class JsonUtil {
             return MAPPER.readValue(json, collectionType);
         } catch (JsonProcessingException e) {
             log.error("json 转List异常。json: {}, listClass: {}, clazz: {}. msg: {}", json, listClass, clazz, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -204,7 +204,7 @@ public final class JsonUtil {
             return MAPPER.readValue(json, collectionType);
         } catch (JsonProcessingException e) {
             log.error("json 转Set异常。json: {}, setClass: {}, clazz: {}. msg: {}", json, setClass, clazz, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -226,7 +226,7 @@ public final class JsonUtil {
             return MAPPER.readValue(json, mapType);
         } catch (JsonProcessingException e) {
             log.error("json 转Map异常。json: {}, mapClass: {}, kClass: {}, vClass: {}. msg: {}", json, mapClass, kClass, vClass, e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -255,7 +255,7 @@ public final class JsonUtil {
             return MAPPER.readValue(json, reference);
         } catch (JsonProcessingException e) {
             log.error("json 转<T>异常. json: {}, type: {}, msg: {}", json, reference.getType(), e.getMessage());
-            throw ExceptionUtil.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
