@@ -1,5 +1,8 @@
 package com.wz.common.util;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -28,22 +31,27 @@ public class GeneratorCode {
     /**
      * 生成验证码图片的宽度
      */
+    @Setter
     private int width = 100;
     /**
      * 生成验证码图片的高度
      */
+    @Setter
     private int height = 50;
 
+    @Setter
     private String[] fontNames = {"宋体", "楷体", "隶书", "微软雅黑"};
 
     /**
      * 定义验证码图片的背景颜色为白色
      */
+    @Setter
     private Color bgColor = new Color(250, 255, 255);
 
     /**
      * 记录随机code
      */
+    @Getter
     private String code;
 
     /**
@@ -119,10 +127,6 @@ public class GeneratorCode {
         }
     }
 
-    public String getCode() {
-        return code;
-    }
-
     public static void outImage(BufferedImage image, OutputStream out) throws IOException {
         ImageIO.write(image, "PNG", out);
     }
@@ -132,10 +136,11 @@ public class GeneratorCode {
         ImageIO.write(image, "PNG", bos);
         byte[] bytes = bos.toByteArray();
         Base64.Encoder encoder = Base64.getEncoder();
+        String encode = encoder.encodeToString(bytes);
         if (isUrl) {
-            return "data:image/png;base64," + encoder.encodeToString(bytes);
+            return "data:image/png;base64," + encode;
         }
-        return encoder.encodeToString(bytes);
+        return encode;
     }
 
     public static void main(String[] args) throws IOException {
