@@ -1,10 +1,14 @@
 package com.wz.webmvc.filter;
 
 import com.wz.common.util.JsonUtil;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.http.MediaType;
 
+import javax.servlet.Filter;
 import javax.servlet.ServletResponse;
+import java.beans.Introspector;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -16,7 +20,8 @@ import java.io.PrintWriter;
  * @version: 1.0
  */
 @Slf4j
-public final class FilterHelper {
+@UtilityClass
+public class FilterHelper {
 
     public static void writeResponse(ServletResponse response, Object resObj) {
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
@@ -28,4 +33,16 @@ public final class FilterHelper {
         }
     }
 
+    public static  <T extends Filter> FilterRegistrationBean<T> filterRegistrationBean(T t, int order) {
+        return filterRegistrationBean(t, Introspector.decapitalize(t.getClass().getSimpleName()), order, "/*");
+    }
+
+    public static  <T extends Filter> FilterRegistrationBean<T> filterRegistrationBean(T t, String filterName, int order, String urlPatterns) {
+        FilterRegistrationBean<T> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(t);
+        registrationBean.addUrlPatterns(urlPatterns);
+        registrationBean.setName(filterName);
+        registrationBean.setOrder(order);
+        return registrationBean;
+    }
 }
