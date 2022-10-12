@@ -1,5 +1,6 @@
 package com.wz.common.util;
 
+import com.wz.common.exception.ExceptionUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.management.ManagementFactory;
@@ -163,7 +164,7 @@ public final class UniqueNoGenerator {
      * 获取 maxWorkerId
      * </p>
      */
-    protected static long getMaxWorkerId(long datacenterId, long maxWorkerId) {
+    public static long getMaxWorkerId(long datacenterId, long maxWorkerId) {
         StringBuffer mpid = new StringBuffer();
         mpid.append(datacenterId);
         String name = ManagementFactory.getRuntimeMXBean().getName();
@@ -184,7 +185,7 @@ public final class UniqueNoGenerator {
      * 数据标识id部分
      * </p>
      */
-    protected static long getDatacenterId(long maxDatacenterId) {
+    public static long getDatacenterId(long maxDatacenterId) {
         long id = 0L;
         try {
             InetAddress ip = InetAddress.getLocalHost();
@@ -199,6 +200,7 @@ public final class UniqueNoGenerator {
             }
         } catch (Exception e) {
             log.error("自动生成ID发生异常: {}", e.getMessage());
+            ExceptionUtil.wrapAndThrow(e);
         }
         return id;
     }
