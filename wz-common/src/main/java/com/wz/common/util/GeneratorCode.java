@@ -28,6 +28,8 @@ public class GeneratorCode {
 
     private static final Random RANDOM = new Random();
 
+    public static final GeneratorCode GENERATOR_CODE = new GeneratorCode();
+
     /**
      * 生成验证码图片的宽度
      */
@@ -144,7 +146,7 @@ public class GeneratorCode {
     }
 
     public static void main(String[] args) throws IOException {
-        GeneratorCode g = new GeneratorCode();
+        GeneratorCode g = GENERATOR_CODE;
         BufferedImage image = g.getImage();
         System.out.println(g.getCode());
         OutputStream os = new FileOutputStream("/Users/wangzhi/work/wz-component/wz-common/src/main/java/com/wz/common/util/a.png");
