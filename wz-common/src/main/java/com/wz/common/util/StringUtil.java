@@ -49,6 +49,14 @@ public final class StringUtil {
         return StringUtils.isAnyBlank(css);
     }
 
+    public static boolean isAllBlank(CharSequence... css) {
+        return StringUtils.isAllBlank(css);
+    }
+
+    public static boolean isNoneBlank(CharSequence... css) {
+        return StringUtils.isNoneBlank(css);
+    }
+
     public static List<String> split(CharSequence str, String separator) {
         requireNonNull(str, "string is not null");
         requireNonNull(separator, "separator is not null");
@@ -66,4 +74,12 @@ public final class StringUtil {
                 .join(strings);
     }
 
+    public static void main(String[] args) {
+        System.out.println(isNoneBlank(null, null)); // false
+        System.out.println(isNoneBlank(null, "")); // false
+        System.out.println(isNoneBlank("", "")); // false
+        System.out.println(isNoneBlank("", "1")); // false
+        System.out.println(isNoneBlank("1", "")); // false
+        System.out.println(isNoneBlank("1", "1")); // true
+    }
 }
