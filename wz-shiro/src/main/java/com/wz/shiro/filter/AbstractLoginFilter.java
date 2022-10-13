@@ -33,6 +33,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,8 +52,8 @@ import static com.wz.shiro.enums.ShiroEnum.METHOD_NOT_ALLOWED;
 @Slf4j
 public abstract class AbstractLoginFilter extends AuthenticatingFilter implements EnvironmentAware, ApplicationListener<ContextRefreshedEvent> {
     protected ShiroProperties shiroProperties;
-    private ApplicationContext applicationContext;
-    private List<HandlerMapping> handlerMappings;
+    protected ApplicationContext applicationContext;
+    protected List<HandlerMapping> handlerMappings;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -127,7 +128,7 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
                     code = se.getCode();
                     msg = se.getMsg();
                 }
-                if (StringUtil.isNotBlank(code) && StringUtil.isNotBlank(msg)) {
+                if (StringUtil.isNoneBlank(code, msg)) {
                     FilterHelper.writeResponse(response, R.fail(code, msg));
                     return false;
                 } else {
@@ -179,19 +180,19 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
      */
     protected boolean isAnonUri(HttpServletRequest req) {
         if (this.handlerMappings != null) {
-            HandlerExecutionChain handler = null;
+            HandlerMethod m = null;
             for (HandlerMapping mapping : handlerMappings) {
                 try {
-                    handler = mapping.getHandler(req);
-                    if (handler != null) {
+                    HandlerExecutionChain handler = mapping.getHandler(req);
+                    if (handler != null && handler.getHandler() instanceof HandlerMethod) {
+                        m = (HandlerMethod) handler.getHandler();
                         break;
                     }
                 } catch (Exception e) {
                     log.error(">>> HandlerMapping.getHandler(req) e: ", e);
                 }
             }
-            if (null != handler && handler.getHandler() instanceof HandlerMethod) {
-                final HandlerMethod m = (HandlerMethod) handler.getHandler();
+            if (null != m) {
                 // @Anon写在类上 || @Anon写在方法上
                 return m.getBeanType().isAnnotationPresent(Anon.class) || m.hasMethodAnnotation(Anon.class);
             }
@@ -217,8 +218,9 @@ public abstract class AbstractLoginFilter extends AuthenticatingFilter implement
 
     private void initHandlerMappings(ApplicationContext applicationContext) {
         Map<String, HandlerMapping> allRequestHandlerMappings = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, HandlerMapping.class, true, false);
-        if (MapUtil.isNotEmpty(allRequestHandlerMappings) && CollectionUtil.isNotEmpty(allRequestHandlerMappings.values())) {
-            this.handlerMappings = new ArrayList<>(allRequestHandlerMappings.values());
+        Collection<HandlerMapping> handlerMappings;
+        if (MapUtil.isNotEmpty(allRequestHandlerMappings) && CollectionUtil.isNotEmpty(handlerMappings = allRequestHandlerMappings.values())) {
+            this.handlerMappings = new ArrayList<>(handlerMappings);
         }
     }
 
