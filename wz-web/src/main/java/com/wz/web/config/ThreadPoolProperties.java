@@ -34,4 +34,24 @@ public class ThreadPoolProperties {
      * 线程池维护线程所允许的空闲时间，默认为60s
      */
     private int keepAliveSecond = 60;
+
+    /**
+     * 线程名称前缀: 默认 spring.application.name
+     */
+    private String threadNamePrefix;
+
+    /**
+     * 线程优先级, 默认5
+     */
+    private int threadPriority = Thread.NORM_PRIORITY;
+
+    /**
+     * 是否为守护线程, 默认false
+     */
+    private boolean daemon = false;
+
+    /**
+     * 线程组名字
+     */
+    private String threadGroupName;
 }
