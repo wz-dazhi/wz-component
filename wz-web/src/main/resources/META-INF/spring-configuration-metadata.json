@@ -44,6 +44,33 @@
       "defaultValue": "60"
     },
     {
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
+      "name": "thread.pool.thread-name-prefix",
+      "type": "java.lang.String",
+      "description": "线程名称前缀, 默认: spring.application.name",
+      "defaultValue": "app"
+    },
+    {
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
+      "name": "thread.pool.thread-priority",
+      "type": "java.lang.Integer",
+      "description": "线程优先级, 默认: Thread.NORM_PRIORITY",
+      "defaultValue": "5"
+    },
+    {
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
+      "name": "thread.pool.daemon",
+      "type": "java.lang.Boolean",
+      "description": "是否为守护线程, 默认: false",
+      "defaultValue": "false"
+    },
+    {
+      "sourceType": "com.wz.web.config.ThreadPoolProperties",
+      "name": "thread.pool.thread-group-name",
+      "type": "java.lang.String",
+      "description": "线程组名字"
+    },
+    {
       "sourceType": "com.wz.web.config.ValidatorConfig",
       "name": "validator.config.base-names",
       "type": "java.lang.String",
