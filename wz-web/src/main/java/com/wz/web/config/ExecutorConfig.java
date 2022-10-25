@@ -56,7 +56,9 @@ public class ExecutorConfig implements AsyncConfigurer {
         executor.setKeepAliveSeconds(threadPoolProperties.getKeepAliveSecond());
         executor.setRejectedExecutionHandler(rejectedExecutionHandler == null ? new ThreadPoolExecutor.CallerRunsPolicy() : rejectedExecutionHandler);
         executor.setTaskDecorator(new ExecutorTaskDecorator());
+        initBefore(executor);
         executor.initialize();
+        initAfter(executor);
         return executor;
     }
 
@@ -79,6 +81,12 @@ public class ExecutorConfig implements AsyncConfigurer {
 
     protected ThreadGroup getThreadGroup() {
         return StringUtil.isBlank(threadPoolProperties.getThreadGroupName()) ? null : new ThreadGroup(threadPoolProperties.getThreadGroupName());
+    }
+
+    protected void initBefore(ThreadPoolTaskExecutor executor) {
+    }
+
+    protected void initAfter(ThreadPoolTaskExecutor executor) {
     }
 
 }
