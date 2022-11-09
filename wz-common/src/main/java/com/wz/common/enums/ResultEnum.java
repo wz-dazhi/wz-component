@@ -38,6 +38,11 @@ public enum ResultEnum implements IErrorCode {
      */
     REQUEST_LIMIT("-4"),
 
+    /**
+     * 状态错误
+     */
+    STATE_ERROR("-5"),
+
     ;
 
     private final String code;
