@@ -21,18 +21,6 @@ import java.util.function.Supplier;
 @UtilityClass
 public class Assert {
 
-    public static RuntimeException wrap(Throwable t) {
-        return t instanceof RuntimeException ? (RuntimeException) t : new RuntimeException(t);
-    }
-
-    public static CommonException wrap(Exception e) {
-        return new CommonException(e.getMessage());
-    }
-
-    public static CommonException wrap(SystemException e) {
-        return new CommonException(e.getCode(), e.getMsg());
-    }
-
     public static <T> void notNull(T t) {
         notNull(t, ResultEnum.PARAM_ERROR);
     }
@@ -52,6 +40,8 @@ public class Assert {
                 expression = ((Collection<?>) t).isEmpty();
             } else if (t instanceof Map) {
                 expression = ((Map<?, ?>) t).isEmpty();
+            } else if (t.getClass().isArray()) {
+                expression = ((T[]) t).length == 0;
             }
         }
         notThrow(expression, () -> new ParameterException(code, msg));
@@ -89,10 +79,28 @@ public class Assert {
         notThrow(!Objects.equals(a, b), () -> new BusinessException(code, msg));
     }
 
+    public static void state(boolean expression) {
+        state(expression, ResultEnum.STATE_ERROR);
+    }
+
+    public static void state(boolean expression, IErrorCode ec) {
+        state(expression, ec.code(), ec.desc());
+    }
+
+    public static void state(boolean expression, String msg) {
+        state(expression, ResultEnum.STATE_ERROR.code(), msg);
+    }
+
+    public static void state(boolean expression, String code, String msg) {
+        state(expression, () -> new BusinessException(code, msg));
+    }
+
+    public static <T extends Throwable> void state(boolean expression, Supplier<T> supplier) throws T {
+        if (!expression) throw supplier.get();
+    }
+
     public static <T extends Throwable> void notThrow(boolean expression, Supplier<T> supplier) throws T {
-        if (expression) {
-            throw supplier.get();
-        }
+        if (expression) throw supplier.get();
     }
 
 }
