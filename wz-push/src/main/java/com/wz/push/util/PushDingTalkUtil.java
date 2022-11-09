@@ -1,6 +1,7 @@
 package com.wz.push.util;
 
 import com.wz.common.exception.Assert;
+import com.wz.common.exception.ExceptionUtil;
 import com.wz.common.util.JsonUtil;
 import com.wz.common.util.StringUtil;
 import com.wz.push.bean.dingtalk.BaseDingTalkReq;
@@ -66,7 +67,7 @@ public final class PushDingTalkUtil {
             return JsonUtil.toBean(res, DingTalkResp.class);
         } catch (Exception e) {
             log.error(">>> 调用钉钉机器人通知接口发生异常. req: {}, errMsg: {}", req, e.getMessage());
-            throw Assert.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
@@ -80,7 +81,7 @@ public final class PushDingTalkUtil {
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             log.error(">>> 调用钉钉机器人通知接口拼装sign签名发生异常. " +
                     "\n secret: {}, timestamp: {}, errMsg: {}", secret, timestamp, e.getMessage());
-            throw Assert.wrap(e);
+            throw ExceptionUtil.wrapCommon(e);
         }
     }
 
