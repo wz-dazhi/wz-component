@@ -1,6 +1,5 @@
 package com.wz.common.util;
 
-import com.wz.common.exception.Assert;
 import com.wz.common.exception.ExceptionUtil;
 import org.apache.commons.codec.binary.Base64;
 
