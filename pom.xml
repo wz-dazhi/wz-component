@@ -7,7 +7,6 @@
     <modules>
         <module>wz-common</module>
         <module>wz-web</module>
-        <module>wz-datasource</module>
         <module>wz-encrypt</module>
         <module>wz-redis</module>
         <module>wz-mail</module>
@@ -19,7 +18,7 @@
         <module>wz-logging</module>
         <module>wz-excel</module>
         <module>wz-push</module>
-        <module>wz-datasource-common</module>
+        <module>wz-datasource</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
