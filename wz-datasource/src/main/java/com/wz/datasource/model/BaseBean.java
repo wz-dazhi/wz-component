@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * @projectName: wz-datasource
  * @package: com.wz.datasource.mybatisplus.model
- * @className: BaseEntity
+ * @className: BaseBean
  * @description:
  * @author: Zhi Wang
  * @date: 2019/4/30 5:35 PM
