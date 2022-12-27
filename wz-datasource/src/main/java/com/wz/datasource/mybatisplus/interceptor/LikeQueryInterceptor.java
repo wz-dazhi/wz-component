@@ -1,4 +1,4 @@
-package com.wz.datasource.common.mybatisplus.interceptor;
+package com.wz.datasource.mybatisplus.interceptor;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import org.apache.commons.lang3.StringUtils;

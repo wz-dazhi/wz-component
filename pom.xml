@@ -94,11 +94,6 @@
             </dependency>
             <dependency>
                 <groupId>com.wz</groupId>
-                <artifactId>wz-datasource-common</artifactId>
-                <version>${wz-component.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.wz</groupId>
                 <artifactId>wz-web</artifactId>
                 <version>${wz-component.version}</version>
             </dependency>

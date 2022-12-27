@@ -1,4 +1,4 @@
-package com.wz.datasource.common.mybatisplus.model;
+package com.wz.datasource.mybatisplus.model;
 
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

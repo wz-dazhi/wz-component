@@ -1,9 +1,8 @@
-package com.wz.datasource.common.mybatisplus.model;
+package com.wz.datasource.mybatisplus.model;
 
 import java.util.function.Consumer;
 
 /**
- * @projectName: wz-component
  * @package: com.wz.datasource.mybatisplus.model
  * @className: IPage
  * @description:

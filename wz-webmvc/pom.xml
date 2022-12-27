@@ -44,7 +44,7 @@
 
         <dependency>
             <groupId>com.wz</groupId>
-            <artifactId>wz-datasource-common</artifactId>
+            <artifactId>wz-datasource</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>

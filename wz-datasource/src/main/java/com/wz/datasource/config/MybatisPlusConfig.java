@@ -1,18 +1,17 @@
-package com.wz.datasource.common.config;
+package com.wz.datasource.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.wz.datasource.common.mybatisplus.handler.MybatisPlusMetaObjectHandler;
-import com.wz.datasource.common.mybatisplus.interceptor.LikeQueryInterceptor;
+import com.wz.datasource.mybatisplus.handler.MybatisPlusMetaObjectHandler;
+import com.wz.datasource.mybatisplus.interceptor.LikeQueryInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @projectName: wz-component
- * @package: com.wz.datasource.common.config
+ * @package: com.wz.datasource.config
  * @className: MybatisPlusConfig
  * @description:
  * @author: zhi

@@ -1,7 +1,7 @@
 package com.wz.webmvc.controller;
 
 import com.wz.common.exception.BusinessException;
-import com.wz.datasource.common.mybatisplus.model.Page;
+import com.wz.datasource.mybatisplus.model.Page;
 import com.wz.swagger.model.Result;
 import com.wz.swagger.util.R;
 import com.wz.webmvc.annotation.NoResult;

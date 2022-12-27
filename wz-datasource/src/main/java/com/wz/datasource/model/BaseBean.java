@@ -1,4 +1,4 @@
-package com.wz.datasource.common.model;
+package com.wz.datasource.model;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
