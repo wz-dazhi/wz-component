@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
@@ -20,7 +21,7 @@ public class App {
 
     public static void main(String[] args) throws SQLException {
         ConfigurableApplicationContext c = SpringApplication.run(App.class, args);
-        // DataSource ds = c.getBean(DataSource.class);
-        // System.out.println(ds.getConnection());
+         DataSource ds = c.getBean(DataSource.class);
+         System.out.println(ds.getConnection());
     }
 }
