@@ -11,6 +11,7 @@
 
     <modules>
         <module>wz-example-datasource</module>
+        <module>wz-example-nacos</module>
     </modules>
 
     <properties>
