@@ -1,0 +1,32 @@
+spring:
+  # 必须写在bootstrap文件中, 用于动态刷新.
+  # 在Spring cloud LegacyContextRefresher类中, 会创建新的容器, 新容器只会copy 原始的environment, 如: 命令行 defaultProperties.
+  # copy后的environment对象, 由于新的environment 中不存在application.yml.
+  # 所以动态刷新时 获取不到spring.application.name, 导致获取配置时, 拼接的data-id为 bootstrap-null-dev.yaml  bootstrap-null.yaml
+  # 主要原因2.4版本配置文件加载机制发生改变, bootstrap.yml application.yml 都由ConfigDataEnvironmentPostProcessor加载
+  application:
+    name: wz-example-nacos
+  cloud:
+    nacos:
+      config:
+        server-addr: 172.16.207.140
+        namespace: 555c79ca-4f08-44e0-a26b-d3e7e7efff69
+        file-extension: yaml
+        refresh-enabled: true
+        # 自定义配置, 当配置多个时. 越靠后的优先级越高
+        extension-configs:
+          - data-id: extension-config-1.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: extension-config-2.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+        # 多个应用间可共享的配置
+        shared-configs:
+          - data-id: shared-config-1.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+
+      discovery:
+        server-addr: 172.16.207.140
+        namespace: 555c79ca-4f08-44e0-a26b-d3e7e7efff69
