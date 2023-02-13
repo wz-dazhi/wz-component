@@ -45,6 +45,13 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <!-- 组件统一根据项目版本走 -->
         <wz-component.version>${project.version}</wz-component.version>
+        <!-- boot -->
+        <rocketmq-spring-boot-starter.version>2.0.2</rocketmq-spring-boot-starter.version>
+        <knife4j-spring-boot-starter.version>3.0.3</knife4j-spring-boot-starter.version>
+        <shiro-spring-boot-web-starter.version>1.9.0</shiro-spring-boot-web-starter.version>
+        <!-- <redisson-spring-boot-starter.version>3.12.1</redisson-spring-boot-starter.version> -->
+
+        <!-- other -->
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
         <druid.version>1.2.13</druid.version>
@@ -53,13 +60,11 @@
         <fastjson.version>2.0.15</fastjson.version>
         <json-smart.version>2.4.8</json-smart.version>
         <weixin-java.version>4.4.0</weixin-java.version>
-        <knife4j-spring-boot-starter.version>3.0.3</knife4j-spring-boot-starter.version>
         <springfox-core.version>3.0.0</springfox-core.version>
         <io.swagger.version>1.6.7</io.swagger.version>
         <java-jwt.version>4.0.0</java-jwt.version>
         <nimbus-jose-jwt.version>9.25.4</nimbus-jose-jwt.version>
         <thymeleaf-extras-java8time.version>3.0.4.RELEASE</thymeleaf-extras-java8time.version>
-        <!--        <redisson-spring-boot-starter.version>3.12.1</redisson-spring-boot-starter.version>-->
         <redisson.version>3.17.6</redisson.version>
         <qiniu-java-sdk.version>7.11.0</qiniu-java-sdk.version>
         <hutool-all.version>5.8.8</hutool-all.version>
@@ -67,7 +72,6 @@
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <lombok.version>1.18.24</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-        <shiro-spring-boot-web-starter.version>1.9.0</shiro-spring-boot-web-starter.version>
         <shiro-redis.version>3.3.1</shiro-redis.version>
         <disruptor.version>3.4.4</disruptor.version>
         <easyexcel.version>3.1.1</easyexcel.version>
@@ -386,6 +390,13 @@
                 <groupId>com.lmax</groupId>
                 <artifactId>disruptor</artifactId>
                 <version>${disruptor.version}</version>
+            </dependency>
+
+            <!-- mq -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq-spring-boot-starter.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
