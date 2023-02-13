@@ -12,6 +12,7 @@
     <modules>
         <module>wz-example-datasource</module>
         <module>wz-example-nacos</module>
+        <module>wz-example-rocketmq</module>
     </modules>
 
     <properties>
