@@ -1,0 +1,4 @@
+rocketmq:
+  name-server: 172.16.207.2:9876;172.16.207.3:9876;
+  producer:
+    group: test
