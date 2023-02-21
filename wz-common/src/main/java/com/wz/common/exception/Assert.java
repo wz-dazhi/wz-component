@@ -4,6 +4,7 @@ import com.wz.common.enums.ResultEnum;
 import com.wz.common.util.StringUtil;
 import lombok.experimental.UtilityClass;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -41,7 +42,7 @@ public class Assert {
             } else if (t instanceof Map) {
                 expression = ((Map<?, ?>) t).isEmpty();
             } else if (t.getClass().isArray()) {
-                expression = ((T[]) t).length == 0;
+                expression = Array.getLength(t) == 0;
             }
         }
         notThrow(expression, () -> new ParameterException(code, msg));
