@@ -113,7 +113,7 @@ public class RestUtil {
         static {
             TEMPLATE = new RestTemplate();
             MappingJackson2HttpMessageConverter jackson = new MappingJackson2HttpMessageConverter();
-            jackson.setObjectMapper(JsonUtil.getMapper());
+            jackson.setObjectMapper(ObjectMapperUtil.getMapper());
             jackson.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_HTML, MediaType.MULTIPART_FORM_DATA));
             TEMPLATE.getMessageConverters().add(jackson);
         }
