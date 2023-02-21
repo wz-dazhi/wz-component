@@ -1,7 +1,7 @@
 package com.wz.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wz.common.util.JsonUtil;
+import com.wz.common.util.ObjectMapperUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +24,6 @@ public class JsonConfig {
     @Bean
     @ConditionalOnMissingBean
     public ObjectMapper objectMapper() {
-        return JsonUtil.getMapper();
+        return ObjectMapperUtil.getMapper();
     }
 }
