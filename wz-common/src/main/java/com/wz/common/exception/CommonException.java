@@ -19,6 +19,12 @@ public class CommonException extends RuntimeException {
         this(ResultEnum.SYSTEM_ERROR);
     }
 
+    public CommonException(Throwable cause) {
+        super(cause);
+        this.code = ResultEnum.SYSTEM_ERROR.code();
+        this.msg = cause.getMessage();
+    }
+
     public CommonException(IErrorCode iErrorCode) {
         this(iErrorCode.code(), iErrorCode.desc());
     }
@@ -40,4 +46,5 @@ public class CommonException extends RuntimeException {
     public String getMsg() {
         return msg;
     }
+
 }
