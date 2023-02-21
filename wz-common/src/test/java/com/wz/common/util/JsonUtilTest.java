@@ -17,7 +17,7 @@ public class JsonUtilTest {
 
     @Test
     public void getMapper() {
-        System.out.println(JsonUtil.getMapper());
+        System.out.println(ObjectMapperUtil.getMapper());
     }
 
     @Test
