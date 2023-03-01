@@ -19,7 +19,7 @@ public class ExceptionUtil {
     }
 
     public static CommonException wrapCommon(Exception e) {
-        return new CommonException(e.getMessage());
+        return new CommonException(e);
     }
 
     public static CommonException wrapCommon(SystemException e) {
