@@ -55,7 +55,7 @@
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
         <druid.version>1.2.13</druid.version>
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
         <cglib-nodep.version>3.3.0</cglib-nodep.version>
         <fastjson.version>2.0.15</fastjson.version>
         <json-smart.version>2.4.8</json-smart.version>
