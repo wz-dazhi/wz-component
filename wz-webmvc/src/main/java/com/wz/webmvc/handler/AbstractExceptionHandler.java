@@ -62,7 +62,8 @@ public abstract class AbstractExceptionHandler {
             while (iterator.hasNext()) {
                 Path.Node node = iterator.next();
                 ElementKind kind = node.getKind();
-                if (ElementKind.PARAMETER == kind) {
+                // 参数和属性
+                if (ElementKind.PARAMETER == kind || ElementKind.PROPERTY == kind) {
                     paramName = node.getName();
                     break;
                 }
