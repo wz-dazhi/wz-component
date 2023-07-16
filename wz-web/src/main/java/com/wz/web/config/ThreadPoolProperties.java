@@ -46,9 +46,9 @@ public class ThreadPoolProperties {
     private int threadPriority = Thread.NORM_PRIORITY;
 
     /**
-     * 是否为守护线程, 默认false
+     * 是否为守护线程, 默认true. 保证程序退出时 线程池中的线程也退出
      */
-    private boolean daemon = false;
+    private boolean daemon = true;
 
     /**
      * 线程组名字
