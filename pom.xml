@@ -63,7 +63,7 @@
         <springfox-core.version>3.0.0</springfox-core.version>
         <io.swagger.version>1.6.7</io.swagger.version>
         <java-jwt.version>4.0.0</java-jwt.version>
-        <nimbus-jose-jwt.version>9.25.4</nimbus-jose-jwt.version>
+        <nimbus-jose-jwt.version>9.37.2</nimbus-jose-jwt.version>
         <thymeleaf-extras-java8time.version>3.0.4.RELEASE</thymeleaf-extras-java8time.version>
         <redisson.version>3.17.6</redisson.version>
         <qiniu-java-sdk.version>7.11.0</qiniu-java-sdk.version>
